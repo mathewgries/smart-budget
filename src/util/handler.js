@@ -7,13 +7,15 @@ export default function handler(lambda) {
       statusCode = 200;
     } catch (e) {
       console.error(e);
-      {e.message}
+      {
+        e.message;
+      }
       statusCode = 500;
     }
 
     return {
-        statusCode,
-        body: JSON.stringify(body),
+      statusCode,
+      body: JSON.stringify(body),
     };
   };
 }
