@@ -8,7 +8,7 @@ export const main = handler(async (event) => {
   const transactionId = event.pathParameters.id;
 
   const params = {
-    TransactWrite: [
+    TransactItems: [
       {
         Delete: {
           TableName: process.env.TABLE_NAME,
@@ -39,7 +39,7 @@ export const main = handler(async (event) => {
     ],
   };
 
-  await dynamoDb.delete(params);
+  await dynamoDb.transactWrite(params);
 
   return { status: true };
 });
