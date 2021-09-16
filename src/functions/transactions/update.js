@@ -1,6 +1,6 @@
 import handler from "../../util/handler";
 import dynamodb from "../../util/dynamodb";
-import updateTransactionHelper from "../../helpers/updateTransactionHelper";
+import { updateTransactionHelper } from "../../helpers/currencyHandler";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
@@ -46,7 +46,11 @@ export const main = handler(async (event) => {
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": updateTransactionHelper(oldData,newData,data.accountBalance),
+            ":accountBalance": updateTransactionHelper(
+              oldData,
+              newData,
+              data.accountBalance
+            ),
             ":modifyDate": Date.now(),
           },
         },

@@ -1,6 +1,7 @@
 import * as uuid from "uuid";
 import handler from "../../util/handler";
 import dynamoDb from "../../util/dynamodb";
+import { addTransactionHandler } from '../../helpers/currencyHandler'
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
@@ -36,10 +37,7 @@ export const main = handler(async (event) => {
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance":
-              data.transactionType === "W"
-                ? data.accountBalance - data.transactionAmount
-                : data.accountBalance + data.transactionAmount,
+            ":accountBalance": addTransactionHandler(data.accountBalance, data.transactionAmount, data.transactionType),
             ":modifyDate": Date.now(),
           },
         },

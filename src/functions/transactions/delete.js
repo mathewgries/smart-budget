@@ -1,5 +1,6 @@
 import handler from "../../util/handler";
 import dynamoDb from "../../util/dynamodb";
+import { deleteTransactionHandler } from "../../helpers/currencyHandler";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
@@ -28,10 +29,11 @@ export const main = handler(async (event) => {
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance":
-              data.transactionType === "W"
-                ? data.accountBalance + data.transactionAmount
-                : data.accountBalance - data.transactionAmount,
+            ":accountBalance": deleteTransactionHandler(
+              data.accountBalance,
+              data.transactionAmount,
+              data.transactionType
+            ),
             ":modifyDate": Date.now(),
           },
         },
