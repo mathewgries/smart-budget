@@ -16,7 +16,7 @@ export const main = handler(async (event) => {
         Update: {
           TableName: process.env.TABLE_NAME,
           Key: {
-            PK: `ACCT#${accountId}`,
+            PK: `USER#${userId}`,
             SK: `TRANS#${transactionId}`,
           },
           UpdateExpression: `SET 
@@ -27,11 +27,11 @@ export const main = handler(async (event) => {
           subCategory = :subCategory,
           modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
-            ":transactionAmount": newData.transactionAmount || null,
-            ":transactionDate": newData.transactionDate || null,
-            ":transactionType": newData.transactionType || null,
-            ":category": newData.category || null,
-            ":subCategory": newData.subCategory || null,
+            ":transactionAmount": newData.transactionAmount,
+            ":transactionDate": newData.transactionDate,
+            ":transactionType": newData.transactionType,
+            ":category": newData.category,
+            ":subCategory": newData.subCategory,
             ":modifyDate": Date.now(),
           },
         },

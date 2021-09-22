@@ -14,7 +14,7 @@ export const main = handler(async (event) => {
         Delete: {
           TableName: process.env.TABLE_NAME,
           Key: {
-            PK: `ACCT#${accountId}`,
+            PK: `USER#${userId}`,
             SK: `TRANS#${transactionId}`,
           },
         },

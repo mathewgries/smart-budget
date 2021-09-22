@@ -1,7 +1,7 @@
 import * as uuid from "uuid";
 import handler from "../../util/handler";
 import dynamoDb from "../../util/dynamodb";
-import { addTransactionHandler } from '../../helpers/currencyHandler'
+import { addTransactionHandler } from "../../helpers/currencyHandler";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
@@ -14,16 +14,16 @@ export const main = handler(async (event) => {
         Put: {
           TableName: process.env.TABLE_NAME,
           Item: {
-            PK: `ACCT#${accountId}`,
+            PK: `USER#${userId}`,
             SK: `TRANS#${uuid.v1()}`,
-            GSI_user_trans_PK: `USER#${userId}`,
+            GSI1_PK: `ACCT#${accountId}`,
             transactionAmount: data.transactionAmount,
             transactionDate: data.transactionDate,
             transactionType: data.transactionType,
             category: data.category,
             subCategory: data.subCategory,
-            createDate: Date.now(), // Current Unix timestamp
-            modifyDate: Date.now(), // Current Unix timestamp
+            createDate: Date.now(),
+            modifyDate: Date.now(),
           },
         },
       },
@@ -37,7 +37,11 @@ export const main = handler(async (event) => {
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": addTransactionHandler(data.accountBalance, data.transactionAmount, data.transactionType),
+            ":accountBalance": addTransactionHandler(
+              data.accountBalance,
+              data.transactionAmount,
+              data.transactionType
+            ),
             ":modifyDate": Date.now(),
           },
         },

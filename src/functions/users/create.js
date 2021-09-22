@@ -8,14 +8,13 @@ export const main = handler(async (event) => {
   const params = {
     TableName: process.env.TABLE_NAME,
     Item: {
-      // The attributes of the item to be created
-      PK: `USER#${userId}`, // The id of the author
-      SK: `USER#INFO`, // A unique uuid
-      username: data.username, // Parsed from request body
-      email: data.email, // Starting balance of account
-      dateOfBirth: data.dateOfBirth,
-      createDate: Date.now(), // Current Unix timestamp
-      modifyDate: Date.now(), // Current Unix timestamp
+      PK: `USER#${userId}`,
+      SK: `USER#INFO`,
+      username: data.username || null,
+      email: data.email || null,
+      dateOfBirth: data.dateOfBirth || null,
+      createDate: Date.now(),
+      modifyDate: Date.now(),
     },
   };
 

@@ -15,8 +15,8 @@ export const main = handler(async (event) => {
     UpdateExpression:
       "SET accountName = :accountName, accountBalance = :accountBalance, modifyDate = :modifyDate",
     ExpressionAttributeValues: {
-      ":accountName": data.accountName || null,
-      ":accountBalance": data.accountBalance || null,
+      ":accountName": data.accountName,
+      ":accountBalance": data.accountBalance,
       ":modifyDate": Date.now(),
     },
     ReturnValues: "ALL_NEW",
