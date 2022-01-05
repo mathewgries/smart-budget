@@ -1,29 +1,29 @@
 import * as uuid from "uuid";
 import handler from "../../util/handler";
-import dynamoDb from "../../util/dynamodb";
+import dynamodb from "../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-	const accountId = uuid.v1();
-	const type = 'ACCT#'; 
+	const categoryId = uuid.v1();
+	const type = 'CATEG#'
 
   const params = {
     TableName: process.env.TABLE_NAME,
     Item: {
       PK: `USER#${userId}`,
-      SK: `${type}${accountId}`,
-			GSI1_PK: `${type}${accountId}`,
-			id: accountId,
+      SK: `${type}${categoryId}`,
+			GSI1_PK: `${type}USER#${userId}`,
+      id: categoryId,
 			type: type,
-      accountName: data.accountName,
-      accountBalance: data.accountBalance,
+      categoryName: data.categoryName,
+			subCategories: data.subCategories || null,
       createDate: Date.now(),
       modifyDate: Date.now(),
     },
   };
 
-  await dynamoDb.put(params);
+  await dynamodb.put(params);
 
   return params.Item;
 });

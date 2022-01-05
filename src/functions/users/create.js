@@ -10,7 +10,7 @@ export const main = handler(async (event) => {
     Item: {
       PK: `USER#${userId}`,
       SK: `USER#INFO`,
-      username: data.username || null,
+      username: data.email || null,
       email: data.email || null,
       dateOfBirth: data.dateOfBirth || null,
       createDate: Date.now(),

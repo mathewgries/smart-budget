@@ -7,6 +7,9 @@ export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const accountId = data.accountId;
+	const transactionId = uuid.v1();
+	const type = 'TRANS#'
+
 
   const params = {
     TransactItems: [
@@ -15,8 +18,10 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Item: {
             PK: `USER#${userId}`,
-            SK: `TRANS#${uuid.v1()}`,
+            SK: `${type}${uuid.v1()}`,
             GSI1_PK: `ACCT#${accountId}`,
+						id: transactionId,
+						type: type,
             transactionAmount: data.transactionAmount,
             transactionDate: data.transactionDate,
             transactionType: data.transactionType,
