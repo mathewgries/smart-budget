@@ -1,76 +1,42 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { API } from "aws-amplify";
 import Form from "react-bootstrap/Form";
-import {useParams, useHistory } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useFormFields } from "../../lib/hooksLib";
 import LoaderButton from "../../components/LoaderButton";
 import { onError } from "../../lib/errorLib";
 
 export default function NewTransaction() {
   const history = useHistory();
-	const params = useParams();
-  const [isLoading, setIsLoading] = useState(false);
-  // const [fields, handleFieldChange] = useFormFields({
-  //   accountName: "",
-  //   accountBalance: "",
-  // });
+  const params = useParams();
+  const [accountInfo, setAccountInfo] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // function validateForm() {
-  //   return fields.accountName.length > 0;
-  // }
+  useEffect(() => {
+    function loadAccountInfo() {
+      return API.get("smartbudget", `/accounts/${params.id}`);
+    }
 
-  // async function handleSubmit(event) {
-  //   event.preventDefault();
+    async function onLoad() {
+      try {
+        const accountInfo = await loadAccountInfo();
+        setAccountInfo(accountInfo);
+      } catch (e) {
+        onError(e);
+      }
 
-  //   setIsLoading(true);
+      setIsLoading(false);
+    }
 
-  //   try {
-  //     await createAccount(fields);
-  //     history.push("/");
-  //   } catch (e) {
-  //     onError(e);
-  //     setIsLoading(false);
-  //   }
-  // }
-
-  // function createAccount(account) {
-  //   return API.post("smartbudget", "/accounts", {
-  //     body: account,
-  //   });
-  // }
+    onLoad();
+  }, []);
 
   return (
     <div className="NewAccount">
-	
-			{console.log(params)}
-      {/* <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="accountName">
-          <Form.Label>Account Name</Form.Label>
-          <Form.Control
-            type="text"
-            value={fields.accountName}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
-        <Form.Group controlId="accountBalance">
-          <Form.Label>Starting Balance</Form.Label>
-          <Form.Control
-            type="text"
-            value={fields.accountBalance}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
-        <LoaderButton
-          block
-          type="submit"
-          size="lg"
-          variant="primary"
-          isLoading={isLoading}
-          disabled={!validateForm()}
-        >
-          Create
-        </LoaderButton>
-      </Form> */}
+      <div>
+        <pre>{JSON.stringify(accountInfo, null, 2)}</pre>
+      </div>
+      
     </div>
   );
 }

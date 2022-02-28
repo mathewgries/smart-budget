@@ -4,19 +4,13 @@ import { BsArrowRepeat } from "react-icons/bs";
 import "./LoaderButton.css";
 
 export default function LoaderButton({
-  isLoading,
-  className = "",
-  disabled = false,
-  ...props
+  className = ""
 }) {
   return (
-    <Button
-      disabled={disabled || isLoading}
+    <div
       className={`loading-spinner ${className}`}
-      {...props}
     >
-      {isLoading && <BsArrowRepeat className="spinning" />}
-      {props.children}
-    </Button>
+      <BsArrowRepeat className="spinning" />
+    </div>
   );
 }

@@ -1,24 +1,45 @@
 import handler from "../../util/handler";
-import dynamodb from "../../util/dynamodb";
+import dynamoDb from "../../util/dynamodb";
+import { categories } from "../categories/defaultCategories";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
+  const type = "CATEGORY";
 
   const params = {
-    TableName: process.env.TABLE_NAME,
-    Item: {
-      PK: `USER#${userId}`,
-      SK: `USER#INFO`,
-      username: data.email || null,
-      email: data.email || null,
-      dateOfBirth: data.dateOfBirth || null,
-      createDate: Date.now(),
-      modifyDate: Date.now(),
-    },
+    TransactItems: [
+      {
+        Put: {
+          TableName: process.env.TABLE_NAME,
+          Item: {
+            PK: `USER#${userId}`,
+            SK: `USER#INFO`,
+            username: data.email || null,
+            email: data.email || null,
+            dateOfBirth: data.dateOfBirth || null,
+            createDate: Date.now(),
+            modifyDate: Date.now(),
+          },
+        },
+      },
+      {
+        Put: {
+          TableName: process.env.TABLE_NAME,
+          Item: {
+            PK: `USER#${userId}`,
+            SK: `USER#${type}`,
+            type: type,
+            categoryMap: categories,
+            createDate: Date.now(),
+            modifyDate: Date.now(),
+          },
+        },
+      },
+    ],
   };
 
-  await dynamodb.put(params);
+  await dynamoDb.transactWrite(params);
 
-  return params.Item;
+  return params.TransactItems;
 });

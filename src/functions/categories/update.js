@@ -4,22 +4,17 @@ import dynamodb from "../../util/dynamodb";
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const categoryId = event.pathParameters.id;
 
   const params = {
     TableName: process.env.TABLE_NAME,
     Key: {
       PK: `USER#${userId}`,
-      SK: `${data.type}${categoryId}`,
+      SK: "USER#CATEGORY",
     },
     UpdateExpression:
-      `SET 
-			categoryName = :categoryName, 
-			subCategories = :subCategories, 
-			modifyDate = :modifyDate`,
+      "SET categoryMap = :categoryMap, modifyDate = :modifyDate",
     ExpressionAttributeValues: {
-      ":categoryName": data.categoryName,
-      ":subCategories": data.subCategories,
+      ":categoryMap": data,
       ":modifyDate": Date.now(),
     },
     ReturnValues: "ALL_NEW",
