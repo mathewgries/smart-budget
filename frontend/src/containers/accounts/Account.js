@@ -1,18 +1,18 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { API } from "aws-amplify";
 import { onError } from "../../lib/errorLib";
 import AccountItem from "./AccountItem";
 import AccountEdit from "./AccountEdit";
-import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
+import NewTransaction from "../transactions/NewTransactions";
 
 export default function Account() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [accountInfo, setAccountInfo] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
-	const [isSaving, setIsSaving] = useState(false)
+  const [isSaving, setIsSaving] = useState(false);
+  const [isNewTransaction, setIsNewTransaction] = useState(false);
 
   useEffect(() => {
     function loadAccountInfo() {
@@ -31,37 +31,41 @@ export default function Account() {
     }
 
     onLoad();
-  }, [id]);
+  }, [id, isNewTransaction]);
 
   function toggleAccountEdit() {
-    setIsEdit(!isEdit);
+    setIsEdit(prev => !prev);
   }
 
-	async function handleAccountUpdate(data){
-		try{
-			setIsSaving(true)
-			await saveChanges(data) 
-			setAccountInfo({
-				...accountInfo,
-				accountName: data.accountName,
-				accountBalance: data.accountBalance
-			})
-		}catch(e){
-			onError(e)
-		}finally{
-			setIsSaving(false)
-			setIsEdit(false)
-		}
-	}
+  function toggleIsNewTransaction() {
+    setIsNewTransaction(prev => !prev);
+  }
 
-	function saveChanges({accountName, accountBalance}){
-		return API.put("smartbudget", `/accounts/${id}`,{
-			body: {
-				accountName,
-				accountBalance
-			}
-		});
-	}
+  async function handleAccountUpdate(data) {
+    try {
+      setIsSaving(true);
+      await saveChanges(data);
+      setAccountInfo({
+        ...accountInfo,
+        accountName: data.accountName,
+        accountBalance: data.accountBalance,
+      });
+    } catch (e) {
+      onError(e);
+    } finally {
+      setIsSaving(false);
+      setIsEdit(false);
+    }
+  }
+
+  function saveChanges({ accountName, accountBalance }) {
+    return API.put("smartbudget", `/accounts/${id}`, {
+      body: {
+        accountName,
+        accountBalance,
+      },
+    });
+  }
 
   return (
     <div>
@@ -73,19 +77,43 @@ export default function Account() {
             </div>
           ) : (
             <div>
-              <AccountEdit account={accountInfo} updateAccountInfo={handleAccountUpdate} isSaving={isSaving}/>
+              <AccountEdit
+                account={accountInfo}
+                updateAccountInfo={handleAccountUpdate}
+                isSaving={isSaving}
+              />
             </div>
           )}
         </div>
         <div className="form-group">
-          <button className="btn btn-primary form-control" onClick={toggleAccountEdit}>
-            {isEdit ? "Cancel" : "Edit"}
+          <button
+            className="btn btn-primary form-control"
+            onClick={toggleAccountEdit}
+						disabled={isLoading || isSaving || isNewTransaction}
+          >
+            {isEdit ? "Cancel" : "Edit Account"}
           </button>
         </div>
       </div>
-      <Link to={`/accounts/${id}/transactions/new`} className="btn btn-primary">
-        Add Transaction
-      </Link>
+      <div>
+        <div className="form-group">
+          <button
+            className="btn btn-success form-control"
+            onClick={toggleIsNewTransaction}
+						disabled={isLoading || isSaving || isEdit}
+          >
+            {isNewTransaction ? "Cancel" : "Add Transaction"}
+          </button>
+        </div>
+        <div>
+          {isNewTransaction && (
+            <NewTransaction
+              accountInfo={accountInfo}
+              toggleIsNewTransaction={toggleIsNewTransaction}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

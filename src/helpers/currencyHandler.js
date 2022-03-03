@@ -20,24 +20,6 @@ export function addTransactionHandler(
   }
 }
 
-export function deleteTransactionHandler(
-  accountBalance,
-  transactionAmount,
-  transactionType
-) {
-  if (transactionType === "W") {
-    return (
-      (dollarsToCents(accountBalance) + dollarsToCents(transactionAmount)) /
-      100
-    ).toFixed(2);
-  } else {
-    return (
-      (dollarsToCents(accountBalance) - dollarsToCents(transactionAmount)) /
-      100
-    ).toFixed(2);
-  }
-}
-
 export function updateTransactionHelper(oldData, newData, accountBalance) {
   let balance = dollarsToCents(accountBalance);
   const oldAmount = dollarsToCents(oldData.transactionAmount);
@@ -61,3 +43,22 @@ export function updateTransactionHelper(oldData, newData, accountBalance) {
     return ((balance + newAmount) / 100).toFixed(2);
   }
 }
+
+export function deleteTransactionHandler(
+  accountBalance,
+  transactionAmount,
+  transactionType
+) {
+  if (transactionType === "W") {
+    return (
+      (dollarsToCents(accountBalance) + dollarsToCents(transactionAmount)) /
+      100
+    ).toFixed(2);
+  } else {
+    return (
+      (dollarsToCents(accountBalance) - dollarsToCents(transactionAmount)) /
+      100
+    ).toFixed(2);
+  }
+}
+

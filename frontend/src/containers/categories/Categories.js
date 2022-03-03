@@ -121,6 +121,7 @@ export default function Categories() {
                 name="categoryInput"
                 value={fields.categoryInput}
                 onChange={handleFieldChange}
+								placeholder="New Category..."
               />
             </div>
             <button type="submit" className="btn btn-secondary">
@@ -150,6 +151,7 @@ export default function Categories() {
                 name="subCategoryInput"
                 value={fields.subCategoryInput}
                 onChange={handleFieldChange}
+								placeholder='New Sub Category...'
               />
             </div>
             <button type="submit" className="btn btn-secondary">

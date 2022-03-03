@@ -27,6 +27,7 @@ export const main = handler(async (event) => {
             transactionType: data.transactionType,
             category: data.category,
             subCategory: data.subCategory,
+						transactionNote: data.transactionNote,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },
