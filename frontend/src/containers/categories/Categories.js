@@ -1,48 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { API } from "aws-amplify";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectAllCategories,
+  selectActiveCategory,
+  selectSubcategories,
+  selectActiveSubcategory,
+  updateActiveCategory,
+  updateActiveSubcategory,
+} from "../../redux/categoriesSlice";
 import ListContainer from "./ListContainer";
 import { onError } from "../../lib/errorLib";
 
 export default function Categories() {
   const history = useHistory();
-  const [isLoading, setIsLoading] = useState(true);
-  const [categories, setCategories] = useState(null);
-  const [categoryNames, setCategoryNames] = useState([]);
-  const [activeCategory, setActiveCategory] = useState(null);
-  const [activeList, setActiveList] = useState(null);
+  const dispatch = useDispatch();
+  const categories = useSelector(selectAllCategories);
+  const activeCategory = useSelector(selectActiveCategory);
+  const subcategories = useSelector(selectSubcategories);
+  const activeSubcategory = useSelector(selectActiveSubcategory);
   const [fields, setFields] = useState({
     categoryInput: "",
-    subCategoryInput: "",
+    subcategoryInput: "",
   });
-
-  useEffect(() => {
-    function loadCategories() {
-      return API.get("smartbudget", `/categories`);
-    }
-
-    async function onLoad() {
-      try {
-        const categories = await loadCategories();
-        const keys = Object.keys(categories.categoryMap);
-        setCategoryNames(keys);
-        setCategories(categories.categoryMap);
-        setActiveCategory(keys[0]);
-        setActiveList(categories.categoryMap[keys[0]]);
-      } catch (e) {
-        onError(e);
-      }
-
-      setIsLoading(false);
-    }
-
-    onLoad();
-  }, []);
 
   function handleActiveCategory(e) {
     const category = e.target.innerText;
-    setActiveCategory(category);
-    setActiveList(categories[category]);
+    dispatch(updateActiveCategory(category));
+  }
+
+  function handleActiveSubcategory(e) {
+    const category = e.target.innerText;
+    dispatch(updateActiveSubcategory(category));
   }
 
   function handleFieldChange(e) {
@@ -53,47 +42,47 @@ export default function Categories() {
   function handleCategoryAdd(e) {
     e.preventDefault();
 
-    if (fields.categoryInput !== "") {
-      const newCategory = fields.categoryInput;
-      setCategories({ ...categories, [newCategory]: [] });
-      setCategoryNames((prev) => [...prev, newCategory]);
-      setActiveCategory(newCategory);
-      setActiveList([]);
-      setFields({ ...fields, categoryInput: "" });
-    }
+    // if (fields.categoryInput !== "") {
+    //   const newCategory = fields.categoryInput;
+    //   setCategories({ ...categories, [newCategory]: [] });
+    //   setCategoryNames((prev) => [...prev, newCategory]);
+    //   setActiveCategory(newCategory);
+    //   setActiveList([]);
+    //   setFields({ ...fields, categoryInput: "" });
+    // }
   }
 
-  function handleSubCategoryAdd(e) {
+  function handleSubcategoryAdd(e) {
     e.preventDefault();
-    if (fields.subCategoryInput !== "") {
-      const newSubCategory = fields.subCategoryInput;
+    // if (fields.subcategoryInput !== "") {
+    //   const newSubcategory = fields.subcategoryInput;
 
-      setCategories({
-        ...categories,
-        [activeCategory]: [...categories[activeCategory], newSubCategory],
-      });
+    //   setCategories({
+    //     ...categories,
+    //     [activeCategory]: [...categories[activeCategory], newSubcategory],
+    //   });
 
-      setActiveList([...activeList, newSubCategory]);
-      setFields({ ...fields, subCategoryInput: "" });
-    }
+    //   setActiveList([...activeList, newSubcategory]);
+    //   setFields({ ...fields, subcategoryInput: "" });
+    // }
   }
 
-  function saveCategories(categories) {
-    return API.put("smartbudget", "/categories", {
-      body: categories,
-    });
-  }
+  // function saveCategories(categories) {
+  //   return API.put("smartbudget", "/categories", {
+  //     body: categories,
+  //   });
+  // }
 
   async function handleSave(e) {
     e.preventDefault();
-    setIsLoading(true);
-    try {
-      await saveCategories(categories);
-      history.push("/");
-    } catch (e) {
-      onError(e);
-      setIsLoading(false);
-    }
+    // setIsLoading(true);
+    // try {
+    //   await saveCategories(categories);
+    //   history.push("/");
+    // } catch (e) {
+    //   onError(e);
+    //   setIsLoading(false);
+    // }
   }
 
   return (
@@ -121,7 +110,7 @@ export default function Categories() {
                 name="categoryInput"
                 value={fields.categoryInput}
                 onChange={handleFieldChange}
-								placeholder="New Category..."
+                placeholder="New Category..."
               />
             </div>
             <button type="submit" className="btn btn-secondary">
@@ -131,8 +120,7 @@ export default function Categories() {
         </div>
         <div>
           <ListContainer
-            isLoading={isLoading}
-            listItems={categoryNames}
+            listItems={categories}
             updateActiveItem={handleActiveCategory}
           />
         </div>
@@ -140,18 +128,18 @@ export default function Categories() {
 
       <div>
         <header>
-          <h3>Sub Categories</h3>
+          <h3>Subcategories</h3>
         </header>
         <div>
-          <form onSubmit={handleSubCategoryAdd}>
+          <form onSubmit={handleSubcategoryAdd}>
             <div className="form-group">
               <input
                 className="form-control"
                 type="text"
                 name="subCategoryInput"
-                value={fields.subCategoryInput}
+                value={fields.subcategoryInput}
                 onChange={handleFieldChange}
-								placeholder='New Sub Category...'
+                placeholder="New Subcategory..."
               />
             </div>
             <button type="submit" className="btn btn-secondary">
@@ -160,7 +148,10 @@ export default function Categories() {
           </form>
         </div>
         <div>
-          <ListContainer isLoading={isLoading} listItems={activeList} />
+          <ListContainer
+            listItems={subcategories}
+            updateActiveItem={handleActiveSubcategory}
+          />
         </div>
       </div>
     </div>

@@ -1,20 +1,12 @@
 import React from "react";
-import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function AccountItem(props) {
-  const { isLoading, account } = props;
+  const { accountName, accountBalance } = props.account;
+
   return (
     <div>
-      {isLoading ? (
-        <div>
-          <LoadingSpinner />
-        </div>
-      ) : (
-        <div>
-          <p>{account.accountName}</p>
-          <p>{account.accountBalance}</p>
-        </div>
-      )}
+      <p>{accountName}</p>
+      <p>{accountBalance}</p>
     </div>
   );
 }

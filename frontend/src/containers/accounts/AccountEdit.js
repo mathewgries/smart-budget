@@ -1,21 +1,34 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateAccount } from "../../redux/accountsSlice";
+import { onError } from "../../lib/errorLib";
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function AccountItem(props) {
-  const [fields, setFields] = useState({
-    accountName: props.account.accountName,
-    accountBalance: props.account.accountBalance,
-  });
+  const dispatch = useDispatch();
+  const [isSaving, setIsSaving] = useState(false);
+  const { id, accountName, accountBalance } = props.account;
+  const [fields, setFields] = useState({ id, accountName, accountBalance });
 
   function handleChange(e) {
     const { name, value } = e.target;
     setFields({ ...fields, [name]: value });
   }
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    props.updateAccountInfo(fields);
-  }
+    const { id, accountName, accountBalance } = fields;
+
+    try {
+      setIsSaving(true);
+      await dispatch(
+        updateAccount({ id, accountName, accountBalance })
+      ).unwrap();
+      props.toggleAccountEdit();
+    } catch (e) {
+      onError(e);
+    }
+  };
 
   return (
     <div>
@@ -42,7 +55,7 @@ export default function AccountItem(props) {
         </div>
         <div className="form-group">
           <button type="submit" className="btn btn-primary form-control">
-            {!props.isSaving ? "Save Changes" : <LoadingSpinner />}
+            {isSaving ? <LoadingSpinner /> : "Save Changes"}
           </button>
         </div>
       </form>

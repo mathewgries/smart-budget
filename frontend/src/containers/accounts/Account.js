@@ -1,87 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { API } from "aws-amplify";
-import { onError } from "../../lib/errorLib";
+import { useSelector } from "react-redux";
+import { selectAccountById } from "../../redux/accountsSlice";
 import AccountItem from "./AccountItem";
 import AccountEdit from "./AccountEdit";
 import NewTransaction from "../transactions/NewTransactions";
 
 export default function Account() {
   const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
-  const [accountInfo, setAccountInfo] = useState(null);
+  const account = useSelector((state) => selectAccountById(state, id));
   const [isEdit, setIsEdit] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [isNewTransaction, setIsNewTransaction] = useState(false);
 
-  useEffect(() => {
-    function loadAccountInfo() {
-      return API.get("smartbudget", `/accounts/${id}`);
-    }
-
-    async function onLoad() {
-      try {
-        const accountInfo = await loadAccountInfo();
-        setAccountInfo(accountInfo.find((item) => item.type === "ACCT#"));
-      } catch (e) {
-        onError(e);
-      }
-
-      setIsLoading(false);
-    }
-
-    onLoad();
-  }, [id, isNewTransaction]);
-
   function toggleAccountEdit() {
-    setIsEdit(prev => !prev);
+    setIsEdit((prev) => !prev);
   }
 
   function toggleIsNewTransaction() {
-    setIsNewTransaction(prev => !prev);
-  }
-
-  async function handleAccountUpdate(data) {
-    try {
-      setIsSaving(true);
-      await saveChanges(data);
-      setAccountInfo({
-        ...accountInfo,
-        accountName: data.accountName,
-        accountBalance: data.accountBalance,
-      });
-    } catch (e) {
-      onError(e);
-    } finally {
-      setIsSaving(false);
-      setIsEdit(false);
-    }
-  }
-
-  function saveChanges({ accountName, accountBalance }) {
-    return API.put("smartbudget", `/accounts/${id}`, {
-      body: {
-        accountName,
-        accountBalance,
-      },
-    });
+    setIsNewTransaction((prev) => !prev);
   }
 
   return (
     <div>
-      <div>
+      <section>
         <div>
           {!isEdit ? (
             <div>
-              <AccountItem isLoading={isLoading} account={accountInfo} />
+              <AccountItem account={account} />
             </div>
           ) : (
             <div>
-              <AccountEdit
-                account={accountInfo}
-                updateAccountInfo={handleAccountUpdate}
-                isSaving={isSaving}
-              />
+              <AccountEdit account={account} toggleAccountEdit={toggleAccountEdit}/>
             </div>
           )}
         </div>
@@ -89,31 +38,29 @@ export default function Account() {
           <button
             className="btn btn-primary form-control"
             onClick={toggleAccountEdit}
-						disabled={isLoading || isSaving || isNewTransaction}
+            disabled={isNewTransaction}
           >
             {isEdit ? "Cancel" : "Edit Account"}
           </button>
         </div>
-      </div>
-      <div>
+      </section>
+
+      <section>
         <div className="form-group">
           <button
             className="btn btn-success form-control"
             onClick={toggleIsNewTransaction}
-						disabled={isLoading || isSaving || isEdit}
+            disabled={isEdit}
           >
             {isNewTransaction ? "Cancel" : "Add Transaction"}
           </button>
         </div>
         <div>
           {isNewTransaction && (
-            <NewTransaction
-              accountInfo={accountInfo}
-              toggleIsNewTransaction={toggleIsNewTransaction}
-            />
+            <NewTransaction toggleIsNewTransaction={toggleIsNewTransaction} />
           )}
         </div>
-      </div>
+      </section>
     </div>
   );
 }

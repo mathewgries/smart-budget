@@ -1,8 +1,10 @@
-import { configureStore	} from '@reduxjs/toolkit'
-import accountsReducer from '../redux/accountsSlice'
+import { configureStore } from "@reduxjs/toolkit";
+import accountsReducer from "../redux/accountsSlice";
+import categoriesReducer from "../redux/categoriesSlice";
 
 export default configureStore({
-	reducer:{
-		accounts: accountsReducer
-	}
-})
+  reducer: {
+    accounts: accountsReducer,
+    categories: categoriesReducer,
+  },
+});

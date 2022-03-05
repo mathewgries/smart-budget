@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { API } from "aws-amplify";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAccounts } from "../redux/accountsSlice";
+import { fetchCategories } from "../redux/categoriesSlice";
 import ListGroup from "react-bootstrap/ListGroup";
 import AccountList from "../containers/accounts/AccountList";
 import { BsPencilSquare } from "react-icons/bs";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAppContext } from "../lib/contextLib";
-import { onError } from "../lib/errorLib";
 import "./style.css";
 
 export default function Home() {
-  const [accounts, setAccounts] = useState([]);
+  const dispatch = useDispatch();
+  const accountStatus = useSelector((state) => state.accounts.status);
+  const categoriesStatus = useSelector((state) => state.categories.status);
   const { isAuthenticated } = useAppContext();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function onLoad() {
@@ -19,22 +21,17 @@ export default function Home() {
         return;
       }
 
-      try {
-        const accounts = await loadAccounts();
-        setAccounts(accounts);
-      } catch (e) {
-        onError(e);
+      if (accountStatus === "idle") {
+        dispatch(fetchAccounts());
       }
 
-      setIsLoading(false);
+      if (categoriesStatus === "idle") {
+				dispatch(fetchCategories())
+      }
     }
 
     onLoad();
-  }, [isAuthenticated]);
-
-  function loadAccounts() {
-    return API.get("smartbudget", "/accounts");
-  }
+  }, [isAuthenticated, accountStatus, categoriesStatus, dispatch]);
 
   function renderLander() {
     return (
@@ -56,7 +53,7 @@ export default function Home() {
           </ListGroup.Item>
         </LinkContainer>
         <div>
-          <AccountList isLoading={isLoading} accounts={accounts} />
+          <AccountList />
         </div>
       </div>
     );

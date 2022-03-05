@@ -22,7 +22,6 @@ export const main = handler(async (event) => {
     ReturnValues: "ALL_NEW",
   };
 
-  await dynamodb.update(params);
+  return await dynamodb.update(params);
 
-  return { status: true };
 });

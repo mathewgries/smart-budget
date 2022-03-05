@@ -1,12 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import { useSelector } from "react-redux";
+import { selectAllAcounts } from "../../redux/accountsSlice";
 
 export default function AccountList(props) {
-  const { isLoading, accounts } = props;
+  const accounts = useSelector(selectAllAcounts);
+  const accountStatus = useSelector((state) => state.accounts.status);
+
   return (
     <div>
-      {isLoading ? (
+      {accountStatus === "loading" ? (
         <LoadingSpinner />
       ) : (
         <div>
