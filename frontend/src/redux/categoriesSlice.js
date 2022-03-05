@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { get } from "../api/categories";
+import { get, put } from "../api/categories";
 
 const initialState = {
+  history: [],
   items: {},
   categories: [],
   subcategories: [],
@@ -18,18 +19,46 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
+export const saveCategories = createAsyncThunk(
+  "categories/saveCategories",
+  async (categoryMap) => {
+    return await put(categoryMap);
+  }
+);
+
 export const categoriesSlice = createSlice({
   name: "categories",
   initialState,
   reducers: {
     updateActiveCategory(state, action) {
+      state.history = { ...state, history: state.history };
       state.activeCategory = action.payload;
       state.subcategories = state.items[state.activeCategory];
       state.activeSubcategory = state.subcategories[0];
-      console.log(action);
     },
     updateActiveSubcategory(state, action) {
+      state.history = { ...state, history: state.history };
       state.activeSubcategory = action.payload;
+    },
+    addNewCategory(state, action) {
+      state.history = { ...state, history: state.history };
+      const category = action.payload;
+      state.items = {
+        ...state.items,
+        [category]: [],
+      };
+      state.categories.push(category);
+      state.activeCategory = category;
+    },
+    addNewSubcategory(state, action) {
+      state.history = { ...state, history: state.history };
+      const subcategory = action.payload;
+      state.subcategories.push(subcategory);
+      state.activeSubcategory = subcategory;
+      state.items = {
+        ...state.items,
+        [state.activeCategory]: [...state.subcategories],
+      };
     },
   },
   extraReducers(builder) {
@@ -50,22 +79,22 @@ export const categoriesSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
-    // builder.addCase(addNewCategory.fulfilled, (state, action) => {
-    //   state.items.push(action.payload);
-    // });
-    // builder.addCase(updateCategory.fulfilled, (state, action) => {
-    //   const { id, accountName, accountBalance } = action.payload;
-    //   const existingAccount = state.items.find((account) => account.id === id);
-    //   existingAccount.accountName = accountName;
-    //   existingAccount.accountBalance = accountBalance;
-    // });
+    builder.addCase(saveCategories.fulfilled, (state, action) => {
+      console.log(action);
+    });
   },
 });
 
-export const { updateActiveCategory, updateActiveSubcategory } =
-  categoriesSlice.actions;
+export const {
+  updateActiveCategory,
+  updateActiveSubcategory,
+  addNewCategory,
+  addNewSubcategory,
+} = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
+
+export const selectCategoryMap = (state) => state.categories.items;
 
 export const selectAllCategories = (state) => state.categories.categories;
 export const selectActiveCategory = (state) => state.categories.activeCategory;

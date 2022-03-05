@@ -2,7 +2,6 @@ import React from "react";
 
 export default function ListContainer(props) {
   const { listItems, updateActiveItem } = props;
-	console.log(props)
 
   function handleClick(e) {
     if (updateActiveItem) updateActiveItem(e);

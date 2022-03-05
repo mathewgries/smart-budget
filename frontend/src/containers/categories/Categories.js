@@ -1,24 +1,26 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllCategories,
-  selectActiveCategory,
   selectSubcategories,
-  selectActiveSubcategory,
+  selectCategoryMap,
   updateActiveCategory,
   updateActiveSubcategory,
+  addNewCategory,
+  addNewSubcategory,
+  saveCategories,
 } from "../../redux/categoriesSlice";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import ListContainer from "./ListContainer";
 import { onError } from "../../lib/errorLib";
 
 export default function Categories() {
-  const history = useHistory();
   const dispatch = useDispatch();
+  const categoryMap = useSelector(selectCategoryMap);
   const categories = useSelector(selectAllCategories);
-  const activeCategory = useSelector(selectActiveCategory);
   const subcategories = useSelector(selectSubcategories);
-  const activeSubcategory = useSelector(selectActiveSubcategory);
+	const [disableSave, setDisableSave] = useState(true)
+  const [savingCategoryMap, setSavingCategoryMap] = useState(false);
   const [fields, setFields] = useState({
     categoryInput: "",
     subcategoryInput: "",
@@ -39,59 +41,69 @@ export default function Categories() {
     setFields({ ...fields, [name]: value });
   }
 
-  function handleCategoryAdd(e) {
+  const handleAddCetagory = async (e) => {
     e.preventDefault();
+    const { categoryInput } = fields;
 
-    // if (fields.categoryInput !== "") {
-    //   const newCategory = fields.categoryInput;
-    //   setCategories({ ...categories, [newCategory]: [] });
-    //   setCategoryNames((prev) => [...prev, newCategory]);
-    //   setActiveCategory(newCategory);
-    //   setActiveList([]);
-    //   setFields({ ...fields, categoryInput: "" });
-    // }
-  }
+    if (categoryInput !== "" && !categories.includes(categoryInput)) {
+      try {
+        dispatch(addNewCategory(categoryInput));
+				setDisableSave(false)
+        setFields({ ...fields, categoryInput: "" });
+      } catch (e) {
+        onError(e);
+      }
+    }
+  };
 
   function handleSubcategoryAdd(e) {
     e.preventDefault();
-    // if (fields.subcategoryInput !== "") {
-    //   const newSubcategory = fields.subcategoryInput;
+    if (fields.subcategoryInput !== "") {
+      const { subcategoryInput } = fields;
 
-    //   setCategories({
-    //     ...categories,
-    //     [activeCategory]: [...categories[activeCategory], newSubcategory],
-    //   });
-
-    //   setActiveList([...activeList, newSubcategory]);
-    //   setFields({ ...fields, subcategoryInput: "" });
-    // }
+      if (
+        subcategoryInput !== "" ||
+        !subcategories.includes(subcategoryInput)
+      ) {
+        try {
+          dispatch(addNewSubcategory(subcategoryInput));
+					setDisableSave(false)
+          setFields({ ...fields, subcategoryInput: "" });
+        } catch (e) {
+          onError(e);
+        }
+      }
+    }
   }
 
-  // function saveCategories(categories) {
-  //   return API.put("smartbudget", "/categories", {
-  //     body: categories,
-  //   });
-  // }
-
-  async function handleSave(e) {
+  const handleSave = async (e) => {
     e.preventDefault();
-    // setIsLoading(true);
-    // try {
-    //   await saveCategories(categories);
-    //   history.push("/");
-    // } catch (e) {
-    //   onError(e);
-    //   setIsLoading(false);
-    // }
-  }
+
+    try {
+      setSavingCategoryMap(true);
+      await dispatch(saveCategories(categoryMap)).unwrap();
+    } catch (e) {
+      onError(e);
+    } finally {
+      setSavingCategoryMap(false);
+    }
+  };
 
   return (
     <div>
       <div>
         <form onSubmit={handleSave}>
           <div>
-            <button type="submit" className="btn btn-primary">
-              Save Changes
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={disableSave}
+            >
+              {savingCategoryMap ? (
+                <LoadingSpinner text={"Saving"} />
+              ) : (
+                "Save Changes"
+              )}
             </button>
           </div>
         </form>
@@ -102,7 +114,7 @@ export default function Categories() {
           <h3>Categories</h3>
         </header>
         <div>
-          <form onSubmit={handleCategoryAdd}>
+          <form onSubmit={handleAddCetagory}>
             <div className="form-group">
               <input
                 className="form-control"
@@ -113,7 +125,11 @@ export default function Categories() {
                 placeholder="New Category..."
               />
             </div>
-            <button type="submit" className="btn btn-secondary">
+            <button
+              type="submit"
+              className="btn btn-secondary"
+              disabled={fields.categoryInput === ""}
+            >
               Add
             </button>
           </form>
@@ -136,13 +152,17 @@ export default function Categories() {
               <input
                 className="form-control"
                 type="text"
-                name="subCategoryInput"
+                name="subcategoryInput"
                 value={fields.subcategoryInput}
                 onChange={handleFieldChange}
                 placeholder="New Subcategory..."
               />
             </div>
-            <button type="submit" className="btn btn-secondary">
+            <button
+              type="submit"
+              className="btn btn-secondary"
+              disabled={fields.subcategoryInput === ""}
+            >
               Add
             </button>
           </form>
