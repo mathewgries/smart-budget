@@ -7,7 +7,7 @@ import Signup from "./containers/auth/Signup";
 import Login from "./containers/auth/Login";
 import NewAccount from "./containers/accounts/NewAccount";
 import Account from "./containers/accounts/Account";
-import NewTransaction from "./containers/transactions/NewTransactions";
+import Transaction from "./containers/transactions/Transaction";
 import Categories from "./containers/categories/Categories";
 import NotFound from "./containers/NotFound";
 
@@ -29,8 +29,8 @@ export default function Routes() {
       <AuthenticatedRoute exact path="/accounts/:id">
         <Account />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/accounts/:id/transactions/new">
-        <NewTransaction />
+			<AuthenticatedRoute exact path="/transactions/:id">
+        <Transaction />
       </AuthenticatedRoute>
 			<AuthenticatedRoute exact path="/categories">
         <Categories />

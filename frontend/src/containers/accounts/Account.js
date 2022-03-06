@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 import { selectAccountById } from "../../redux/accountsSlice";
 import AccountItem from "./AccountItem";
 import AccountEdit from "./AccountEdit";
-import NewTransaction from "../transactions/NewTransactions";
+import TransactionList from "../transactions/TransactionList";
+import TransactionForm from "../transactions/TransactionForm";
 
 export default function Account() {
   const { id } = useParams();
@@ -30,7 +31,10 @@ export default function Account() {
             </div>
           ) : (
             <div>
-              <AccountEdit account={account} toggleAccountEdit={toggleAccountEdit}/>
+              <AccountEdit
+                account={account}
+                toggleAccountEdit={toggleAccountEdit}
+              />
             </div>
           )}
         </div>
@@ -57,9 +61,16 @@ export default function Account() {
         </div>
         <div>
           {isNewTransaction && (
-            <NewTransaction toggleIsNewTransaction={toggleIsNewTransaction} />
+            <TransactionForm
+              editForm={false}
+              toggleIsNewTransaction={toggleIsNewTransaction}
+              account={account}
+            />
           )}
         </div>
+      </section>
+      <section>
+        <TransactionList accountId={account.GSI1_PK} />
       </section>
     </div>
   );

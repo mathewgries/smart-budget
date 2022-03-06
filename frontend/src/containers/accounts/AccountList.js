@@ -14,12 +14,12 @@ export default function AccountList(props) {
         <LoadingSpinner />
       ) : (
         <div>
-          {accounts.map(({ accountName, id, createDate }, index, arr) => (
-            <div key={id}>
-              <Link to={`/accounts/${id}`}>
-                <div>{accountName}</div>
+          {accounts.map((account, index, arr) => (
+            <div key={account.id}>
+              <Link to={`/accounts/${account.id}`}>
+                <div>{account.accountName}</div>
                 <div className="text-muted">
-                  {new Date(createDate).toLocaleString()}
+                  {new Date(account.createDate).toLocaleString()}
                 </div>
               </Link>
             </div>

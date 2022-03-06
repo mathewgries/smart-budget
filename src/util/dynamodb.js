@@ -9,5 +9,4 @@ export default {
   update: (params) => client.update(params).promise(),
   delete: (params) => client.delete(params).promise(),
   transactWrite: (params) => client.transactWrite(params).promise(),
-  batchWrite: (params) => client.batchWrite(params).promise(),
 };

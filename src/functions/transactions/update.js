@@ -1,11 +1,8 @@
 import handler from "../../util/handler";
 import dynamodb from "../../util/dynamodb";
-import { updateTransactionHelper } from "../../helpers/currencyHandler";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
-  const oldData = data.oldData;
-  const newData = data.newData;
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const accountId = data.accountId;
   const transactionId = event.pathParameters.id;
@@ -14,43 +11,41 @@ export const main = handler(async (event) => {
     TransactItems: [
       {
         Update: {
-          TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
             SK: `TRANS#${transactionId}`,
           },
+          TableName: process.env.TABLE_NAME,
           UpdateExpression: `SET 
           transactionAmount = :transactionAmount, 
           transactionDate = :transactionDate, 
           transactionType = :transactionType, 
           category = :category, 
           subCategory = :subCategory,
+					transactionNote = :transactionNote,
           modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
-            ":transactionAmount": newData.transactionAmount,
-            ":transactionDate": newData.transactionDate,
-            ":transactionType": newData.transactionType,
-            ":category": newData.category,
-            ":subCategory": newData.subCategory,
+            ":transactionAmount": data.transactionAmount,
+            ":transactionDate": Date.parse(data.transactionDate),
+            ":transactionType": data.transactionType,
+            ":category": data.category,
+            ":subCategory": data.subCategory,
+            ":transactionNote": data.transactionNote,
             ":modifyDate": Date.now(),
           },
         },
       },
       {
         Update: {
-          TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
             SK: `ACCT#${accountId}`,
           },
+          TableName: process.env.TABLE_NAME,
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": updateTransactionHelper(
-              oldData,
-              newData,
-              data.accountBalance
-            ),
+            ":accountBalance": data.accountBalance,
             ":modifyDate": Date.now(),
           },
         },

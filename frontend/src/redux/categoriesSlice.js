@@ -5,9 +5,9 @@ const initialState = {
   history: [],
   items: {},
   categories: [],
-  subcategories: [],
+  subCategories: [],
   activeCategory: "",
-  activeSubcategory: "",
+  activeSubCategory: "",
   status: "idle",
   error: null,
 };
@@ -33,12 +33,12 @@ export const categoriesSlice = createSlice({
     updateActiveCategory(state, action) {
       state.history = { ...state, history: state.history };
       state.activeCategory = action.payload;
-      state.subcategories = state.items[state.activeCategory];
-      state.activeSubcategory = state.subcategories[0];
+      state.subCategories = state.items[state.activeCategory];
+      state.activeSubCategory = state.subCategories[0];
     },
-    updateActiveSubcategory(state, action) {
+    updateActiveSubCategory(state, action) {
       state.history = { ...state, history: state.history };
-      state.activeSubcategory = action.payload;
+      state.activeSubCategory = action.payload;
     },
     addNewCategory(state, action) {
       state.history = { ...state, history: state.history };
@@ -50,14 +50,14 @@ export const categoriesSlice = createSlice({
       state.categories.push(category);
       state.activeCategory = category;
     },
-    addNewSubcategory(state, action) {
+    addNewSubCategory(state, action) {
       state.history = { ...state, history: state.history };
-      const subcategory = action.payload;
-      state.subcategories.push(subcategory);
-      state.activeSubcategory = subcategory;
+      const subCategory = action.payload;
+      state.subcategories.push(subCategory);
+      state.activeSubCategory = subCategory;
       state.items = {
         ...state.items,
-        [state.activeCategory]: [...state.subcategories],
+        [state.activeCategory]: [...state.subCategories],
       };
     },
   },
@@ -72,24 +72,24 @@ export const categoriesSlice = createSlice({
         state.items = categoryMap;
         state.categories = Object.keys(categoryMap);
         state.activeCategory = state.categories[0];
-        state.subcategories = state.items[state.activeCategory];
-        state.activeSubcategory = state.subcategories[0];
+        state.subCategories = state.items[state.activeCategory];
+        state.activeSubCategory = state.subCategories[0];
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
     builder.addCase(saveCategories.fulfilled, (state, action) => {
-      console.log(action);
+      
     });
   },
 });
 
 export const {
   updateActiveCategory,
-  updateActiveSubcategory,
+  updateActiveSubCategory,
   addNewCategory,
-  addNewSubcategory,
+  addNewSubCategory,
 } = categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
@@ -99,6 +99,6 @@ export const selectCategoryMap = (state) => state.categories.items;
 export const selectAllCategories = (state) => state.categories.categories;
 export const selectActiveCategory = (state) => state.categories.activeCategory;
 
-export const selectSubcategories = (state) => state.categories.subcategories;
-export const selectActiveSubcategory = (state) =>
-  state.categories.activeSubcategory;
+export const selectSubCategories = (state) => state.categories.subCategories;
+export const selectActiveSubCategory = (state) =>
+  state.categories.activeSubCategory;

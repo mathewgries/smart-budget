@@ -7,9 +7,8 @@ export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const accountId = data.accountId;
-	const transactionId = uuid.v1();
-	const type = 'TRANS#'
-
+  const transactionId = uuid.v1();
+  const type = "TRANS#";
 
   const params = {
     TransactItems: [
@@ -18,16 +17,16 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Item: {
             PK: `USER#${userId}`,
-            SK: `${type}${uuid.v1()}`,
+            SK: `${type}${transactionId}`,
             GSI1_PK: `ACCT#${accountId}`,
-						id: transactionId,
-						type: type,
+            id: transactionId,
+            type: type,
             transactionAmount: data.transactionAmount,
-            transactionDate: data.transactionDate,
+            transactionDate: Date.parse(data.transactionDate),
             transactionType: data.transactionType,
             category: data.category,
             subCategory: data.subCategory,
-						transactionNote: data.transactionNote,
+            transactionNote: data.transactionNote,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },
@@ -57,5 +56,8 @@ export const main = handler(async (event) => {
 
   await dynamoDb.transactWrite(params);
 
-  return params.TransactItems;
+  return {
+    transaction: params.TransactItems[0].Put.Item,
+    account: params.TransactItems[1].Update.ExpressionAttributeValues,
+  };
 });

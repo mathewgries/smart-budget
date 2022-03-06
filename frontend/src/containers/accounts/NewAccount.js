@@ -14,10 +14,10 @@ export default function NewAccount() {
     accountBalance: "",
   });
 
-  function handleOnChange(e) {
+  const handleOnChange = (e) => {
     const { name, value } = e.target;
     setFields({ ...fields, [name]: value });
-  }
+  };
 
   function validateForm() {
     return fields.accountName.length > 0;
@@ -43,6 +43,7 @@ export default function NewAccount() {
           <input
             className="form-control"
             type="text"
+						name="accountName"
             value={fields.accountName}
             onChange={handleOnChange}
           />
@@ -52,6 +53,7 @@ export default function NewAccount() {
           <input
             className="form-control"
             type="text"
+						name="accountBalance"
             value={fields.accountBalance}
             onChange={handleOnChange}
           />

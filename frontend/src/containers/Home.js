@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAccounts } from "../redux/accountsSlice";
 import { fetchCategories } from "../redux/categoriesSlice";
+import { fetchTransactions } from "../redux/transactionsSlice";
 import ListGroup from "react-bootstrap/ListGroup";
 import AccountList from "../containers/accounts/AccountList";
 import { BsPencilSquare } from "react-icons/bs";
@@ -13,6 +14,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const accountStatus = useSelector((state) => state.accounts.status);
   const categoriesStatus = useSelector((state) => state.categories.status);
+  const transactionsStatus = useSelector((state) => state.transactions.status);
   const { isAuthenticated } = useAppContext();
 
   useEffect(() => {
@@ -25,13 +27,23 @@ export default function Home() {
         dispatch(fetchAccounts());
       }
 
+      if (transactionsStatus === "idle") {
+        dispatch(fetchTransactions());
+      }
+
       if (categoriesStatus === "idle") {
-				dispatch(fetchCategories())
+        dispatch(fetchCategories());
       }
     }
 
     onLoad();
-  }, [isAuthenticated, accountStatus, categoriesStatus, dispatch]);
+  }, [
+    isAuthenticated,
+    accountStatus,
+    transactionsStatus,
+    categoriesStatus,
+    dispatch,
+  ]);
 
   function renderLander() {
     return (

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { get, post, put } from "../api/accounts";
 
 const initialState = {
+	history: [],
   items: [],
   status: "idle",
   error: null,
@@ -32,7 +33,14 @@ export const updateAccount = createAsyncThunk(
 export const accountsSlice = createSlice({
   name: "accounts",
   initialState,
-  reducers: {},
+  reducers: {
+    updateAccountBalance(state, action) {
+			state.history = { ...state, history: state.history };
+			const {accountBalance, accountId} = action.payload
+			const existingAccount = state.items.find((account) => account.id === accountId)
+			existingAccount.accountBalance = accountBalance
+		},
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchAccounts.pending, (state, action) => {
@@ -57,6 +65,8 @@ export const accountsSlice = createSlice({
     });
   },
 });
+
+export const { updateAccountBalance } = accountsSlice.actions;
 
 export default accountsSlice.reducer;
 
