@@ -27,15 +27,7 @@ export default function Transaction(props) {
   } = transaction;
 
   return (
-    <div>
-      <div className="form-group">
-        <button
-          className="btn btn-primary form-control"
-          onClick={handleIsEditToggle}
-        >
-          {isEdit ? "Cancel" : "Edit"}
-        </button>
-      </div>
+    <div className="transaction-container">
       <div>
         {isEdit ? (
           <TransactionForm
@@ -44,13 +36,39 @@ export default function Transaction(props) {
             editForm={true}
           />
         ) : (
-          <div>
-            <p>{category}</p>
-            <p>{subCategory}</p>
-            <p>{transactionAmount}</p>
-            <p>{new Date(transactionDate).toLocaleDateString()}</p>
-            <p>{transactionNote}</p>
-            <p>{transactionType}</p>
+          <div className="transaction-detail-wrapper">
+            <div>
+              <h3>Transaction</h3>
+            </div>
+            <div className="transaction-detail">
+              <div>
+                <p>Amount: {transactionAmount}</p>
+              </div>
+              <div>
+                <p>Type: {transactionType === "W" ? "Withdrawal" : "Deposit"}</p>
+              </div>
+              <div>
+                <p>Category: {category}</p>
+              </div>
+              <div>
+                <p>Subcategory: {subCategory}</p>
+              </div>
+              <div>
+                <p>Date: {new Date(transactionDate).toLocaleDateString()}</p>
+              </div>
+              <div>
+								<span>Note:</span>
+                <p>{transactionNote}</p>
+              </div>
+            </div>
+            <div className="form-group">
+              <button
+                className="btn btn-primary form-control"
+                onClick={handleIsEditToggle}
+              >
+                {isEdit ? "Cancel" : "Edit"}
+              </button>
+            </div>
           </div>
         )}
       </div>

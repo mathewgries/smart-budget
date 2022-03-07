@@ -4,9 +4,9 @@ export default function AccountItem(props) {
   const { accountName, accountBalance } = props.account;
 
   return (
-    <div>
+    <div className="account-item-container">
       <p>{accountName}</p>
-      <p>{accountBalance}</p>
+      <p>{`Balance: ${accountBalance}`}</p>
     </div>
   );
 }

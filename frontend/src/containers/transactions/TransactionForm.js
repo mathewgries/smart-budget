@@ -120,59 +120,67 @@ export default function TransactionForm(props) {
   const handleUpdateTransaction = async () => {};
 
   return (
-    <div>
-      <div>
-        <Categories />
-      </div>
+    <div className="transaction-form-container">
       <form onSubmit={handleSave}>
-        <div className="form-group">
-          <label>Amount</label>
-          <input
-            className="form-control"
-            type="number"
-            min=".01"
-            step="any"
-            name="transactionAmount"
-            value={fields.transactionAmount}
-            onChange={handleChange}
-            placeholder="0.00"
-          />
-        </div>
-        <div className="form-group">
-          <label>Transaction Date</label>
-          <input
-            className="form-control"
-            type="date"
-            name="transactionDate"
-            value={fields.transactionDate}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Transaction Type</label>
-          <select
-            className="form-control"
-            name="transactionType"
-            value={fields.transactionType}
-            onChange={handleChange}
-          >
-            {typeList.map((element, index, arr) => (
-              <option key={index} value={element}>
-                {element}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="form-group">
-          <label>Transaction Note</label>
-          <input
-            className="form-control"
-            type="text"
-            name="transactionNote"
-            value={fields.transactionNote}
-            onChange={handleChange}
-            placeholder="Enter transaction detail..."
-          />
+        <div className="transaction-form-input-group">
+          <div className="transaction-form-top-row">
+            <div>
+              <div className="form-group">
+                <label>Amount</label>
+                <input
+                  className="form-control"
+                  type="number"
+                  min=".01"
+                  step="any"
+                  name="transactionAmount"
+                  value={fields.transactionAmount}
+                  onChange={handleChange}
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Transaction Type</label>
+                <select
+                  className="form-control"
+                  name="transactionType"
+                  value={fields.transactionType}
+                  onChange={handleChange}
+                >
+                  {typeList.map((element, index, arr) => (
+                    <option key={index} value={element}>
+                      {element}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div>
+              <Categories />
+            </div>
+            <div className="form-group">
+              <label>Transaction Date</label>
+              <input
+                className="form-control"
+                type="date"
+                name="transactionDate"
+                value={fields.transactionDate}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Transaction Note</label>
+            <input
+              className="form-control"
+              type="text"
+              name="transactionNote"
+              value={fields.transactionNote}
+              onChange={handleChange}
+              placeholder="Enter transaction detail..."
+            />
+          </div>
         </div>
         <div className="form-group">
           <button type="submit" className="btn btn-primary form-control">

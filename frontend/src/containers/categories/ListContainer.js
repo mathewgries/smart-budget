@@ -1,19 +1,31 @@
 import React from "react";
 
 export default function ListContainer(props) {
-  const { listItems, updateActiveItem } = props;
+  const { listItems, activeItem, updateActiveItem, isEdit, labelText } = props;
 
-  function handleClick(e) {
-    if (updateActiveItem) updateActiveItem(e);
+  function handleOnChange(e) {
+    const { value } = e.target;
+    updateActiveItem(value);
   }
 
   return (
-    <div>
-      {listItems.map((element, index, arr) => (
-        <div key={index} onClick={handleClick}>
-          {element}
-        </div>
-      ))}
+    <div className="form-group">
+			{!isEdit && <label>{labelText}</label>}
+			{!activeItem 
+			? <input className="form-control" readOnly={true} placeholder="No subcategories..."/>
+			:<select
+			className="form-control"
+			value={activeItem}
+			onChange={handleOnChange}
+		>
+			{listItems.map((element, index, arr) => (
+				<option key={index} value={element}>
+					{element}
+				</option>
+			))}
+		</select>
+			}
+      
     </div>
   );
 }

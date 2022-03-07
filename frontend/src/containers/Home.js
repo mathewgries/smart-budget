@@ -6,6 +6,7 @@ import { fetchTransactions } from "../redux/transactionsSlice";
 import ListGroup from "react-bootstrap/ListGroup";
 import AccountList from "../containers/accounts/AccountList";
 import { BsPencilSquare } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAppContext } from "../lib/contextLib";
 import "./style.css";
@@ -56,14 +57,20 @@ export default function Home() {
 
   function renderAccounts() {
     return (
-      <div className="accounts">
-        <h2 className="pb-3 mt-4 mb-3 border-bottom">Your Accounts</h2>
-        <LinkContainer to="/accounts/new">
-          <ListGroup.Item action className="py-3 text-nowrap text-truncate">
-            <BsPencilSquare size={17} />
-            <span className="ml-2 font-weight-bold">Create a new account</span>
-          </ListGroup.Item>
-        </LinkContainer>
+      <div className="home-container">
+        <div className="home-header border-bottom">
+          <div>
+            <h2>Your Accounts</h2>
+          </div>
+          <div>
+            <Link to="/accounts/new" className="btn btn-primary">
+              <BsPencilSquare size={17} />
+              <span className="ml-2 font-weight-bold">
+                New Account
+              </span>
+            </Link>
+          </div>
+        </div>
         <div>
           <AccountList />
         </div>
@@ -72,7 +79,7 @@ export default function Home() {
   }
 
   return (
-    <div className="Home">
+    <div className="home-wrapper">
       {isAuthenticated ? renderAccounts() : renderLander()}
     </div>
   );

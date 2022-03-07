@@ -7,7 +7,6 @@ import { LinkContainer } from "react-router-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Routes from "./Routes";
-import "./App.css";
 
 function App() {
   const history = useHistory();
@@ -40,39 +39,45 @@ function App() {
 
   return (
     !isAuthenticating && (
-      <div className="App container py-3">
-        <Navbar collapseOnSelect bg="light" expand="md" className="mb-3">
-          <LinkContainer to="/">
-            <Navbar.Brand className="font-weight-bold text-muted">
-              Smart Budget
-            </Navbar.Brand>
-          </LinkContainer>
-          <Navbar.Toggle />
-          <Navbar.Collapse className="justify-content-end">
-            <Nav>
-              {isAuthenticated ? (
-                <>
-                  <LinkContainer to="/categories">
-                    <Nav.Link>Categories</Nav.Link>
-                  </LinkContainer> 
-                  <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
-                </>
-              ) : (
-                <>
-                  <LinkContainer to="/signup">
-                    <Nav.Link>Signup</Nav.Link>
-                  </LinkContainer>
-                  <LinkContainer to="/login">
-                    <Nav.Link>Login</Nav.Link>
-                  </LinkContainer>
-                </>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Navbar>
-        <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
-          <Routes />
-        </AppContext.Provider>
+      <div className="app-wrapper">
+        <div className="nav-wrapper">
+          <Navbar collapseOnSelect bg="light" expand="md" className="mb-3 nav">
+            <LinkContainer to="/">
+              <Navbar.Brand className="font-weight-bold text-muted">
+                Smart Budget
+              </Navbar.Brand>
+            </LinkContainer>
+            <Navbar.Toggle />
+            <Navbar.Collapse className="justify-content-end">
+              <Nav>
+                {isAuthenticated ? (
+                  <>
+                    <LinkContainer to="/categories">
+                      <Nav.Link>Categories</Nav.Link>
+                    </LinkContainer>
+                    <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
+                  </>
+                ) : (
+                  <>
+                    <LinkContainer to="/signup">
+                      <Nav.Link>Signup</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/login">
+                      <Nav.Link>Login</Nav.Link>
+                    </LinkContainer>
+                  </>
+                )}
+              </Nav>
+            </Navbar.Collapse>
+          </Navbar>
+        </div>
+        <div className="app-container">
+          <AppContext.Provider
+            value={{ isAuthenticated, userHasAuthenticated }}
+          >
+            <Routes />
+          </AppContext.Provider>
+        </div>
       </div>
     )
   );

@@ -1,4 +1,4 @@
-.NotFound {
+/* .NotFound {
   padding-top: 100px;
 }
 
@@ -10,4 +10,21 @@
 .Home .lander h1 {
   font-family: "Open Sans", sans-serif;
   font-weight: 600;
+} */
+
+.home-wrapper {
+	width: 100%;
+}
+
+.home-container {
+	width: 100%;
+	padding: 5px;
+}
+
+.home-header {
+	width: 100%;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row nowrap;
+	justify-content: space-between;
 }

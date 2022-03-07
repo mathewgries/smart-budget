@@ -22,11 +22,14 @@ export default function Account() {
   }
 
   return (
-    <div>
-      <section>
+    <div className="account-wrapper">
+			<div>
+				<h3>Account</h3>
+			</div>
+      <div className="account-info-wrapper">
         <div>
           {!isEdit ? (
-            <div>
+            <div className="account-item-wrapper">
               <AccountItem account={account} />
             </div>
           ) : (
@@ -47,9 +50,9 @@ export default function Account() {
             {isEdit ? "Cancel" : "Edit Account"}
           </button>
         </div>
-      </section>
+      </div>
 
-      <section>
+      <div>
         <div className="form-group">
           <button
             className="btn btn-success form-control"
@@ -68,10 +71,10 @@ export default function Account() {
             />
           )}
         </div>
-      </section>
-      <section>
+      </div>
+      <div>
         <TransactionList accountId={account.GSI1_PK} />
-      </section>
+      </div>
     </div>
   );
 }

@@ -10,10 +10,13 @@ import {
   addNewCategory,
   addNewSubCategory,
   saveCategories,
+  selectActiveCategory,
+  selectActiveSubCategory,
 } from "../../redux/categoriesSlice";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import ListContainer from "./ListContainer";
 import { onError } from "../../lib/errorLib";
+import "./style.css";
 
 export default function Categories() {
   const history = useHistory();
@@ -22,6 +25,8 @@ export default function Categories() {
   const categoryMap = useSelector(selectCategoryMap);
   const categories = useSelector(selectAllCategories);
   const subCategories = useSelector(selectSubCategories);
+  const activeCategory = useSelector(selectActiveCategory);
+  const activeSubCategory = useSelector(selectActiveSubCategory);
   const [disableSave, setDisableSave] = useState(true);
   const [savingCategoryMap, setSavingCategoryMap] = useState(false);
   const [fields, setFields] = useState({
@@ -29,13 +34,11 @@ export default function Categories() {
     subCategoryInput: "",
   });
 
-  function handleActiveCategory(e) {
-    const category = e.target.innerText;
+  function handleActiveCategory(category) {
     dispatch(updateActiveCategory(category));
   }
 
-  function handleActiveSubCategory(e) {
-    const category = e.target.innerText;
+  function handleActiveSubCategory(category) {
     dispatch(updateActiveSubCategory(category));
   }
 
@@ -114,70 +117,80 @@ export default function Categories() {
         </div>
       )}
       <div>
-        <header>
-          <h3>Categories</h3>
-        </header>
         <div>
           {isEdit && (
             <form onSubmit={handleAddCetagory}>
-              <div className="form-group">
-                <input
-                  className="form-control"
-                  type="text"
-                  name="categoryInput"
-                  value={fields.categoryInput}
-                  onChange={handleFieldChange}
-                  placeholder="New Category..."
-                />
+              <div className="categories-form-group">
+                <div className="form-group">
+                  {isEdit && <h3>Categories</h3>}
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="categoryInput"
+                    value={fields.categoryInput}
+                    onChange={handleFieldChange}
+                    placeholder="New Category..."
+                  />
+                </div>
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-secondary form-control"
+                    disabled={fields.categoryInput === ""}
+                  >
+                    Add
+                  </button>
+                </div>
               </div>
-              <button
-                type="submit"
-                className="btn btn-secondary"
-                disabled={fields.categoryInput === ""}
-              >
-                Add
-              </button>
             </form>
           )}
         </div>
         <div>
           <ListContainer
             listItems={categories}
+            activeItem={activeCategory}
+            isEdit={isEdit}
+						labelText={"Categories"}
             updateActiveItem={handleActiveCategory}
           />
         </div>
       </div>
 
       <div>
-        <header>
-          <h3>Subcategories</h3>
-        </header>
         <div>
           {isEdit && (
             <form onSubmit={handleSubCategoryAdd}>
-              <div className="form-group">
-                <input
-                  className="form-control"
-                  type="text"
-                  name="subCategoryInput"
-                  value={fields.subCategoryInput}
-                  onChange={handleFieldChange}
-                  placeholder="New SubCategory..."
-                />
+              <div className="categories-form-group">
+                <div className="form-group">
+                  {isEdit && <h3>Subcategories</h3>}
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="subCategoryInput"
+                    value={fields.subCategoryInput}
+                    onChange={handleFieldChange}
+                    placeholder="New SubCategory..."
+                  />
+                </div>
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-secondary form-control"
+                    disabled={fields.subCategoryInput === ""}
+                  >
+                    Add
+                  </button>
+                </div>
               </div>
-              <button
-                type="submit"
-                className="btn btn-secondary"
-                disabled={fields.subCategoryInput === ""}
-              >
-                Add
-              </button>
             </form>
           )}
         </div>
         <div>
           <ListContainer
             listItems={subCategories}
+            activeItem={activeSubCategory}
+            isEdit={isEdit}
+						labelText={"Subcategories"}
             updateActiveItem={handleActiveSubCategory}
           />
         </div>
