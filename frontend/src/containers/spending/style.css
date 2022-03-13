@@ -1,0 +1,81 @@
+.NewAccount form input {
+  /* height: 300px; */
+  font-size: 1rem;
+}
+
+.account-list-container {
+	margin-bottom: 50px;
+}
+
+.account-list-header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.account-list-wrapper {
+  width: 100%;
+}
+
+.account-list-item-wrapper {
+  margin-bottom: 10px;
+	border: 1px solid lightgray;
+	border-radius: 5px;
+}
+
+.account-list-item {
+  padding: 7px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  line-height: 1em;
+}
+
+.account-list-item-detail div {
+  margin-bottom: 5px;
+}
+
+.account-item-container {
+	height: 8vh;
+	line-height: 8vh;
+	padding: 0 10px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row wrap;
+	justify-content: space-between;
+	border: 1px solid lightgray;
+	border-radius: 5px;
+}
+
+.investing-list-btn-wrapper div{
+	margin: 5px;
+}
+
+.transaction-list-item {
+	width: 100%;
+	padding: 5px 10px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	border: 1px solid lightgray;
+	border-radius: 5px;
+}
+
+.transaction-form-input-group {
+	padding: 5px;
+}
+
+.transaction-form-top-row {
+	display: flex;
+	flex-direction: row wrap;
+	flex-shrink: inherit;
+	flex-grow: inherit;
+	justify-content: space-between;
+}
+
+.categories-form-group {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+}

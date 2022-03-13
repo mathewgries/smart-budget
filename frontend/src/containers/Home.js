@@ -1,21 +1,30 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { fetchAccounts } from "../redux/accountsSlice";
-import { fetchCategories } from "../redux/categoriesSlice";
-import { fetchTransactions } from "../redux/transactionsSlice";
-import ListGroup from "react-bootstrap/ListGroup";
-import AccountList from "../containers/accounts/AccountList";
-import { BsPencilSquare } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import { LinkContainer } from "react-router-bootstrap";
 import { useAppContext } from "../lib/contextLib";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchSpendingAccounts } from "../redux/spending/spendingAccountsSlice";
+import { fetchSpendingTransactions } from "../redux/spending/spendingTransactionsSlice";
+import { fetchCategories } from "../redux/spending/categoriesSlice";
+import { fetchInvestingAccounts } from "../redux/investing/investingAccountsSlice";
+import { fetchInvestingTransactions } from "../redux/investing/investingTransactionsSlice";
+import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
+import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
 import "./style.css";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const accountStatus = useSelector((state) => state.accounts.status);
+  const spendingAccountsState = useSelector(
+    (state) => state.spendingAccounts.status
+  );
   const categoriesStatus = useSelector((state) => state.categories.status);
-  const transactionsStatus = useSelector((state) => state.transactions.status);
+  const spendingTransactionsStatus = useSelector(
+    (state) => state.spendingTransactions.status
+  );
+  const investingAccountsStatus = useSelector(
+    (state) => state.investingAccounts.status
+  );
+  const investingTransactionsStatus = useSelector(
+    (state) => state.investingTransactions.status
+  );
   const { isAuthenticated } = useAppContext();
 
   useEffect(() => {
@@ -24,25 +33,35 @@ export default function Home() {
         return;
       }
 
-      if (accountStatus === "idle") {
-        dispatch(fetchAccounts());
+      if (spendingAccountsState === "idle") {
+        dispatch(fetchSpendingAccounts());
       }
 
-      if (transactionsStatus === "idle") {
-        dispatch(fetchTransactions());
+      if (spendingTransactionsStatus === "idle") {
+        dispatch(fetchSpendingTransactions());
       }
 
       if (categoriesStatus === "idle") {
         dispatch(fetchCategories());
       }
+
+      if (investingAccountsStatus === "idle") {
+        dispatch(fetchInvestingAccounts());
+      }
+
+			if(investingTransactionsStatus === 'idle'){
+				dispatch(fetchInvestingTransactions())
+			}
     }
 
     onLoad();
   }, [
     isAuthenticated,
-    accountStatus,
-    transactionsStatus,
+    spendingAccountsState,
+    spendingTransactionsStatus,
     categoriesStatus,
+		investingAccountsStatus,
+		investingTransactionsStatus,
     dispatch,
   ]);
 
@@ -58,21 +77,11 @@ export default function Home() {
   function renderAccounts() {
     return (
       <div className="home-container">
-        <div className="home-header border-bottom">
-          <div>
-            <h2>Your Accounts</h2>
-          </div>
-          <div>
-            <Link to="/accounts/new" className="btn btn-primary">
-              <BsPencilSquare size={17} />
-              <span className="ml-2 font-weight-bold">
-                New Account
-              </span>
-            </Link>
-          </div>
+        <div>
+          <SpendingAccountsList />
         </div>
         <div>
-          <AccountList />
+          <InvestingAccountsList />
         </div>
       </div>
     );

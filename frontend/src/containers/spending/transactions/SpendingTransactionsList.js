@@ -1,0 +1,46 @@
+import React from "react";
+import { useSelector } from "react-redux";
+import { selectSpendingTransactionsByAccountId } from "../../../redux/spending/spendingTransactionsSlice";
+import { Link } from "react-router-dom";
+import "../style.css";
+
+export default function SpendingTransactionsList(props) {
+  const spendingTransactions = useSelector((state) =>
+    selectSpendingTransactionsByAccountId(state, props.accountId)
+  );
+
+  return (
+    <div className="transaction-list-container">
+      {spendingTransactions.map((transaction, index, arr) => (
+        <div key={transaction.id} className="transaction-list-item-wrapper">
+          <Link to={`/spending/transactions/${transaction.id}`}>
+            <div className="transaction-list-item">
+              <div>
+                <span>Amount:</span>
+                <p>{transaction.transactionAmount}</p>
+              </div>
+              <div>
+                <span>Type:</span>
+                <p>
+                  {transaction.transactionType === "W"
+                    ? "Withdrawal"
+                    : "Deposit"}
+                </p>
+              </div>
+              <div>
+                <span>Category:</span>
+                <p>{transaction.category}</p>
+              </div>
+              <div>
+                <span>Date:</span>
+                <p>
+                  {new Date(transaction.transactionDate).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      ))}
+    </div>
+  );
+}

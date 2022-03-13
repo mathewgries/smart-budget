@@ -1,6 +1,6 @@
 import handler from "../../util/handler";
 import dynamoDb from "../../util/dynamodb";
-import { categories } from "../categories/defaultCategories";
+import { categories } from "../spending/categories/defaultCategories";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);

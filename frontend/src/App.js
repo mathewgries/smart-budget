@@ -52,7 +52,13 @@ function App() {
               <Nav>
                 {isAuthenticated ? (
                   <>
-                    <LinkContainer to="/categories">
+                    <LinkContainer to="/spending">
+                      <Nav.Link>Spending</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/investing">
+                      <Nav.Link>Investing</Nav.Link>
+                    </LinkContainer>
+                    <LinkContainer to="/spending/categories">
                       <Nav.Link>Categories</Nav.Link>
                     </LinkContainer>
                     <Nav.Link onClick={handleLogout}>Logout</Nav.Link>

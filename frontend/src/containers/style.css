@@ -28,3 +28,15 @@
 	flex-direction: row nowrap;
 	justify-content: space-between;
 }
+
+.account-item-container {
+	height: 8vh;
+	line-height: 8vh;
+	padding: 0 10px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row wrap;
+	justify-content: space-between;
+	border: 1px solid lightgray;
+	border-radius: 5px;
+}
