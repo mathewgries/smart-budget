@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 import "../style.css";
 
 export default function SpendingTransactionsList(props) {
-  const spendingTransactions = useSelector((state) =>
+  const transactions = useSelector((state) =>
     selectSpendingTransactionsByAccountId(state, props.accountId)
   );
 
   return (
     <div className="transaction-list-container">
-      {spendingTransactions.map((transaction, index, arr) => (
+      {transactions.map((transaction, index, arr) => (
         <div key={transaction.id} className="transaction-list-item-wrapper">
           <Link to={`/spending/transactions/${transaction.id}`}>
             <div className="transaction-list-item">

@@ -13,21 +13,20 @@ code {
     monospace;
 }
 
-select.form-control,
+/* select.form-control,
 textarea.form-control,
 input.form-control {
   font-size: 1rem;
-}
+} */
 
-input[type="file"] {
+/* input[type="file"] {
+  width: 100%;
+} */
+
+.app-container {
   width: 100%;
 }
 
 .app-wrapper {
-	width: 100%;
-}
-
-.app-container {
-	width: 90%;
-	margin: 0 auto;
+  width: 100%;
 }

@@ -5,7 +5,7 @@ import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 import Signup from "./containers/auth/Signup";
 import Login from "./containers/auth/Login";
 import Home from "./containers/Home";
-import SpendingAccountsList from "./containers/spending/accounts/SpendingAccountsList"
+import SpendingAccounts from "./containers/spending/accounts/SpendingAccounts"
 import SpendingAccountNew from "./containers/spending/accounts/SpendingAccountNew";
 import SpendingAccount from "./containers/spending/accounts/SpendingAccount";
 import SpendingTransaction from "./containers/spending/transactions/SpendingTransaction";
@@ -14,6 +14,7 @@ import InvestingAccountsList from "./containers/investing/accounts/InvestingAcco
 import InvestingAccountNew from "./containers/investing/accounts/InvestingAccountNew";
 import InvestingAccount from "./containers/investing/accounts/InvestingAccount";
 import InvestingTransaction from "./containers/investing/transactions/InvestingTransaction";
+import InvestingOrders from "./containers/investing/orders/InvestingOrders";
 import NotFound from "./containers/NotFound";
 
 export default function Routes() {
@@ -29,7 +30,7 @@ export default function Routes() {
         <Signup />
       </UnauthenticatedRoute>
 			<AuthenticatedRoute exact path="/spending"> 
-				<SpendingAccountsList />
+				<SpendingAccounts />
 			</AuthenticatedRoute>
       <AuthenticatedRoute exact path="/spending/accounts/new">
         <SpendingAccountNew />
@@ -54,6 +55,9 @@ export default function Routes() {
       </AuthenticatedRoute>
 			<AuthenticatedRoute exact path="/investing/transactions/:id">
         <InvestingTransaction />
+      </AuthenticatedRoute>
+			<AuthenticatedRoute exact path="/investing/orders/:id">
+        <InvestingOrders />
       </AuthenticatedRoute>
 			
       {/* Finally, catch all unmatched routes */}

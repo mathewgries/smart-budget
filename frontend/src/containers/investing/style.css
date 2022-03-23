@@ -1,9 +1,4 @@
-.NewAccount form input {
-  /* height: 300px; */
-  font-size: 1rem;
-}
-
-.account-list-container {
+/* .account-list-container {
 	margin-bottom: 50px;
 }
 
@@ -47,6 +42,6 @@
 	border-radius: 5px;
 }
 
-.investing-list-btn-wrapper div{
+.investing-list-btn-wrapper a{
 	margin: 5px;
-}
+} */

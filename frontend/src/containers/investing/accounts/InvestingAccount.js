@@ -26,7 +26,7 @@ export default function InvestingAccount(props) {
   return (
     <div className="account-wrapper">
       <div>
-        <h3>Account</h3>
+        <h3>Investing Account</h3>
       </div>
       <div className="account-info-wrapper">
         <div>

@@ -2,15 +2,13 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectSpendingAccountById } from "../../../redux/spending/spendingAccountsSlice";
-import AccountItem from "../../AccountItem";
-import SpendingAccountEdit from "./SpendingAccountEdit";
-import SpendingTransactionsList from "../transactions/SpendingTransactionsList"
-import SpendingTransactionForm from "../transactions/SpendingTransactionForm";
-import "../style.css"
+import SpendingAccountCard from "./SpendingAccountCard";
+import SpendingTransactionsList from "../transactions/SpendingTransactionsList";
+import "../style.css";
 
 export default function SpendingAccount() {
   const { id } = useParams();
-  const spendingAccount = useSelector((state) => selectSpendingAccountById(state, id));
+  const account = useSelector((state) => selectSpendingAccountById(state, id));
   const [isEdit, setIsEdit] = useState(false);
   const [isNewTransaction, setIsNewTransaction] = useState(false);
 
@@ -23,58 +21,25 @@ export default function SpendingAccount() {
   }
 
   return (
-    <div className="account-wrapper">
-			<div>
-				<h3>Account</h3>
-			</div>
-      <div className="account-info-wrapper">
-        <div>
-          {!isEdit ? (
-            <div className="account-item-wrapper">
-              <AccountItem account={spendingAccount} />
-            </div>
-          ) : (
-            <div>
-              <SpendingAccountEdit
-                spendingAccount={spendingAccount}
-                toggleAccountEdit={toggleAccountEdit}
-              />
-            </div>
-          )}
-        </div>
-        <div className="form-group">
-          <button
-            className="btn btn-primary form-control"
-            onClick={toggleAccountEdit}
-            disabled={isNewTransaction}
-          >
-            {isEdit ? "Cancel" : "Edit Account"}
-          </button>
-        </div>
-      </div>
+    <div className="spending-account-container">
+      <section className="spending-account-info-header">
+        <header>Account Info</header>
+      </section>
+      <div className="spending-account-wrapper">
+        <section className="spending-account-info-section">
+          <div>
+            <SpendingAccountCard account={account} />
+          </div>
+        </section>
 
-      <div>
-        <div className="form-group">
-          <button
-            className="btn btn-success form-control"
-            onClick={toggleIsNewTransaction}
-            disabled={isEdit}
-          >
-            {isNewTransaction ? "Cancel" : "Add Transaction"}
-          </button>
-        </div>
-        <div>
-          {isNewTransaction && (
-            <SpendingTransactionForm
-              editForm={false}
-              toggleIsNewTransaction={toggleIsNewTransaction}
-              spendingAccount={spendingAccount}
-            />
-          )}
-        </div>
-      </div>
-      <div>
-        <SpendingTransactionsList accountId={spendingAccount.GSI1_PK} />
+        <section className="spending-account-transaction-list-section">
+          <div className="spending-account-transaction-list-header">
+            <header>Transactions</header>
+          </div>
+          <div>
+            <SpendingTransactionsList accountId={account.GSI1_PK} />
+          </div>
+        </section>
       </div>
     </div>
   );

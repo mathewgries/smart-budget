@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSpendingAccounts } from "../redux/spending/spendingAccountsSlice";
@@ -6,12 +6,15 @@ import { fetchSpendingTransactions } from "../redux/spending/spendingTransaction
 import { fetchCategories } from "../redux/spending/categoriesSlice";
 import { fetchInvestingAccounts } from "../redux/investing/investingAccountsSlice";
 import { fetchInvestingTransactions } from "../redux/investing/investingTransactionsSlice";
+import { Link } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
 import "./style.css";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   const spendingAccountsState = useSelector(
     (state) => state.spendingAccounts.status
   );
@@ -49,9 +52,11 @@ export default function Home() {
         dispatch(fetchInvestingAccounts());
       }
 
-			if(investingTransactionsStatus === 'idle'){
-				dispatch(fetchInvestingTransactions())
-			}
+      if (investingTransactionsStatus === "idle") {
+        dispatch(fetchInvestingTransactions());
+      }
+
+      setIsLoading(false);
     }
 
     onLoad();
@@ -60,8 +65,8 @@ export default function Home() {
     spendingAccountsState,
     spendingTransactionsStatus,
     categoriesStatus,
-		investingAccountsStatus,
-		investingTransactionsStatus,
+    investingAccountsStatus,
+    investingTransactionsStatus,
     dispatch,
   ]);
 
@@ -76,19 +81,36 @@ export default function Home() {
 
   function renderAccounts() {
     return (
-      <div className="home-container">
-        <div>
-          <SpendingAccountsList />
-        </div>
-        <div>
-          <InvestingAccountsList />
-        </div>
+      <div className="home-wrapper">
+        <section className="home-account-list-section">
+          <div>
+            <header className="home-account-header">
+              <h3>Accounts</h3>
+            </header>
+          </div>
+          <div className="home-list-wrapper">
+            <header className="home-list-header">
+              <h5>Spending</h5>
+            </header>
+            <div className="home-list-section">
+              <SpendingAccountsList />
+            </div>
+          </div>
+          <div className="home-list-wrapper">
+            <header className="home-list-header">
+              <h5>Investing</h5>
+            </header>
+            <div className="home-list-section">
+              <InvestingAccountsList />
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
 
   return (
-    <div className="home-wrapper">
+    <div className="home-container">
       {isAuthenticated ? renderAccounts() : renderLander()}
     </div>
   );

@@ -39,7 +39,7 @@ function App() {
 
   return (
     !isAuthenticating && (
-      <div className="app-wrapper">
+      <div className="app-container">
         <div className="nav-wrapper">
           <Navbar collapseOnSelect bg="light" expand="md" className="mb-3 nav">
             <LinkContainer to="/">
@@ -77,7 +77,7 @@ function App() {
             </Navbar.Collapse>
           </Navbar>
         </div>
-        <div className="app-container">
+        <div className="app-wrapper">
           <AppContext.Provider
             value={{ isAuthenticated, userHasAuthenticated }}
           >
