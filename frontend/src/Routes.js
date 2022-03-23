@@ -6,13 +6,14 @@ import Signup from "./containers/auth/Signup";
 import Login from "./containers/auth/Login";
 import Home from "./containers/Home";
 import SpendingAccounts from "./containers/spending/accounts/SpendingAccounts"
-import SpendingAccountNew from "./containers/spending/accounts/SpendingAccountNew";
 import SpendingAccount from "./containers/spending/accounts/SpendingAccount";
+import SpendingAccountNew from "./containers/spending/accounts/SpendingAccountNew";
 import SpendingTransaction from "./containers/spending/transactions/SpendingTransaction";
 import Categories from "./containers/spending/categories/Categories";
-import InvestingAccountsList from "./containers/investing/accounts/InvestingAccountsList";
-import InvestingAccountNew from "./containers/investing/accounts/InvestingAccountNew";
+
+import InvestingAccounts from "./containers/investing/accounts/InvestingAccounts";
 import InvestingAccount from "./containers/investing/accounts/InvestingAccount";
+import InvestingAccountNew from "./containers/investing/accounts/InvestingAccountNew";
 import InvestingTransaction from "./containers/investing/transactions/InvestingTransaction";
 import InvestingOrders from "./containers/investing/orders/InvestingOrders";
 import NotFound from "./containers/NotFound";
@@ -45,7 +46,7 @@ export default function Routes() {
         <Categories />
       </AuthenticatedRoute>
 			<AuthenticatedRoute exact path="/investing">
-        <InvestingAccountsList />
+        <InvestingAccounts />
       </AuthenticatedRoute>
 			<AuthenticatedRoute exact path="/investing/accounts/new">
         <InvestingAccountNew />

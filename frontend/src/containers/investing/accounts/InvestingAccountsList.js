@@ -7,7 +7,6 @@ import "../style.css";
 
 export default function InvestingAccountsList(props) {
 	const accountList = useSelector(selectAllInvestingAccounts);
-  console.log(accountList);
 
   return (
     <div className="account-list-container">

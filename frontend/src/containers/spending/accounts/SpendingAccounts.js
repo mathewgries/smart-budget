@@ -4,14 +4,16 @@ import "../style.css";
 
 export default function SpendingAccounts(props) {
   return (
-    <div className="spending-accounts-container">
-      <div className="spending-accounts-wrapper">
-        <section className="accounts-list-header">
-          <header>Spending Accounts</header>
-        </section>
-        <section className="accounts-list-wrapper">
-          <SpendingAccountsList pageStyle={"account-list-style"} />
-        </section>
+    <div className="page-container">
+      <div className="page-wrapper">
+        <div className="page-list-wrapper">
+          <header className="spending-accounts-list-header">
+            <h5>Spending Accounts</h5>
+          </header>
+          <div className="spending-accounts-list-section">
+            <SpendingAccountsList />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -81,14 +81,14 @@ export default function Home() {
 
   function renderAccounts() {
     return (
-      <div className="home-wrapper">
+      <div className="page-wrapper">
         <section className="home-account-list-section">
           <div>
             <header className="home-account-header">
               <h3>Accounts</h3>
             </header>
           </div>
-          <div className="home-list-wrapper">
+          <div className="page-list-wrapper">
             <header className="home-list-header">
               <h5>Spending</h5>
             </header>
@@ -96,7 +96,7 @@ export default function Home() {
               <SpendingAccountsList />
             </div>
           </div>
-          <div className="home-list-wrapper">
+          <div className="page-list-wrapper">
             <header className="home-list-header">
               <h5>Investing</h5>
             </header>
@@ -110,7 +110,7 @@ export default function Home() {
   }
 
   return (
-    <div className="home-container">
+    <div className="page-container">
       {isAuthenticated ? renderAccounts() : renderLander()}
     </div>
   );

@@ -1,35 +1,67 @@
-.account-list-container {
-	/* background-color: aquamarine; */
-	width: 100%;
+.account-card-container,
+.spending-transaction-card-container,
+.spending-transaction-note-section {
+  background-color: whitesmoke;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
 }
 
-.account-card-container {
-	background-color: whitesmoke;
+.spending-transaction-card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-@media (max-width: 600px){
-	.account-card-container {
-		width: 100%;
-		padding: 10px;
-		margin-bottom: 10px;
-		border-radius: 10px;
-	}
+.spending-transaction-note-header h6 {
+  border-bottom: 1px solid lightgray;
 }
 
-@media (min-width: 601px){
+@media (max-width: 600px) {
+  .account-card-container,
+  .spending-transaction-card-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
-	.account-list-container{
+  .accounts-list-section,
+  .spending-transaction-list-container {
+    width: 100%;
+  }
+}
+
+@media (min-width: 601px) {
+  .account-list-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
+
+  .account-card-container {
 		display: flex;
-		flex-flow: row wrap;
-		justify-content: flex-start;
-	}
+		flex-flow: column nowrap;
+		justify-content: space-between;
+    width: 150px;
+    height: 200px;
+    padding: 10px;
+    margin-right: 10px;
+  }
 
-	.account-card-container {
-		width: 150px;
-		height: 200px;
-		padding: 10px;
-		margin-right: 10px;
-		margin-bottom: 10px;
-		border-radius: 10px;
-	}
+  .spending-account-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .accounts-list-section,
+  .account-transaction-list-section {
+    width: 60%;
+  }
+
+  .spending-transaction-wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+  }
 }
