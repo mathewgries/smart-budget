@@ -1,69 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectInvestingTransactionById } from "../../../redux/investing/investingTransactionsSlice";
-import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
-import InvestingTransactionForm from "./InvestingTransactionForm";
-import "../style.css"
+import InvestingTransactionCard from "./InvestingTransactionCard";
+import "../style.css";
 
 export default function InvestingTransaction(props) {
   const { id } = useParams();
-  const investingTransaction = useSelector((state) => selectInvestingTransactionById(state, id));
-  const investingAccount = useSelector((state) =>
-	selectInvestingAccountById(state, investingTransaction.GSI1_PK.replace("ACCT#INVESTING#", ""))
+  const transaction = useSelector((state) =>
+    selectInvestingTransactionById(state, id)
   );
-  const [isEdit, setIsEdit] = useState(false);
 
-  function handleIsEditToggle() {
-    setIsEdit((prev) => !prev);
-  }
-
-  const {
-    transactionAmount,
-    transactionDate,
-    transactionNote,
-    transactionType,
-  } = investingTransaction;
+  const { transactionNote } = transaction;
 
   return (
-    <div className="transaction-container">
-      <div>
-        {isEdit ? (
-          <InvestingTransactionForm
-            investingAccount={investingAccount}
-            investingTransaction={investingTransaction}
-            editForm={true}
-          />
-        ) : (
-          <div className="transaction-detail-wrapper">
-            <div>
-              <h3>Transaction</h3>
+    <div className="page-container">
+      <div className="page-wrapper">
+        <div className="spending-transaction-wrapper">
+          <section className="spending-transaction-info-section">
+            <InvestingTransactionCard transaction={transaction} />
+          </section>
+          <section className="spending-transaction-note-section">
+            <div className="spending-transaction-note-header">
+              <header>
+                <h6>Note:</h6>
+              </header>
             </div>
-            <div className="transaction-detail">
-              <div>
-                <p>Amount: {transactionAmount}</p>
-              </div>
-              <div>
-                <p>Type: {transactionType === "W" ? "Withdrawal" : "Deposit"}</p>
-              </div>
-              <div>
-                <p>Date: {new Date(transactionDate).toLocaleDateString()}</p>
-              </div>
-              <div>
-								<span>Note:</span>
-                <p>{transactionNote}</p>
-              </div>
-            </div>
-            <div className="form-group">
-              <button
-                className="btn btn-primary form-control"
-                onClick={handleIsEditToggle}
-              >
-                {isEdit ? "Cancel" : "Edit"}
-              </button>
-            </div>
-          </div>
-        )}
+            <div>{transactionNote}</div>
+          </section>
+        </div>
       </div>
     </div>
   );
