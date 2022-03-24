@@ -15,7 +15,11 @@ export default function SpendingTransactionCard(props) {
         <div>{`${transaction.category}: ${transaction.subCategory}`}</div>
       </section>
       <section>
-        <div>{new Date(transaction.transactionDate).toLocaleDateString()}</div>
+        <div>
+          <div className="transaction-card-date-wrapper">
+            {new Date(transaction.transactionDate).toLocaleDateString()}
+          </div>
+        </div>
       </section>
     </div>
   );

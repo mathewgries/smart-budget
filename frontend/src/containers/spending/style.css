@@ -1,4 +1,4 @@
-.account-card-container,
+/* .account-card-container,
 .spending-transaction-card-container,
 .spending-transaction-note-section {
   background-color: whitesmoke;
@@ -17,10 +17,21 @@
   border-bottom: 1px solid lightgray;
 }
 
+.spending-transaction-wrapper {
+	max-width: 400px;
+	margin: 0 auto;
+}
+
 .categories-header-section {
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.categories-wrapper,
+.account-form-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 @media (max-width: 600px) {
@@ -36,6 +47,14 @@
   .spending-transaction-list-container {
     width: 100%;
   }
+
+	.account-list-header-wrapper {
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		gap: 5px;
+		margin-bottom: 5px;
+	}
 }
 
 @media (min-width: 601px) {
@@ -46,9 +65,9 @@
   }
 
   .account-card-container {
-		display: flex;
-		flex-flow: column nowrap;
-		justify-content: space-between;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
     width: 150px;
     height: 200px;
     padding: 10px;
@@ -61,18 +80,18 @@
     justify-content: flex-start;
   }
 
-  .accounts-list-section,
-  .account-transaction-list-section {
+	.account-list-header-wrapper {
+		display: flex;
+		flex-flow: row nowrap;
+		gap: 5px;
+		margin-bottom: 5px;
+	}
+
+  .accounts-list-section {
     width: 60%;
   }
 
-  .spending-transaction-wrapper {
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-	.categories-wrapper {
-		max-width: 400px;
-		margin: 0 auto;
+	.account-transaction-list-section{
+		width: 400px;
 	}
-}
+} */

@@ -97,53 +97,51 @@ export default function Categories() {
 
   return (
     <div className="page-container">
-      <div className="page-wrapper">
-        <div className="categories-wrapper">
-          <div>
+      <div className={isEdit ? "page-wrapper" : ""}>
+        <div className={isEdit ? "form-wrapper" : ""}>
+          <section>
             <div>
               {isEdit && (
                 <form onSubmit={handleAddCetagory}>
-                  <div className="categories-form-group">
-                    <div className="form-group">
-                      {isEdit && (
-                        <section className="categories-header-section">
-                          <header>
-                            <h4>Categories</h4>
-                          </header>
-                          <div className="form-group">
-                            <button
-                              type="submit"
-                              className={`btn ${disableSave ? "btn-secondary" : "btn-primary"}`}
-                              disabled={disableSave}
-                              onClick={handleSave}
-                            >
-                              {savingCategoryMap ? (
-                                <LoadingSpinner text={"Saving"} />
-                              ) : (
-                                "Save"
-                              )}
-                            </button>
-                          </div>
-                        </section>
-                      )}
-                      <input
-                        className="form-control"
-                        type="text"
-                        name="categoryInput"
-                        value={fields.categoryInput}
-                        onChange={handleFieldChange}
-                        placeholder="New Category..."
-                      />
-                    </div>
+                  <section className="categories-header-section">
+                    <header>
+                      <h5>Categories</h5>
+                    </header>
                     <div className="form-group">
                       <button
                         type="submit"
-                        className="btn btn-secondary form-control"
-                        disabled={fields.categoryInput === ""}
+                        className={`btn ${
+                          disableSave ? "btn-secondary" : "btn-primary"
+                        }`}
+                        disabled={disableSave}
+                        onClick={handleSave}
                       >
-                        Add
+                        {savingCategoryMap ? (
+                          <LoadingSpinner text={"Saving"} />
+                        ) : (
+                          "Save"
+                        )}
                       </button>
                     </div>
+                  </section>
+                  <div className="form-group">
+                    <input
+                      className="form-control"
+                      type="text"
+                      name="categoryInput"
+                      value={fields.categoryInput}
+                      onChange={handleFieldChange}
+                      placeholder="New Category..."
+                    />
+                  </div>
+                  <div className="form-group">
+                    <button
+                      type="submit"
+                      className="btn btn-secondary form-control"
+                      disabled={fields.categoryInput === ""}
+                    >
+                      Add
+                    </button>
                   </div>
                 </form>
               )}
@@ -157,15 +155,15 @@ export default function Categories() {
                 updateActiveItem={handleActiveCategory}
               />
             </div>
-          </div>
+          </section>
 
-          <div>
+          <section>
             <div>
               {isEdit && (
                 <form onSubmit={handleSubCategoryAdd}>
                   <div className="categories-form-group">
                     <div className="form-group">
-                      {isEdit && <h3>Subcategories</h3>}
+                      <h5>Subcategories</h5>
                       <input
                         className="form-control"
                         type="text"
@@ -197,7 +195,7 @@ export default function Categories() {
                 updateActiveItem={handleActiveSubCategory}
               />
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </div>

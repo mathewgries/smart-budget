@@ -2,6 +2,49 @@
   width: 100%;
 }
 
+.account-card-container,
+.spending-transaction-card-container,
+.transaction-note-section {
+  background-color: whitesmoke;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.spending-transaction-card-container,
+.categories-header-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.transaction-card-btn-container {
+  display: flex;
+  flex-direction: row nowrap;
+	justify-content: flex-end;
+  gap: 5px;
+	margin-bottom: 10px;
+}
+
+.transaction-note-header h6 {
+  border-bottom: 1px solid lightgray;
+}
+
+.transaction-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.transaction-card-date-wrapper {
+  text-align: right;
+  margin-bottom: 2px;
+}
+
+.form-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
 @media (max-width: 600px) {
   .home-account-list-section {
     width: 100%;
@@ -10,10 +53,95 @@
   .home-account-header {
     text-align: center;
   }
+
+  .home-list-header-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+
+  .account-card-container,
+  .spending-transaction-card-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .accounts-list-section,
+  .transaction-list-container {
+    width: 100%;
+  }
+
+  .account-list-header-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .account-btn-section {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
 }
 
 @media (min-width: 601px) {
   .home-account-list-section {
     width: 60%;
+  }
+
+  .home-list-header-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .account-list-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
+
+  .account-card-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    width: 150px;
+    height: 200px;
+    padding: 10px;
+    margin-right: 10px;
+  }
+
+  .account-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .account-list-header-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .accounts-list-section {
+    width: 60%;
+  }
+
+  .account-btn-wrapper {
+    width: 150px;
+    margin-bottom: 5px;
+  }
+
+  .transaction-list-section,
+  .form-wrapper {
+    width: 400px;
   }
 }

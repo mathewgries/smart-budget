@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function SpendingTransactionCard(props) {
+export default function InvestingTransactionCard(props) {
   const { transaction } = props;
 
   const displayAmount =

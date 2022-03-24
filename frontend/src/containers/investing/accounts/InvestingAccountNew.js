@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addNewInvestingAccount } from "../../../redux/investing/investingAccountsSlice"
-import { onError } from "../../../lib/errorLib"
-import LoadingSpinner from "../../../components/LoadingSpinner"
-import "../style.css"
+import { addNewInvestingAccount } from "../../../redux/investing/investingAccountsSlice";
+import { onError } from "../../../lib/errorLib";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import "../style.css";
 
 export default function InvestingAccountNew() {
   const history = useHistory();
@@ -14,7 +14,6 @@ export default function InvestingAccountNew() {
     accountName: "",
     accountBalance: "",
   });
-	
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +29,7 @@ export default function InvestingAccountNew() {
 
     try {
       setAddRequestStatus("pending");
-			console.log("FIELDS: ", fields)
+      console.log("FIELDS: ", fields);
       await dispatch(addNewInvestingAccount(fields)).unwrap();
       history.push("/investing");
     } catch (e) {
@@ -39,38 +38,47 @@ export default function InvestingAccountNew() {
   };
 
   return (
-    <div className="NewAccount">
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Account Name</label>
-          <input
-            className="form-control"
-            type="text"
-						name="accountName"
-            value={fields.accountName}
-            onChange={handleOnChange}
-          />
+    <div className="page-container">
+      <div className="page-wrapper">
+        <div className="form-wrapper">
+          <form onSubmit={handleSubmit}>
+            <div>
+              <header>
+                <h4>New Investing Account</h4>
+              </header>
+            </div>
+            <div className="form-group">
+              <label>Account Name</label>
+              <input
+                className="form-control"
+                type="text"
+                name="accountName"
+                value={fields.accountName}
+                onChange={handleOnChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Starting Balance</label>
+              <input
+                className="form-control"
+                type="text"
+                name="accountBalance"
+                value={fields.accountBalance}
+                onChange={handleOnChange}
+              />
+            </div>
+            <div className="form-group">
+              <button
+                type="submit"
+                className="btn btn-primary form-control"
+                disabled={!validateForm()}
+              >
+                {addRequestStatus === "pending" ? <LoadingSpinner /> : "Create"}
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="form-group">
-          <label>Starting Balance</label>
-          <input
-            className="form-control"
-            type="text"
-						name="accountBalance"
-            value={fields.accountBalance}
-            onChange={handleOnChange}
-          />
-        </div>
-        <div className="form-group">
-          <button
-            type="submit"
-            className="btn btn-primary form-control"
-            disabled={!validateForm()}
-          >
-            {addRequestStatus === "pending" ? <LoadingSpinner /> : "Create"}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }

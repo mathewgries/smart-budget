@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSpendingAccounts } from "../redux/spending/spendingAccountsSlice";
@@ -7,14 +7,12 @@ import { fetchCategories } from "../redux/spending/categoriesSlice";
 import { fetchInvestingAccounts } from "../redux/investing/investingAccountsSlice";
 import { fetchInvestingTransactions } from "../redux/investing/investingTransactionsSlice";
 import { Link } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
 import "./style.css";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
   const spendingAccountsState = useSelector(
     (state) => state.spendingAccounts.status
   );
@@ -55,8 +53,6 @@ export default function Home() {
       if (investingTransactionsStatus === "idle") {
         dispatch(fetchInvestingTransactions());
       }
-
-      setIsLoading(false);
     }
 
     onLoad();
@@ -83,23 +79,32 @@ export default function Home() {
     return (
       <div className="page-wrapper">
         <section className="home-account-list-section">
-          <div>
-            <header className="home-account-header">
-              <h3>Accounts</h3>
-            </header>
-          </div>
           <div className="page-list-wrapper">
-            <header className="home-list-header">
-              <h5>Spending</h5>
-            </header>
+            <div className="home-list-header-wrapper">
+              <header className="home-list-header">
+                <h5>Spending Accounts</h5>
+              </header>
+              <div>
+                <Link to="/spending/accounts/new" className="btn btn-primary">
+                  Add
+                </Link>
+              </div>
+            </div>
             <div className="home-list-section">
               <SpendingAccountsList />
             </div>
           </div>
           <div className="page-list-wrapper">
-            <header className="home-list-header">
-              <h5>Investing</h5>
-            </header>
+            <div className="home-list-header-wrapper">
+              <header className="home-list-header">
+                <h5>Investing Accounts</h5>
+              </header>
+              <div>
+                <Link to="/investing/accounts/new" className="btn btn-primary">
+                  Add
+                </Link>
+              </div>
+            </div>
             <div className="home-list-section">
               <InvestingAccountsList />
             </div>

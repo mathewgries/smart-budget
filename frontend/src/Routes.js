@@ -5,16 +5,22 @@ import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 import Signup from "./containers/auth/Signup";
 import Login from "./containers/auth/Login";
 import Home from "./containers/Home";
-import SpendingAccounts from "./containers/spending/accounts/SpendingAccounts"
+import SpendingAccounts from "./containers/spending/accounts/SpendingAccounts";
 import SpendingAccount from "./containers/spending/accounts/SpendingAccount";
-import SpendingAccountNew from "./containers/spending/accounts/SpendingAccountNew";
+import SpendingAccountsNew from "./containers/spending/accounts/SpendingAccountNew";
+import SpendingAccountsEdit from "./containers/spending/accounts/SpendingAccountEdit";
 import SpendingTransaction from "./containers/spending/transactions/SpendingTransaction";
+import SpendingTransactionNew from "./containers/spending/transactions/SpendingTransactionNew";
+import SpendingTransactionEdit from "./containers/spending/transactions/SpendingTransactionEdit";
 import Categories from "./containers/spending/categories/Categories";
 
 import InvestingAccounts from "./containers/investing/accounts/InvestingAccounts";
 import InvestingAccount from "./containers/investing/accounts/InvestingAccount";
-import InvestingAccountNew from "./containers/investing/accounts/InvestingAccountNew";
+import InvestingAccountsNew from "./containers/investing/accounts/InvestingAccountNew";
+import InvestingAccountsEdit from "./containers/investing/accounts/InvestingAccountEdit";
 import InvestingTransaction from "./containers/investing/transactions/InvestingTransaction";
+import InvestingTransactionNew from "./containers/investing/transactions/InvestingTransactionNew";
+import InvestingTransactionEdit from "./containers/investing/transactions/InvestingTransactionEdit";
 import InvestingOrders from "./containers/investing/orders/InvestingOrders";
 import NotFound from "./containers/NotFound";
 
@@ -30,37 +36,59 @@ export default function Routes() {
       <UnauthenticatedRoute exact path="/signup">
         <Signup />
       </UnauthenticatedRoute>
-			<AuthenticatedRoute exact path="/spending"> 
-				<SpendingAccounts />
-			</AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/spending/accounts/new">
-        <SpendingAccountNew />
+
+      {/* SPENDING ACCOUNTS */}
+      <AuthenticatedRoute exact path="/spending">
+        <SpendingAccounts />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/spending/accounts/:id">
+			<AuthenticatedRoute exact path="/spending/accounts/:id">
         <SpendingAccount />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/spending/transactions/:id">
+      <AuthenticatedRoute exact path="/spending/accounts/new">
+        <SpendingAccountsNew />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/spending/accounts/edit/:id">
+        <SpendingAccountsEdit />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/spending/transactions/:id">
         <SpendingTransaction />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/spending/categories">
+      <AuthenticatedRoute exact path="/spending/transactions/new/:id">
+        <SpendingTransactionNew />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/spending/transactions/edit/:id">
+        <SpendingTransactionEdit />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/spending/categories">
         <Categories />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/investing">
+
+      {/* INVESTING ACCOUNTS */}
+      <AuthenticatedRoute exact path="/investing">
         <InvestingAccounts />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/investing/accounts/new">
-        <InvestingAccountNew />
-      </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/investing/accounts/:id">
+      <AuthenticatedRoute exact path="/investing/accounts/:id">
         <InvestingAccount />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/investing/transactions/:id">
+      <AuthenticatedRoute exact path="/investing/accounts/new">
+        <InvestingAccountsNew />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/investing/accounts/edit/:id">
+        <InvestingAccountsEdit />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/investing/transactions/:id">
         <InvestingTransaction />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/investing/orders/:id">
+			<AuthenticatedRoute exact path="/investing/transactions/new/:id">
+        <InvestingTransactionNew />
+      </AuthenticatedRoute>
+			<AuthenticatedRoute exact path="/investing/transactions/edit/:id">
+        <InvestingTransactionEdit />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/investing/orders/:id">
         <InvestingOrders />
       </AuthenticatedRoute>
-			
+
       {/* Finally, catch all unmatched routes */}
       <Route>
         <NotFound />

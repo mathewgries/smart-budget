@@ -11,10 +11,10 @@ export default function SpendingTransactionsList(props) {
   );
 
   return (
-    <div className="spending-transaction-list-container">
+    <div className="transaction-list-container">
       <div className="page-list-wrapper">
         {transactions.map((transaction, index, arr) => (
-          <div key={transaction.id} className="spending-transaction-list-item-wrapper">
+          <div key={transaction.id} className="transaction-list-item-wrapper">
             <Link to={`/spending/transactions/${transaction.id}`}>
               <SpendingTransactionCard transaction={transaction} />
             </Link>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice"
-import { onError } from "../../../lib/errorLib"
-import LoadingSpinner from "../../../components/LoadingSpinner"
-import "../style.css"
+import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
+import { onError } from "../../../lib/errorLib";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import "../style.css";
 
 export default function SpendingAccountNew() {
   const history = useHistory();
@@ -14,7 +14,6 @@ export default function SpendingAccountNew() {
     accountName: "",
     accountBalance: "",
   });
-	
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -38,38 +37,47 @@ export default function SpendingAccountNew() {
   };
 
   return (
-    <div className="NewAccount">
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Account Name</label>
-          <input
-            className="form-control"
-            type="text"
-						name="accountName"
-            value={fields.accountName}
-            onChange={handleOnChange}
-          />
+    <div className="page-cointainer">
+      <div className="page-wrapper">
+        <div className="form-wrapper">
+          <form onSubmit={handleSubmit}>
+            <div>
+              <header>
+                <h4>New Spending Account</h4>
+              </header>
+            </div>
+            <div className="form-group">
+              <label>Account Name</label>
+              <input
+                className="form-control"
+                type="text"
+                name="accountName"
+                value={fields.accountName}
+                onChange={handleOnChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Starting Balance</label>
+              <input
+                className="form-control"
+                type="text"
+                name="accountBalance"
+                value={fields.accountBalance}
+                onChange={handleOnChange}
+              />
+            </div>
+            <div className="form-group">
+              <button
+                type="submit"
+                className="btn btn-primary form-control"
+                disabled={!validateForm()}
+              >
+                {addRequestStatus === "pending" ? <LoadingSpinner /> : "Create"}
+              </button>
+            </div>
+          </form>
         </div>
-        <div className="form-group">
-          <label>Starting Balance</label>
-          <input
-            className="form-control"
-            type="text"
-						name="accountBalance"
-            value={fields.accountBalance}
-            onChange={handleOnChange}
-          />
-        </div>
-        <div className="form-group">
-          <button
-            type="submit"
-            className="btn btn-primary form-control"
-            disabled={!validateForm()}
-          >
-            {addRequestStatus === "pending" ? <LoadingSpinner /> : "Create"}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
