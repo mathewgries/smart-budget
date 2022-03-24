@@ -17,6 +17,12 @@
   border-bottom: 1px solid lightgray;
 }
 
+.categories-header-section {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+}
+
 @media (max-width: 600px) {
   .account-card-container,
   .spending-transaction-card-container {
@@ -64,4 +70,9 @@
     max-width: 400px;
     margin: 0 auto;
   }
+
+	.categories-wrapper {
+		max-width: 400px;
+		margin: 0 auto;
+	}
 }
