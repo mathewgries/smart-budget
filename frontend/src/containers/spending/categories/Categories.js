@@ -16,7 +16,6 @@ import {
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import ListContainer from "./ListContainer";
 import { onError } from "../../../lib/errorLib";
-import "../style.css";
 
 export default function Categories() {
   const history = useHistory();
@@ -62,22 +61,17 @@ export default function Categories() {
     }
   };
 
-  function handleSubCategoryAdd(e) {
+  function handleAddSubCategory(e) {
     e.preventDefault();
-    if (fields.subCategoryInput !== "") {
-      const { subCategoryInput } = fields;
+    const { subCategoryInput } = fields;
 
-      if (
-        subCategoryInput !== "" ||
-        !subCategories.includes(subCategoryInput)
-      ) {
-        try {
-          dispatch(addNewSubCategory(subCategoryInput));
-          setDisableSave(false);
-          setFields({ ...fields, subCategoryInput: "" });
-        } catch (e) {
-          onError(e);
-        }
+    if (subCategoryInput !== "" || !subCategories.includes(subCategoryInput)) {
+      try {
+        dispatch(addNewSubCategory(subCategoryInput));
+        setDisableSave(false);
+        setFields({ ...fields, subCategoryInput: "" });
+      } catch (e) {
+        onError(e);
       }
     }
   }
@@ -100,30 +94,40 @@ export default function Categories() {
       <div className={isEdit ? "page-wrapper" : ""}>
         <div className={isEdit ? "form-wrapper" : ""}>
           <section>
+            <section className="categories-header-section">
+              <header>
+                {isEdit ? <h5>Categories</h5> : <label>Categories</label>}
+              </header>
+              {isEdit && (
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className={`btn ${
+                      disableSave ? "btn-secondary" : "btn-primary"
+                    }`}
+                    disabled={disableSave}
+                    onClick={handleSave}
+                  >
+                    {savingCategoryMap ? (
+                      <LoadingSpinner text={"Saving"} />
+                    ) : (
+                      "Save"
+                    )}
+                  </button>
+                </div>
+              )}
+            </section>
+            <div>
+              <ListContainer
+                listItems={categories}
+                activeItem={activeCategory}
+                isEdit={isEdit}
+                updateActiveItem={handleActiveCategory}
+              />
+            </div>
             <div>
               {isEdit && (
                 <form onSubmit={handleAddCetagory}>
-                  <section className="categories-header-section">
-                    <header>
-                      <h5>Categories</h5>
-                    </header>
-                    <div className="form-group">
-                      <button
-                        type="submit"
-                        className={`btn ${
-                          disableSave ? "btn-secondary" : "btn-primary"
-                        }`}
-                        disabled={disableSave}
-                        onClick={handleSave}
-                      >
-                        {savingCategoryMap ? (
-                          <LoadingSpinner text={"Saving"} />
-                        ) : (
-                          "Save"
-                        )}
-                      </button>
-                    </div>
-                  </section>
                   <div className="form-group">
                     <input
                       className="form-control"
@@ -137,7 +141,7 @@ export default function Categories() {
                   <div className="form-group">
                     <button
                       type="submit"
-                      className="btn btn-secondary form-control"
+											className={`btn form-control ${fields.categoryInput === "" ? "btn-secondary" : "btn-primary"}`}
                       disabled={fields.categoryInput === ""}
                     >
                       Add
@@ -146,24 +150,25 @@ export default function Categories() {
                 </form>
               )}
             </div>
-            <div>
-              <ListContainer
-                listItems={categories}
-                activeItem={activeCategory}
-                isEdit={isEdit}
-                labelText={"Categories"}
-                updateActiveItem={handleActiveCategory}
-              />
-            </div>
           </section>
 
           <section>
+            <header>
+              {isEdit ? <h5>subcategories</h5> : <label>subcategories</label>}
+            </header>
+            <div>
+              <ListContainer
+                listItems={subCategories}
+                activeItem={activeSubCategory}
+                isEdit={isEdit}
+                updateActiveItem={handleActiveSubCategory}
+              />
+            </div>
             <div>
               {isEdit && (
-                <form onSubmit={handleSubCategoryAdd}>
+                <form onSubmit={handleAddSubCategory}>
                   <div className="categories-form-group">
                     <div className="form-group">
-                      <h5>Subcategories</h5>
                       <input
                         className="form-control"
                         type="text"
@@ -176,7 +181,7 @@ export default function Categories() {
                     <div className="form-group">
                       <button
                         type="submit"
-                        className="btn btn-secondary form-control"
+                        className={`btn form-control ${fields.subCategoryInput === "" ? "btn-secondary" : "btn-primary"}`}
                         disabled={fields.subCategoryInput === ""}
                       >
                         Add
@@ -185,15 +190,6 @@ export default function Categories() {
                   </div>
                 </form>
               )}
-            </div>
-            <div>
-              <ListContainer
-                listItems={subCategories}
-                activeItem={activeSubCategory}
-                isEdit={isEdit}
-                labelText={"Subcategories"}
-                updateActiveItem={handleActiveSubCategory}
-              />
             </div>
           </section>
         </div>

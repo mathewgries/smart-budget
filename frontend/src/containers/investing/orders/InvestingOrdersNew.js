@@ -7,7 +7,6 @@ import {
   updateInvestingAccountBalance,
 } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
-import "../style.css";
 
 export default function InvestingOrdersNew(props) {
   const { id } = useParams();

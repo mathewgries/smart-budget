@@ -18,7 +18,6 @@ import { addTransactionHandler } from "../../../helpers/currencyHandler";
 // Component imports
 import Categories from "../categories/Categories";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function SpendingTransactionNew(props) {
   const { id } = useParams();

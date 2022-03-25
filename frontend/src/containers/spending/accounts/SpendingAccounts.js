@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./SpendingAccountsList";
-import "../style.css";
 
 export default function SpendingAccounts(props) {
   return (

@@ -82,7 +82,9 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                <h5>Spending Accounts</h5>
+                <Link to="/spending">
+                  <h5>Spending Accounts</h5>
+                </Link>
               </header>
               <div>
                 <Link to="/spending/accounts/new" className="btn btn-primary">
@@ -97,7 +99,9 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                <h5>Investing Accounts</h5>
+                <Link to="/investing">
+                  <h5>Investing Accounts</h5>
+                </Link>
               </header>
               <div>
                 <Link to="/investing/accounts/new" className="btn btn-primary">

@@ -23,7 +23,6 @@ import { updateTransactionHelper } from "../../../helpers/currencyHandler";
 // Component imports
 import Categories from "../categories/Categories";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function SpendingTransactionEdit(props) {
   const { id } = useParams();

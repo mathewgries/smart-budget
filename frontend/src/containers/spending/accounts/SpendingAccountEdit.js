@@ -7,7 +7,6 @@ import {
 } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function SpendingAccountEdit(props) {
   const { id } = useParams();

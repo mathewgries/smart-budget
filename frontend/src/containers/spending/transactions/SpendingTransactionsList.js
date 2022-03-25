@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { selectSpendingTransactionsByAccountId } from "../../../redux/spending/spendingTransactionsSlice";
 import { Link } from "react-router-dom";
 import SpendingTransactionCard from "./SpendingTransactionCard";
-import "../style.css";
 
 export default function SpendingTransactionsList(props) {
   const transactions = useSelector((state) =>

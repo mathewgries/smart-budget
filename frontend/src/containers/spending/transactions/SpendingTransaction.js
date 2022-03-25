@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { selectSpendingTransactionById } from "../../../redux/spending/spendingTransactionsSlice";
 import SpendingTransactionCard from "./SpendingTransactionCard";
 import SpendingTransactionButtons from "./SpendingTransactionButtons";
-import "../style.css";
 
 export default function SpendingTransaction(props) {
   const { id } = useParams();
@@ -17,6 +16,11 @@ export default function SpendingTransaction(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
+			<section>
+          <header>
+            <h3>Spending Account</h3>
+          </header>
+        </section>
         <div className="transaction-wrapper">
           <section>
             <header>

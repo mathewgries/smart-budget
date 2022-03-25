@@ -49,11 +49,13 @@ export const categoriesSlice = createSlice({
       };
       state.categories.push(category);
       state.activeCategory = category;
+			state.subCategories = state.items[state.activeCategory];
+			state.activeSubCategory = state.subCategories[0];
     },
     addNewSubCategory(state, action) {
       state.history = { ...state, history: state.history };
       const subCategory = action.payload;
-      state.subcategories.push(subCategory);
+      state.subCategories.push(subCategory);
       state.activeSubCategory = subCategory;
       state.items = {
         ...state.items,

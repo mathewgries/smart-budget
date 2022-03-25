@@ -21,9 +21,9 @@
 .transaction-card-btn-container {
   display: flex;
   flex-direction: row nowrap;
-	justify-content: flex-end;
+  justify-content: flex-end;
   gap: 5px;
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .transaction-note-header h6 {
@@ -43,6 +43,13 @@
 .form-wrapper {
   max-width: 400px;
   margin: 0 auto;
+}
+
+.journal-table,
+.journal-table td,
+.journal-table th {
+  border: 1px solid black;
+  text-align: center;
 }
 
 @media (max-width: 600px) {
@@ -84,10 +91,40 @@
 
   .account-btn-section {
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: space-between;
+    gap: 5px;
     margin-bottom: 5px;
   }
+
+  .journal-table-wrapper {
+    width: 100%;
+  }
+
+  .journal-table,
+  .journal-table td,
+  .journal-table th {
+    font-size: 2.5vw;
+  }
+
+	.investing-journal-account-performance-wrapper {
+		background-color: bisque;
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+	}
+
+	.component-container {
+		height: 50px;
+	}
+
+	.component-wrapper {
+		background-color: whitesmoke;
+		border-radius: 5px;
+		height: 100%;
+		padding: 5px;
+		width: 31.5vw;
+	}
 }
 
 @media (min-width: 601px) {

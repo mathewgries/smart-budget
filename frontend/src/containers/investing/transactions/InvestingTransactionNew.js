@@ -13,7 +13,6 @@ import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
 // Component imports
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function InvestingTransactionNew(props) {
   const { id } = useParams();

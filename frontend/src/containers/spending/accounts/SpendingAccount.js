@@ -5,7 +5,6 @@ import { selectSpendingAccountById } from "../../../redux/spending/spendingAccou
 import { Link } from "react-router-dom";
 import SpendingAccountCard from "./SpendingAccountCard";
 import SpendingTransactionsList from "../transactions/SpendingTransactionsList";
-import "../style.css";
 
 export default function SpendingAccount() {
   const { id } = useParams();
@@ -14,6 +13,11 @@ export default function SpendingAccount() {
   return (
     <div className="page-container">
       <div className="page-wrapper">
+        <section>
+          <header>
+            <h3>Spending Account</h3>
+          </header>
+        </section>
         <div className="account-wrapper">
           <section className="account-card-section">
             <header>

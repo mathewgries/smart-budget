@@ -16,7 +16,6 @@ import { inputDateFormat } from "../../../helpers/dateFormat";
 import { updateTransactionHelper } from "../../../helpers/currencyHandler";
 // Component imports
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function InvestingTransactionEdit(props) {
   const { id } = useParams();

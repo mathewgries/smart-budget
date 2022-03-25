@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import InvestingAccountsList from "./InvestingAccountsList";
-import "../style.css";
 
 export default function InvestingAccounts(props) {
   return (

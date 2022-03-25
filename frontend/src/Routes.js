@@ -7,8 +7,8 @@ import Login from "./containers/auth/Login";
 import Home from "./containers/Home";
 import SpendingAccounts from "./containers/spending/accounts/SpendingAccounts";
 import SpendingAccount from "./containers/spending/accounts/SpendingAccount";
-import SpendingAccountsNew from "./containers/spending/accounts/SpendingAccountNew";
-import SpendingAccountsEdit from "./containers/spending/accounts/SpendingAccountEdit";
+import SpendingAccountNew from "./containers/spending/accounts/SpendingAccountNew";
+import SpendingAccountEdit from "./containers/spending/accounts/SpendingAccountEdit";
 import SpendingTransaction from "./containers/spending/transactions/SpendingTransaction";
 import SpendingTransactionNew from "./containers/spending/transactions/SpendingTransactionNew";
 import SpendingTransactionEdit from "./containers/spending/transactions/SpendingTransactionEdit";
@@ -21,6 +21,7 @@ import InvestingAccountsEdit from "./containers/investing/accounts/InvestingAcco
 import InvestingTransaction from "./containers/investing/transactions/InvestingTransaction";
 import InvestingTransactionNew from "./containers/investing/transactions/InvestingTransactionNew";
 import InvestingTransactionEdit from "./containers/investing/transactions/InvestingTransactionEdit";
+import InvestingJournal from './containers/investing/orders/InvestingJournal'
 import InvestingOrders from "./containers/investing/orders/InvestingOrders";
 import NotFound from "./containers/NotFound";
 
@@ -41,14 +42,14 @@ export default function Routes() {
       <AuthenticatedRoute exact path="/spending">
         <SpendingAccounts />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/spending/accounts/:id">
+      <AuthenticatedRoute exact path="/spending/accounts/new">
+        <SpendingAccountNew />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/spending/accounts/:id">
         <SpendingAccount />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/spending/accounts/new">
-        <SpendingAccountsNew />
-      </AuthenticatedRoute>
       <AuthenticatedRoute exact path="/spending/accounts/edit/:id">
-        <SpendingAccountsEdit />
+        <SpendingAccountEdit />
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path="/spending/transactions/:id">
         <SpendingTransaction />
@@ -67,11 +68,11 @@ export default function Routes() {
       <AuthenticatedRoute exact path="/investing">
         <InvestingAccounts />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/investing/accounts/:id">
-        <InvestingAccount />
-      </AuthenticatedRoute>
       <AuthenticatedRoute exact path="/investing/accounts/new">
         <InvestingAccountsNew />
+      </AuthenticatedRoute>
+      <AuthenticatedRoute exact path="/investing/accounts/:id">
+        <InvestingAccount />
       </AuthenticatedRoute>
       <AuthenticatedRoute exact path="/investing/accounts/edit/:id">
         <InvestingAccountsEdit />
@@ -79,14 +80,16 @@ export default function Routes() {
       <AuthenticatedRoute exact path="/investing/transactions/:id">
         <InvestingTransaction />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/investing/transactions/new/:id">
+      <AuthenticatedRoute exact path="/investing/transactions/new/:id">
         <InvestingTransactionNew />
       </AuthenticatedRoute>
-			<AuthenticatedRoute exact path="/investing/transactions/edit/:id">
+      <AuthenticatedRoute exact path="/investing/transactions/edit/:id">
         <InvestingTransactionEdit />
       </AuthenticatedRoute>
-      <AuthenticatedRoute exact path="/investing/orders/:id">
-        <InvestingOrders />
+
+			{/* INVESTING JOURNAL */}
+      <AuthenticatedRoute exact path="/investing/journal/:id">
+        <InvestingJournal />
       </AuthenticatedRoute>
 
       {/* Finally, catch all unmatched routes */}

@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { addNewInvestingAccount } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function InvestingAccountNew() {
   const history = useHistory();

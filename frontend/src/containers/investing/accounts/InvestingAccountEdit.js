@@ -7,7 +7,6 @@ import {
 } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function InvestingAccountsEdit(props) {
   const { id } = useParams();

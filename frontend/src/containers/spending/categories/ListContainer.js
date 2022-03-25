@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function ListContainer(props) {
-  const { listItems, activeItem, updateActiveItem, isEdit, labelText } = props;
+  const { listItems, activeItem, updateActiveItem } = props;
 
   function handleOnChange(e) {
     const { value } = e.target;
@@ -11,7 +11,6 @@ export default function ListContainer(props) {
   return (
     <div className="category-list-wrapper">
       <div className="form-group">
-        {!isEdit && <label>{labelText}</label>}
         {!activeItem ? (
           <input
             className="form-control"

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAllSpendingAcounts } from "../../../redux/spending/spendingAccountsSlice";
 import SpendingAccountCard from "./SpendingAccountCard";
-import "../style.css";
 
 export default function SpendingAccountsList(props) {
   const accountList = useSelector(selectAllSpendingAcounts);

@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "../style.css";
 
 export default function SpendingAccountNew() {
   const history = useHistory();

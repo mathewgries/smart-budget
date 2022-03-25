@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAllInvestingAccounts } from "../../../redux/investing/investingAccountsSlice";
 import InvestingAccountCard from "./InvestingAccountCard";
-import "../style.css";
 
 export default function InvestingAccountsList(props) {
 	const accountList = useSelector(selectAllInvestingAccounts);

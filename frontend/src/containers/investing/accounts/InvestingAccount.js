@@ -5,7 +5,6 @@ import { selectInvestingAccountById } from "../../../redux/investing/investingAc
 import { Link } from "react-router-dom";
 import InvestingAccountCard from "./InvestingAccountCard";
 import InvestingTransactionsList from "../transactions/InvestingTransactionsList";
-import "../style.css";
 
 export default function InvestingAccount() {
   const { id } = useParams();
@@ -14,6 +13,11 @@ export default function InvestingAccount() {
   return (
     <div className="page-container">
       <div className="page-wrapper">
+        <section>
+          <header>
+            <h3>Investing Account</h3>
+          </header>
+        </section>
         <div className="account-wrapper">
           <section className="account-card-section">
             <header>
@@ -25,10 +29,10 @@ export default function InvestingAccount() {
             <section className="account-btn-section">
               <div className="account-btn-wrapper">
                 <Link
-                  to={`/investing/accounts/edit/${id}`}
-                  className="btn btn-primary form-control"
+                  to={`/investing/journal/${id}`}
+                  className="btn btn-info form-control"
                 >
-                  Edit Account
+                  Journal
                 </Link>
               </div>
               <div className="account-btn-wrapper">
@@ -37,6 +41,14 @@ export default function InvestingAccount() {
                   className="btn btn-success form-control"
                 >
                   Add Transaction
+                </Link>
+              </div>
+              <div className="account-btn-wrapper">
+                <Link
+                  to={`/investing/accounts/edit/${id}`}
+                  className="btn btn-primary form-control"
+                >
+                  Edit Account
                 </Link>
               </div>
             </section>
