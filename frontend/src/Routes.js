@@ -21,8 +21,10 @@ import InvestingAccountsEdit from "./containers/investing/accounts/InvestingAcco
 import InvestingTransaction from "./containers/investing/transactions/InvestingTransaction";
 import InvestingTransactionNew from "./containers/investing/transactions/InvestingTransactionNew";
 import InvestingTransactionEdit from "./containers/investing/transactions/InvestingTransactionEdit";
-import InvestingJournal from './containers/investing/orders/InvestingJournal'
-import InvestingOrders from "./containers/investing/orders/InvestingOrders";
+import InvestingJournal from "./containers/investing/orders/InvestingJournal";
+import OptionsOrderNew from "./containers/investing/orders/options/OptionsOrderNew";
+import SharesOrderNew from "./containers/investing/orders/shares/SharesOrderNew";
+import VerticalSpreadsOrderNew from "./containers/investing/orders/spreads/VerticalSpreadsOrderNew";
 import NotFound from "./containers/NotFound";
 
 export default function Routes() {
@@ -31,9 +33,11 @@ export default function Routes() {
       <Route exact path="/">
         <Home />
       </Route>
+
       <UnauthenticatedRoute exact path="/login">
         <Login />
       </UnauthenticatedRoute>
+
       <UnauthenticatedRoute exact path="/signup">
         <Signup />
       </UnauthenticatedRoute>
@@ -42,24 +46,31 @@ export default function Routes() {
       <AuthenticatedRoute exact path="/spending">
         <SpendingAccounts />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/spending/accounts/new">
         <SpendingAccountNew />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/spending/accounts/:id">
         <SpendingAccount />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/spending/accounts/edit/:id">
         <SpendingAccountEdit />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/spending/transactions/:id">
         <SpendingTransaction />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/spending/transactions/new/:id">
         <SpendingTransactionNew />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/spending/transactions/edit/:id">
         <SpendingTransactionEdit />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/spending/categories">
         <Categories />
       </AuthenticatedRoute>
@@ -68,26 +79,45 @@ export default function Routes() {
       <AuthenticatedRoute exact path="/investing">
         <InvestingAccounts />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/investing/accounts/new">
         <InvestingAccountsNew />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/investing/accounts/:id">
         <InvestingAccount />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/investing/accounts/edit/:id">
         <InvestingAccountsEdit />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/investing/transactions/:id">
         <InvestingTransaction />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/investing/transactions/new/:id">
         <InvestingTransactionNew />
       </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/investing/transactions/edit/:id">
         <InvestingTransactionEdit />
       </AuthenticatedRoute>
 
-			{/* INVESTING JOURNAL */}
+      {/* INVESTING ACCOUNTS */}
+      <AuthenticatedRoute exact path="/investing/orders/options/new/:id">
+        <OptionsOrderNew />
+      </AuthenticatedRoute>
+
+      <AuthenticatedRoute exact path="/investing/orders/shares/new/:id">
+        <SharesOrderNew />
+      </AuthenticatedRoute>
+
+      <AuthenticatedRoute exact path="/investing/orders/spreads/vertical/new/:id">
+        <VerticalSpreadsOrderNew />
+      </AuthenticatedRoute>
+
+      {/* INVESTING JOURNAL */}
       <AuthenticatedRoute exact path="/investing/journal/:id">
         <InvestingJournal />
       </AuthenticatedRoute>

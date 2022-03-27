@@ -13,15 +13,33 @@ code {
     monospace;
 }
 
-/* select.form-control,
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+  color: black;
+}
+
+select.form-control,
 textarea.form-control,
 input.form-control {
   font-size: 1rem;
-} */
+}
 
 /* input[type="file"] {
   width: 100%;
 } */
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
 
 .app-container,
 .app-wrapper {
@@ -29,23 +47,23 @@ input.form-control {
 }
 
 .page-container {
-	width: 100%;
+  width: 100%;
 }
 
 .page-list-wrapper {
-	width: 100%;
+  width: 100%;
 }
 
-@media (max-width: 600px){
-	.page-wrapper {
-		width: 95%;
-		margin: 0 auto;
-	}
+@media (max-width: 600px) {
+  .page-wrapper {
+    width: 95%;
+    margin: 0 auto;
+  }
 }
 
-@media (min-width: 601px){
-	.page-wrapper {
-		width: 85%;
-		margin: 0 auto;
-	}
+@media (min-width: 601px) {
+  .page-wrapper {
+    width: 85%;
+    margin: 0 auto;
+  }
 }

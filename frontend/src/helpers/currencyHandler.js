@@ -1,4 +1,4 @@
-function dollarsToCents(amount) {
+export function dollarsToCents(amount) {
   return Number.parseFloat(amount) * 100;
 }
 
@@ -60,4 +60,46 @@ export function deleteTransactionHandler(
       100
     ).toFixed(2);
   }
+}
+
+function calculateProfitLoss(orderSize, openPrice, closePrice, tradeSide) {
+  const openCost = dollarsToCents(openPrice) * orderSize;
+  const closeCost = dollarsToCents(closePrice) * orderSize;
+
+  return tradeSide === "LONG"
+    ? closeCost - openCost
+    : (closeCost - openCost) * -1;
+}
+
+export function sharesProfitLossHandler(
+  orderSize,
+  openSharePrice,
+  closeSharePrice,
+  tradeSide
+) {
+  return (
+    calculateProfitLoss(orderSize, openSharePrice, closeSharePrice, tradeSide) /
+    100
+  ).toFixed(2);
+}
+
+export function optionsProfitLossHandler(
+  orderSize,
+  openContractPrice,
+  closeContractPrice,
+  tradeSide
+) {
+  return calculateProfitLoss(
+    orderSize,
+    openContractPrice,
+    closeContractPrice,
+    tradeSide
+  ).toFixed(2);
+}
+
+export function addOrderHandler(profitLoss, accountBalance) {
+  return (
+    (dollarsToCents(accountBalance) + dollarsToCents(profitLoss)) /
+    100
+  ).toFixed(2);
 }

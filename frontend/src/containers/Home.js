@@ -86,7 +86,7 @@ export default function Home() {
                   <h5>Spending Accounts</h5>
                 </Link>
               </header>
-              <div>
+              <div className="form-group">
                 <Link to="/spending/accounts/new" className="btn btn-primary">
                   Add
                 </Link>
@@ -103,7 +103,7 @@ export default function Home() {
                   <h5>Investing Accounts</h5>
                 </Link>
               </header>
-              <div>
+              <div className="form-group">
                 <Link to="/investing/accounts/new" className="btn btn-primary">
                   Add
                 </Link>

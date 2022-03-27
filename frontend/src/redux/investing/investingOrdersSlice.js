@@ -1,142 +1,64 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { postShares } from "../../api/investing/orders/shares";
+import { postOptions } from "../../api/investing/orders/options";
+import { postVerticalSpread } from "../../api/investing/orders/verticalSpreads";
 
 const initialState = {
-  items: [
-    {
-      PK: "USER#us-east-1:9cd038af-168a-4a1f-90a1-f00c70c8ab86",
-      SK: "INVESTING#ORDER#OPTION#96b33140-9ced-11ec-8432-b762c2373c01",
-      id: "96b33140-9ced-11ec-8432-b762c2373c01",
-      type: "INVESTING#ORDER#OPTION#",
-      GSI1_PK: "ACCT#INVESTING#66941e00-a24c-11ec-b081-3776eb702261",
-      ticker: "TSLA",
-      openDatetime: 1646790271218,
-      closeDatetime: 1646800271218,
-      orderSide: "LONG",
-      contractType: "CALL",
-      strikePrice: "810",
-      quantity: 1,
-      openPrice: 22.0,
-      closePrice: 28.2,
-			result: "win",
-			resultDollars: 620.00,
-			resultPercent: 28.18
-    },
-    {
-      PK: "USER#us-east-1:9cd038af-168a-4a1f-90a1-f00c70c8ab86",
-      SK: "INVESTING#ORDER#OPTION#86b33140-9ced-11ec-8432-b762c2373c01",
-      id: "86b33140-9ced-11ec-8432-b762c2373c01",
-      type: "INVESTING#ORDER#OPTION#",
-      GSI1_PK: "ACCT#INVESTING#66941e00-a24c-11ec-b081-3776eb702261",
-      ticker: "TSLA",
-      openDatetime: 1646790271218,
-      closeDatetime: 1646800271218,
-      orderSide: "LONG",
-      contractType: "CALL",
-      strikePrice: "800",
-      quantity: 1,
-      openPrice: 20.0,
-      closePrice: 18.0,
-			result: "loss",
-			resultDollars: 200,
-			resultPercent: 10
-    },
-		{
-      PK: "USER#us-east-1:9cd038af-168a-4a1f-90a1-f00c70c8ab86",
-      SK: "INVESTING#ORDER#OPTION#96b33140-9ced-11ec-8432-b762c2373c01",
-      id: "96b33140-9ced-11ec-8432-b762c2373c01",
-      type: "INVESTING#ORDER#OPTION#",
-      GSI1_PK: "ACCT#INVESTING#66941e00-a24c-11ec-b081-3776eb702261",
-      ticker: "TSLA",
-      openDatetime: 1646790271218,
-      closeDatetime: 1646800271218,
-      orderSide: "LONG",
-      contractType: "CALL",
-      strikePrice: "810",
-      quantity: 1,
-      openPrice: 22.0,
-      closePrice: 28.2,
-			result: "win",
-			resultDollars: 620.00,
-			resultPercent: 28.18
-    },
-    {
-      PK: "USER#us-east-1:9cd038af-168a-4a1f-90a1-f00c70c8ab86",
-      SK: "INVESTING#ORDER#OPTION#86b33140-9ced-11ec-8432-b762c2373c01",
-      id: "86b33140-9ced-11ec-8432-b762c2373c01",
-      type: "INVESTING#ORDER#OPTION#",
-      GSI1_PK: "ACCT#INVESTING#66941e00-a24c-11ec-b081-3776eb702261",
-      ticker: "TSLA",
-      openDatetime: 1646790271218,
-      closeDatetime: 1646800271218,
-      orderSide: "LONG",
-      contractType: "CALL",
-      strikePrice: "800",
-      quantity: 1,
-      openPrice: 20.0,
-      closePrice: 18.0,
-			result: "loss",
-			resultDollars: 200,
-			resultPercent: 10
-    },
-		{
-      PK: "USER#us-east-1:9cd038af-168a-4a1f-90a1-f00c70c8ab86",
-      SK: "INVESTING#ORDER#OPTION#96b33140-9ced-11ec-8432-b762c2373c01",
-      id: "96b33140-9ced-11ec-8432-b762c2373c01",
-      type: "INVESTING#ORDER#OPTION#",
-      GSI1_PK: "ACCT#INVESTING#66941e00-a24c-11ec-b081-3776eb702261",
-      ticker: "TSLA",
-      openDatetime: 1646790271218,
-      closeDatetime: 1646800271218,
-      orderSide: "LONG",
-      contractType: "CALL",
-      strikePrice: "810",
-      quantity: 1,
-      openPrice: 22.0,
-      closePrice: 28.2,
-			result: "win",
-			resultDollars: 620.00,
-			resultPercent: 28.18
-    },
-    {
-      PK: "USER#us-east-1:9cd038af-168a-4a1f-90a1-f00c70c8ab86",
-      SK: "INVESTING#ORDER#OPTION#86b33140-9ced-11ec-8432-b762c2373c01",
-      id: "86b33140-9ced-11ec-8432-b762c2373c01",
-      type: "INVESTING#ORDER#OPTION#",
-      GSI1_PK: "ACCT#INVESTING#66941e00-a24c-11ec-b081-3776eb702261",
-      ticker: "TSLA",
-      openDatetime: 1646790271218,
-      closeDatetime: 1646800271218,
-      orderSide: "LONG",
-      contractType: "CALL",
-      strikePrice: "800",
-      quantity: 1,
-      openPrice: 20.0,
-      closePrice: 18.0,
-			result: "loss",
-			resultDollars: 200,
-			resultPercent: 10
-    },
-  ],
+  items: {
+    sharesOrders: [],
+    optionsOrders: [],
+    verticalSpreadsOrders: [],
+  },
   status: "idle",
   error: null,
 };
 
 export const addNewInvestingOrder = createAsyncThunk(
-	'investingOrders/addNewInvestingOrder',
-	async (newOrder) => {
-		console.log(newOrder)
-	}
-)
+  "investingOrders/addNewInvestingOrder",
+  async (newOrder) => {
+    console.log(newOrder);
+  }
+);
+
+export const saveNewSharesOrder = createAsyncThunk(
+  "investingOrders/saveNewSharesOrder",
+  async (newSharesOrder) => {
+    return await postShares(newSharesOrder);
+  }
+);
+
+export const saveNewOptionsOrder = createAsyncThunk(
+  "investingOrders/saveNewOptionsOrder",
+  async (newOptionsOrder) => {
+    return await postOptions(newOptionsOrder);
+  }
+);
+
+export const saveNewVerticalSpreadsOrder = createAsyncThunk(
+  "investingOrders/saveNewVerticalSpreadsOrder",
+  async (newVerticalSpreadsOrder) => {
+    return await postVerticalSpread(newVerticalSpreadsOrder);
+  }
+);
 
 export const investingOrdersSlice = createSlice({
   name: "investingOrders",
   initialState,
   reducers: {},
-	extraReducers(builder){
-		builder.addCase(addNewInvestingOrder.fulfilled, (state, action) => {
-
+  extraReducers(builder) {
+    builder.addCase(saveNewSharesOrder.fulfilled, (state, action) => {
+      const { order } = action.payload;
+      state.items.sharesOrders.push(order);
+    });
+    builder.addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
+      const { order } = action.payload;
+      state.items.optionsOrders.push(order);
+    });
+		builder.addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
+			const { order } = action.payload
+			state.items.verticalSpreadsOrders.push(order)
 		})
-	}
+  },
 });
 
 export default investingOrdersSlice.reducer;

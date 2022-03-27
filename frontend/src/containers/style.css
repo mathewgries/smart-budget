@@ -52,6 +52,72 @@
   text-align: center;
 }
 
+.order-form-section {
+  background-color: whitesmoke;
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.order-form-header {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+}
+
+.order-form-row-group {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.order-form-row-group-left {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.order-form-greek-group {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.order-form-greek-header {
+  border-bottom: 1px solid lightgray;
+  text-align: center;
+}
+
+.order-type-accordian-title {
+	background-color: whitesmoke;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.order-type-dropdown-content{
+	background-color: whitesmoke;
+	width: 100%;
+}
+
+.order-type-dropdown-content div{
+	background-color: whitesmoke;
+	width: 100%;
+}
+
+.order-type-dropdown-content div:hover{
+	background-color: lightgray;
+}
+
+.order-type-dropdown-content a {
+	display: block;
+	width: 100%;
+	padding: 5px;
+}
+
 @media (max-width: 600px) {
   .home-account-list-section {
     width: 100%;
@@ -65,7 +131,6 @@
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    margin-bottom: 5px;
   }
 
   .account-card-container,
@@ -107,24 +172,35 @@
     font-size: 2.5vw;
   }
 
-	.investing-journal-account-performance-wrapper {
-		background-color: bisque;
-		display: flex;
-		flex-flow: row nowrap;
-		justify-content: space-between;
-	}
+  .investing-journal-account-performance-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    border: 1px solid black;
+  }
 
-	.component-container {
-		height: 50px;
-	}
+  .component-container {
+    height: 50px;
+  }
 
-	.component-wrapper {
-		background-color: whitesmoke;
-		border-radius: 5px;
-		height: 100%;
-		padding: 5px;
-		width: 31.5vw;
-	}
+  .component-wrapper {
+    background-color: whitesmoke;
+    border-radius: 5px;
+    height: 100%;
+    padding: 5px;
+    width: 31vw;
+  }
+
+  .order-type-accordian {
+    background-color: whitesmoke;
+    width: 100%;
+		padding: 10px;
+  }
+
+  .order-type-accordian-title {
+    background-color: whitesmoke;
+    width: 100%;
+  }
 }
 
 @media (min-width: 601px) {
