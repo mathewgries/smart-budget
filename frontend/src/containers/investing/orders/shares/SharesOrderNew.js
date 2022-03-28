@@ -25,8 +25,8 @@ export default function SharesOrderNew(props) {
     openDate: inputDateFormat(new Date()),
     closeDate: inputDateFormat(new Date()),
     orderSize: "",
-    openSharePrice: "",
-    closeSharePrice: "",
+    openPrice: "",
+    closePrice: "",
     tradeSide: "",
   });
 
@@ -35,8 +35,8 @@ export default function SharesOrderNew(props) {
     fields.openDate === "" ||
     fields.closeDate === "" ||
     fields.orderSize === "" ||
-    fields.openSharePrice === "" ||
-    fields.closeSharePrice === "" ||
+    fields.openPrice === "" ||
+    fields.closePrice === "" ||
     fields.tradeSide === "";
 
   function handleOnChange(e) {
@@ -49,14 +49,14 @@ export default function SharesOrderNew(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderSize, openSharePrice, closeSharePrice, tradeSide } = fields;
+    const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
       setIsSaving(true);
       const profitLoss = sharesProfitLossHandler(
         orderSize,
-        openSharePrice,
-        closeSharePrice,
+        openPrice,
+        closePrice,
         tradeSide
       );
       const newAccountBalance = addOrderHandler(
@@ -85,8 +85,8 @@ export default function SharesOrderNew(props) {
         openDate: fields.openDate,
         closeDate: fields.closeDate,
         orderSize: fields.orderSize,
-        openSharePrice: fields.openSharePrice,
-        closeSharePrice: fields.closeSharePrice,
+        openPrice: fields.openPrice,
+        closePrice: fields.closePrice,
         tradeSide: fields.tradeSide,
         profitLoss: profitLoss,
       })
@@ -177,25 +177,25 @@ export default function SharesOrderNew(props) {
                   </div>
                   <div className="order-form-greek-group">
                     <div className="form-group">
-                      <label htmlFor="openSharePrice">Open</label>
+                      <label htmlFor="openPrice">Open</label>
                       <input
                         className="form-control"
                         type="text"
-                        id="openSharePrice"
-                        name="openSharePrice"
-                        value={fields.openSharePrice}
+                        id="openPrice"
+                        name="openPrice"
+                        value={fields.openPrice}
                         onChange={handleOnChange}
                         data-lpignore="true"
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="closeSharePrice">Close</label>
+                      <label htmlFor="closePrice">Close</label>
                       <input
                         className="form-control"
                         type="text"
-                        id="closeSharePrice"
-                        name="closeSharePrice"
-                        value={fields.closeSharePrice}
+                        id="closePrice"
+                        name="closePrice"
+                        value={fields.closePrice}
                         onChange={handleOnChange}
                         data-lpignore="true"
                       />

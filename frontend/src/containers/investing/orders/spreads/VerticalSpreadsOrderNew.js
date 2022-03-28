@@ -26,8 +26,8 @@ export default function VerticalSpreadsOrderNew(props) {
     openDate: inputDateFormat(new Date()),
     closeDate: inputDateFormat(new Date()),
     orderSize: "",
-    openValue: "",
-    closeValue: "",
+    openPrice: "",
+    closePrice: "",
     strikeUpperLegPrice: "",
     strikeLowerLegPrice: "",
     contractType: "",
@@ -50,8 +50,8 @@ export default function VerticalSpreadsOrderNew(props) {
     fields.openDate === "" ||
     fields.closeDate === "" ||
     fields.orderSize === "" ||
-    fields.openValue === "" ||
-    fields.closeValue === "" ||
+    fields.openPrice === "" ||
+    fields.closePrice === "" ||
     fields.strikeUpperLegPrice === "" ||
     fields.strikeLowerLegPrice === "" ||
     fields.contractType === "" ||
@@ -68,15 +68,14 @@ export default function VerticalSpreadsOrderNew(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderSize, openValue, closeValue, tradeSide } =
-      fields;
+    const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
       setIsSaving(true);
       const profitLoss = optionsProfitLossHandler(
         orderSize,
-        openValue,
-        closeValue,
+        openPrice,
+        closePrice,
         tradeSide
       );
       const newAccountBalance = addOrderHandler(
@@ -105,8 +104,8 @@ export default function VerticalSpreadsOrderNew(props) {
         openDate: fields.openDate,
         closeDate: fields.closeDate,
         orderSize: fields.orderSize,
-        openValue: fields.openValue,
-        closeValue: fields.closeValue,
+        openPrice: fields.openPrice,
+        closePrice: fields.closePrice,
         strikeUpperLegPrice: fields.strikeUpperLegPrice,
         strikeLowerLegPrice: fields.strikeLowerLegPrice,
         contractType: fields.contractType,
@@ -205,13 +204,25 @@ export default function VerticalSpreadsOrderNew(props) {
             <section className="order-form-section">
               <div className="order-form-row-group">
                 <div className="form-group">
-                  <label htmlFor="openValue">Open Value</label>
+                  <label htmlFor="openPrice">Open Value</label>
                   <input
                     className="form-control"
                     type="text"
-                    id="openValue"
-                    name="openValue"
-                    value={fields.openValue}
+                    id="openPrice"
+                    name="openPrice"
+                    value={fields.openPrice}
+                    onChange={handleOnChange}
+                    data-lpignore="true"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="closePrice">Close Value</label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    id="closePrice"
+                    name="closePrice"
+                    value={fields.closePrice}
                     onChange={handleOnChange}
                     data-lpignore="true"
                   />
@@ -224,18 +235,6 @@ export default function VerticalSpreadsOrderNew(props) {
                     id="orderSize"
                     name="orderSize"
                     value={fields.orderSize}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="closeValue">Close Value</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="closeValue"
-                    name="closeValue"
-                    value={fields.closeValue}
                     onChange={handleOnChange}
                     data-lpignore="true"
                   />

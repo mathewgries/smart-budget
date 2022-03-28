@@ -6,6 +6,7 @@ import { fetchSpendingTransactions } from "../redux/spending/spendingTransaction
 import { fetchCategories } from "../redux/spending/categoriesSlice";
 import { fetchInvestingAccounts } from "../redux/investing/investingAccountsSlice";
 import { fetchInvestingTransactions } from "../redux/investing/investingTransactionsSlice";
+import { fetchAllOrders } from "../redux/investing/investingOrdersSlice";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
@@ -25,6 +26,9 @@ export default function Home() {
   );
   const investingTransactionsStatus = useSelector(
     (state) => state.investingTransactions.status
+  );
+  const investingOrdersStatus = useSelector(
+    (state) => state.investingOrders.status
   );
   const { isAuthenticated } = useAppContext();
 
@@ -53,6 +57,10 @@ export default function Home() {
       if (investingTransactionsStatus === "idle") {
         dispatch(fetchInvestingTransactions());
       }
+
+      if (investingOrdersStatus === "idle") {
+        dispatch(fetchAllOrders());
+      }
     }
 
     onLoad();
@@ -63,6 +71,7 @@ export default function Home() {
     categoriesStatus,
     investingAccountsStatus,
     investingTransactionsStatus,
+		investingOrdersStatus,
     dispatch,
   ]);
 

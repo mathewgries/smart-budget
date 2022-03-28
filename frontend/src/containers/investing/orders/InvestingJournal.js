@@ -2,20 +2,38 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
+import { selectOrderCountByTypeAndAccountId } from "../../../redux/investing/investingOrdersSlice";
 import { Link } from "react-router-dom";
 import InvestingBalance from "./InvestingBalance";
 import GrowthRate from "./GrowthRate";
-import InvestingOrders from "./InvestingOrders";
+import SharesOrdersTable from "./shares/SharesOrdersTable";
+import OptionsOrdersTable from "./options/OptionsOrderTable";
+import VerticalSpreadsTable from "./spreads/VerticalSpreadsTable";
 
 export default function InvestingJournal(props) {
   const { id } = useParams();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const [isActive, setIsActive] = useState(false);
+  const sharesCount = useSelector((state) =>
+    selectOrderCountByTypeAndAccountId(state, "shares", id)
+  );
+  const optionsCount = useSelector((state) =>
+    selectOrderCountByTypeAndAccountId(state, "options", id)
+  );
+  const verticalSpreadsCount = useSelector((state) =>
+    selectOrderCountByTypeAndAccountId(state, "verticalSpreads", id)
+  );
+  const [openOrderSelect, setOpenOrderSelect] = useState(false);
+  const [openViewSelect, setOpenViewSelect] = useState(false);
+  const [selectedView, setSelectedView] = useState(false);
+
+  function handleSelectView(e) {
+    const { innerText } = e.target;
+    setSelectedView(innerText);
+  }
 
   return (
     <div className="page-container">
       <div className="page-wrapper">
-        <div>Investing Journal</div>
         <section className="investing-journal-account-performance-wrapper">
           <div>
             <InvestingBalance account={account} />
@@ -27,17 +45,18 @@ export default function InvestingJournal(props) {
             <GrowthRate />
           </div>
         </section>
-        <section>
+
+        <section className="order-accordian-section">
           <div className="order-type-accordian">
             <div className="order-type-accordian-item">
               <div
                 className="order-type-accordian-title"
-                onClick={() => setIsActive(!isActive)}
+                onClick={() => setOpenOrderSelect(!openOrderSelect)}
               >
                 <div>New Order</div>
-                <div>{isActive ? "-" : "+"}</div>
+                <div>{openOrderSelect ? "-" : "+"}</div>
               </div>
-              {isActive && (
+              {openOrderSelect && (
                 <div className="order-type-dropdown-content">
                   <div>
                     <Link to={`/investing/orders/shares/new/${id}`}>
@@ -58,6 +77,96 @@ export default function InvestingJournal(props) {
               )}
             </div>
           </div>
+        </section>
+
+        <section>
+          <div className="order-type-accordian">
+            <div className="order-type-accordian-item">
+              <div
+                className="order-type-accordian-title"
+                onClick={() => setOpenViewSelect(!openViewSelect)}
+              >
+                <div>View Select</div>
+                <div>{openViewSelect ? "-" : "+"}</div>
+              </div>
+              {openViewSelect && (
+                <div className="order-type-dropdown-content">
+                  <div
+                    className="view-selection"
+                    value="all"
+                    onClick={handleSelectView}
+                  >
+                    View All
+                  </div>
+                  <div
+                    className="view-selection"
+                    value="shares"
+                    onClick={handleSelectView}
+                  >
+                    Shares
+                  </div>
+                  <div
+                    className="view-selection"
+                    value="options"
+                    onClick={handleSelectView}
+                  >
+                    Options
+                  </div>
+                  <div
+                    className="view-selection"
+                    value="vertical"
+                    onClick={handleSelectView}
+                  >
+                    Vertical Spreads
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="journal-table-section">
+          {sharesCount === 0 &&
+          optionsCount === 0 &&
+          verticalSpreadsCount === 0 ? (
+            <div>
+              <p>Add your first order...</p>
+            </div>
+          ) : (
+            <div>
+              <div>
+                {sharesCount > 0 && (
+                  <div>
+                    {selectedView === "View All" ||
+                    selectedView === "Shares" ? (
+                      <SharesOrdersTable />
+                    ) : null}
+                  </div>
+                )}
+              </div>
+              <div>
+                {optionsCount > 0 && (
+                  <div>
+										{selectedView === "View All" ||
+                    selectedView === "Options" ? (
+                      <OptionsOrdersTable />
+                    ) : null}
+                  </div>
+                )}
+              </div>
+              <div>
+                {verticalSpreadsCount > 0 && (
+                  <div>
+										{selectedView === "View All" ||
+                    selectedView === "Vertical Spreads" ? (
+                      <VerticalSpreadsTable />
+                    ) : null}
+                    
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </section>
       </div>
     </div>

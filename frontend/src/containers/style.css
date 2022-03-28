@@ -1,13 +1,36 @@
-.home-list-section {
+.home-list-section,
+.order-type-dropdown-content,
+.order-type-dropdown-content div,
+.order-type-dropdown-content a {
   width: 100%;
+}
+
+.order-accordian-section,
+.account-card-container,
+.spending-transaction-card-container,
+.transaction-note-section,
+.transaction-card-btn-container,
+.order-form-section,
+.investing-journal-account-performance-wrapper {
+  margin-bottom: 10px;
+}
+
+.account-card-container,
+.spending-transaction-card-container,
+.transaction-note-section,
+.order-form-section,
+.order-type-accordian-title,
+.order-type-dropdown-content,
+.order-type-dropdown-content div,
+.component-wrapper,
+.order-type-accordian {
+  background-color: whitesmoke;
 }
 
 .account-card-container,
 .spending-transaction-card-container,
 .transaction-note-section {
-  background-color: whitesmoke;
   padding: 10px;
-  margin-bottom: 10px;
   border-radius: 10px;
 }
 
@@ -18,21 +41,21 @@
   justify-content: space-between;
 }
 
+.transaction-wrapper,
+.form-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
 .transaction-card-btn-container {
   display: flex;
   flex-direction: row nowrap;
   justify-content: flex-end;
   gap: 5px;
-  margin-bottom: 10px;
 }
 
 .transaction-note-header h6 {
   border-bottom: 1px solid lightgray;
-}
-
-.transaction-wrapper {
-  max-width: 400px;
-  margin: 0 auto;
 }
 
 .transaction-card-date-wrapper {
@@ -40,29 +63,15 @@
   margin-bottom: 2px;
 }
 
-.form-wrapper {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.journal-table,
-.journal-table td,
-.journal-table th {
-  border: 1px solid black;
-  text-align: center;
-}
-
 .order-form-section {
-  background-color: whitesmoke;
   padding: 5px;
   border-radius: 5px;
-  margin-bottom: 10px;
 }
 
 .order-form-header {
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }
 
 .order-form-row-group {
@@ -92,34 +101,38 @@
 }
 
 .order-type-accordian-title {
-	background-color: whitesmoke;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
 }
 
-.order-type-dropdown-content{
-	background-color: whitesmoke;
-	width: 100%;
+.order-type-dropdown-content div:hover,
+.view-selection {
+  background-color: lightgray;
 }
 
-.order-type-dropdown-content div{
-	background-color: whitesmoke;
-	width: 100%;
+.order-type-dropdown-content a,
+.order-type-dropdown-content {
+  display: block;
+  padding: 5px;
 }
 
-.order-type-dropdown-content div:hover{
-	background-color: lightgray;
-}
-
-.order-type-dropdown-content a {
-	display: block;
-	width: 100%;
-	padding: 5px;
+caption {
+  caption-side: top;
 }
 
 @media (max-width: 600px) {
-  .home-account-list-section {
+  .home-account-list-section,
+  .account-card-container,
+  .spending-transaction-card-container,
+  .accounts-list-section,
+  .transaction-list-container,
+  .order-type-accordian,
+  .order-type-accordian-title,
+  .journal-table-section,
+  .orders-table-container,
+  .orders-table-wrapper,
+  .orders-table {
     width: 100%;
   }
 
@@ -135,15 +148,9 @@
 
   .account-card-container,
   .spending-transaction-card-container {
-    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-  }
-
-  .accounts-list-section,
-  .transaction-list-container {
-    width: 100%;
   }
 
   .account-list-header-wrapper {
@@ -162,21 +169,10 @@
     margin-bottom: 5px;
   }
 
-  .journal-table-wrapper {
-    width: 100%;
-  }
-
-  .journal-table,
-  .journal-table td,
-  .journal-table th {
-    font-size: 2.5vw;
-  }
-
   .investing-journal-account-performance-wrapper {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
-    border: 1px solid black;
   }
 
   .component-container {
@@ -184,22 +180,25 @@
   }
 
   .component-wrapper {
-    background-color: whitesmoke;
     border-radius: 5px;
     height: 100%;
     padding: 5px;
     width: 31vw;
+    font-size: 3vw;
   }
 
   .order-type-accordian {
-    background-color: whitesmoke;
-    width: 100%;
-		padding: 10px;
+    padding: 10px;
+    font-size: 3vw;
   }
 
-  .order-type-accordian-title {
-    background-color: whitesmoke;
-    width: 100%;
+  .orders-table thead {
+    font-size: 2vw;
+  }
+
+  .orders-table {
+    text-align: center;
+    font-size: 2.5vw;
   }
 }
 

@@ -1,6 +1,6 @@
 import * as uuid from "uuid";
 import handler from "../../../../util/handler";
-import dynamoDb from "../../../../util/dynamodb"
+import dynamoDb from "../../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
@@ -20,15 +20,14 @@ export const main = handler(async (event) => {
             GSI1_PK: `ACCT#INVESTING#${accountId}`,
             id: orderId,
             type: type,
-						ticker: data.ticker,
-						sharePrice: data.sharePrice,
-						orderSide: data.orderSide,
-						orderSize: data.orderSize,
+            ticker: data.ticker,
+            openDate: data.openDate,
+            closeDate: data.closeDate,
+            orderSize: data.orderSize,
             openPrice: data.openPrice,
-						closePrice: data.closePrice,
-						openDate: data.openDate,
-						closeDate: data.closeDate,
-						profitLoss: data.profitLoss,
+            closePrice: data.closePrice,
+            tradeSide: data.tradeSide,
+            profitLoss: data.profitLoss,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },

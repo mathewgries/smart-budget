@@ -26,8 +26,8 @@ export default function OptionsOrderNew(props) {
     openDate: inputDateFormat(new Date()),
     closeDate: inputDateFormat(new Date()),
     orderSize: "",
-    openContractPrice: "",
-    closeContractPrice: "",
+    openPrice: "",
+    closePrice: "",
     strikePrice: "",
     contractType: "",
     tradeSide: "",
@@ -47,8 +47,8 @@ export default function OptionsOrderNew(props) {
   const saveDisabled =
     fields.ticker === "" ||
     fields.orderSize === "" ||
-    fields.openContractPrice === "" ||
-    fields.closeContractPrice === "" ||
+    fields.openPrice === "" ||
+    fields.closePrice === "" ||
     fields.strikePrice === "" ||
     fields.contractType === "" ||
     fields.tradeSide === "";
@@ -63,15 +63,15 @@ export default function OptionsOrderNew(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderSize, openContractPrice, closeContractPrice, tradeSide } =
+    const { orderSize, openPrice, closePrice, tradeSide } =
       fields;
 
     try {
       setIsSaving(true);
       const profitLoss = optionsProfitLossHandler(
         orderSize,
-        openContractPrice,
-        closeContractPrice,
+        openPrice,
+        closePrice,
         tradeSide
       );
       const newAccountBalance = addOrderHandler(
@@ -100,8 +100,8 @@ export default function OptionsOrderNew(props) {
         openDate: fields.openDate,
         closeDate: fields.closeDate,
         orderSize: fields.orderSize,
-        openContractPrice: fields.openContractPrice,
-        closeContractPrice: fields.closeContractPrice,
+        openPrice: fields.openPrice,
+        closePrice: fields.closePrice,
         strikePrice: fields.strikePrice,
         contractType: fields.contractType,
         tradeSide: fields.tradeSide,
@@ -199,25 +199,25 @@ export default function OptionsOrderNew(props) {
             <section className="order-form-section">
               <div className="order-form-row-group">
                 <div className="form-group">
-                  <label htmlFor="openContractPrice">Open Price</label>
+                  <label htmlFor="openPrice">Open Price</label>
                   <input
                     className="form-control"
                     type="text"
-                    id="openContractPrice"
-                    name="openContractPrice"
-                    value={fields.openContractPrice}
+                    id="openPrice"
+                    name="openPrice"
+                    value={fields.openPrice}
                     onChange={handleOnChange}
                     data-lpignore="true"
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="closeContractPrice">Close Price</label>
+                  <label htmlFor="closePrice">Close Price</label>
                   <input
                     className="form-control"
                     type="text"
-                    id="closeContractPrice"
-                    name="closeContractPrice"
-                    value={fields.closeContractPrice}
+                    id="closePrice"
+                    name="closePrice"
+                    value={fields.closePrice}
                     onChange={handleOnChange}
                     data-lpignore="true"
                   />
