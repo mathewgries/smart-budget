@@ -61,6 +61,9 @@ function App() {
                     <LinkContainer to="/spending/categories">
                       <Nav.Link>Categories</Nav.Link>
                     </LinkContainer>
+										<LinkContainer to="/investing/signals">
+                      <Nav.Link>Signals</Nav.Link>
+                    </LinkContainer>
                     <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
                   </>
                 ) : (

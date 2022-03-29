@@ -28,9 +28,22 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Item: {
             PK: `USER#${userId}`,
-            SK: `USER#${type}`,
+            SK: `USER#$CATEGORY`,
             type: type,
             categoryMap: categories,
+            createDate: Date.now(),
+            modifyDate: Date.now(),
+          },
+        },
+      },
+			{
+        Put: {
+          TableName: process.env.TABLE_NAME,
+          Item: {
+            PK: `USER#${userId}`,
+            SK: `USER#SIGNAL`,
+            type: 'SIGNAL',
+            signalList: [],
             createDate: Date.now(),
             modifyDate: Date.now(),
           },

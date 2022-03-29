@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
-import { selectOrderCountByTypeAndAccountId } from "../../../redux/investing/investingOrdersSlice";
+import {
+  selectOrderCountByTypeAndAccountId,
+  selectProfitLossByAccountId,
+} from "../../../redux/investing/investingOrdersSlice";
 import { Link } from "react-router-dom";
 import InvestingBalance from "./InvestingBalance";
 import GrowthRate from "./GrowthRate";
@@ -22,9 +25,12 @@ export default function InvestingJournal(props) {
   const verticalSpreadsCount = useSelector((state) =>
     selectOrderCountByTypeAndAccountId(state, "verticalSpreads", id)
   );
+  const profitLossTotal = useSelector((state) =>
+    selectProfitLossByAccountId(state, id)
+  );
   const [openOrderSelect, setOpenOrderSelect] = useState(false);
   const [openViewSelect, setOpenViewSelect] = useState(false);
-  const [selectedView, setSelectedView] = useState(false);
+  const [selectedView, setSelectedView] = useState("View All");
 
   function handleSelectView(e) {
     const { innerText } = e.target;
@@ -39,10 +45,17 @@ export default function InvestingJournal(props) {
             <InvestingBalance account={account} />
           </div>
           <div>
-            <GrowthRate />
+            <GrowthRate growthRate={`P/L$: ${profitLossTotal}`} />
           </div>
           <div>
-            <GrowthRate />
+            <GrowthRate
+              growthRate={`P/L%: ${(
+                ((account.accountBalance -
+                  (account.accountBalance - profitLossTotal)) /
+                  (account.accountBalance - profitLossTotal)) *
+                100
+              ).toFixed(2)}`}
+            />
           </div>
         </section>
 
@@ -147,7 +160,7 @@ export default function InvestingJournal(props) {
               <div>
                 {optionsCount > 0 && (
                   <div>
-										{selectedView === "View All" ||
+                    {selectedView === "View All" ||
                     selectedView === "Options" ? (
                       <OptionsOrdersTable />
                     ) : null}
@@ -157,11 +170,10 @@ export default function InvestingJournal(props) {
               <div>
                 {verticalSpreadsCount > 0 && (
                   <div>
-										{selectedView === "View All" ||
+                    {selectedView === "View All" ||
                     selectedView === "Vertical Spreads" ? (
                       <VerticalSpreadsTable />
                     ) : null}
-                    
                   </div>
                 )}
               </div>

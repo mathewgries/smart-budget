@@ -7,7 +7,7 @@ export const main = handler(async (event) => {
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const accountId = data.accountId;
   const orderId = uuid.v1();
-  const type = "INVESTING#ORDER#OPTIONS#";
+  const type = "ORDER#OPTIONS#";
 
   const params = {
     TransactItems: [
@@ -26,6 +26,8 @@ export const main = handler(async (event) => {
             orderSize: data.orderSize,
             openPrice: data.openPrice,
             closePrice: data.closePrice,
+            openUnderlyingPrice: data.openUnderlyingPrice,
+            closeUnderlyingPrice: data.closeUnderlyingPrice,
             strikePrice: data.strikePrice,
             contractType: data.contractType,
             tradeSide: data.tradeSide,
@@ -41,6 +43,7 @@ export const main = handler(async (event) => {
             openImpliedVolatility: data.openImpliedVolatility || null,
             closeImpliedVolatility: data.closeImpliedVolatility || null,
             profitLoss: data.profitLoss,
+						signalList: data.signalList,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },

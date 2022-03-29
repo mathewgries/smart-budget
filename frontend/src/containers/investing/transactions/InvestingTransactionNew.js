@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-// redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewInvestingTransaction } from "../../../redux/investing/investingTransactionsSlice";
 import {
   selectInvestingAccountById,
   updateInvestingAccountBalance,
 } from "../../../redux/investing/investingAccountsSlice";
-// Helper imports
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
-// Component imports
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function InvestingTransactionNew(props) {

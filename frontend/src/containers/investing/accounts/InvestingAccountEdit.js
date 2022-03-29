@@ -14,7 +14,10 @@ export default function InvestingAccountsEdit(props) {
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
   const [isSaving, setIsSaving] = useState(false);
-  const [fields, setFields] = useState({ accountName: "", accountBalance: "" });
+  const [fields, setFields] = useState({
+    accountName: "",
+    accountBalance: "",
+  });
 
   useEffect(() => {
     setFields((prev) => ({
@@ -22,7 +25,7 @@ export default function InvestingAccountsEdit(props) {
       accountName: account.accountName,
       accountBalance: account.accountBalance,
     }));
-  },[account]);
+  }, [account]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -38,7 +41,7 @@ export default function InvestingAccountsEdit(props) {
       await dispatch(
         updateInvestingAccount({ id, accountName, accountBalance })
       ).unwrap();
-			history.push(`/investing/accounts/${id}`)
+      history.push(`/investing/accounts/${id}`);
     } catch (e) {
       onError(e);
     }

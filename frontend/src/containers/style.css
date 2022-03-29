@@ -54,7 +54,8 @@
   gap: 5px;
 }
 
-.transaction-note-header h6 {
+.transaction-note-header h6,
+.order-form-greek-header {
   border-bottom: 1px solid lightgray;
 }
 
@@ -96,7 +97,6 @@
 }
 
 .order-form-greek-header {
-  border-bottom: 1px solid lightgray;
   text-align: center;
 }
 
@@ -119,6 +119,25 @@
 
 caption {
   caption-side: top;
+}
+
+@media (max-width: 400px) {
+	.btn {
+		font-size: 3.25vw;
+		font-weight: bold;
+	}
+}
+
+.signal-input-group{
+	display: flex;
+	flex-flow: row nowrap;
+	gap: 5px;
+}
+
+.order-signal-list-item {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
 }
 
 @media (max-width: 600px) {
@@ -184,12 +203,12 @@ caption {
     height: 100%;
     padding: 5px;
     width: 31vw;
-    font-size: 3vw;
+    /* font-size: 3.25vw; */
   }
 
   .order-type-accordian {
     padding: 10px;
-    font-size: 3vw;
+    /* font-size: 3vw; */
   }
 
   .orders-table thead {
@@ -200,6 +219,10 @@ caption {
     text-align: center;
     font-size: 2.5vw;
   }
+
+	.order-type-accordian-title span {
+		color: slategray;
+	}
 }
 
 @media (min-width: 601px) {

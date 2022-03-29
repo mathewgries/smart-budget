@@ -7,7 +7,7 @@ export const main = handler(async (event) => {
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const accountId = data.accountId;
   const orderId = uuid.v1();
-  const type = "INVESTING#ORDER#SHARES#";
+  const type = "ORDER#SHARES#";
 
   const params = {
     TransactItems: [
@@ -28,6 +28,7 @@ export const main = handler(async (event) => {
             closePrice: data.closePrice,
             tradeSide: data.tradeSide,
             profitLoss: data.profitLoss,
+						signalList: data.signalList,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },

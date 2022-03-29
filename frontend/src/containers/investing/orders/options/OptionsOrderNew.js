@@ -12,6 +12,7 @@ import {
   optionsProfitLossHandler,
   addOrderHandler,
 } from "../../../../helpers/currencyHandler";
+import SignalsListGroup from "../SignalListGroup";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function OptionsOrderNew(props) {
@@ -19,7 +20,11 @@ export default function OptionsOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const [isSaving, setIsSaving] = useState(false);
+  const investingOrdersStatus = useSelector(
+    (state) => state.investingOrders.status
+  );
+  const [selectedSignals, setSelectedSignals] = useState([]);
+  const [openGreeks, setOpenGreeks] = useState(false);
 
   const [fields, setFields] = useState({
     ticker: "",
@@ -28,6 +33,8 @@ export default function OptionsOrderNew(props) {
     orderSize: "",
     openPrice: "",
     closePrice: "",
+    openUnderlyingPrice: "",
+    closeUnderlyingPrice: "",
     strikePrice: "",
     contractType: "",
     tradeSide: "",
@@ -49,6 +56,8 @@ export default function OptionsOrderNew(props) {
     fields.orderSize === "" ||
     fields.openPrice === "" ||
     fields.closePrice === "" ||
+    fields.openUnderlyingPrice === "" ||
+    fields.closeUnderlyingPrice === "" ||
     fields.strikePrice === "" ||
     fields.contractType === "" ||
     fields.tradeSide === "";
@@ -61,13 +70,19 @@ export default function OptionsOrderNew(props) {
     }));
   }
 
+  function handleSignalSelection(signal, action) {
+    if (action) {
+      setSelectedSignals([...selectedSignals, signal]);
+    } else {
+      setSelectedSignals(selectedSignals.filter((item) => item !== signal));
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderSize, openPrice, closePrice, tradeSide } =
-      fields;
+    const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-      setIsSaving(true);
       const profitLoss = optionsProfitLossHandler(
         orderSize,
         openPrice,
@@ -102,6 +117,8 @@ export default function OptionsOrderNew(props) {
         orderSize: fields.orderSize,
         openPrice: fields.openPrice,
         closePrice: fields.closePrice,
+        openUnderlyingPrice: fields.openUnderlyingPrice,
+        closeUnderlyingPrice: fields.closeUnderlyingPrice,
         strikePrice: fields.strikePrice,
         contractType: fields.contractType,
         tradeSide: fields.tradeSide,
@@ -117,6 +134,7 @@ export default function OptionsOrderNew(props) {
         openImpliedVolatility: fields.openImpliedVolatility,
         closeImpliedVolatility: fields.closeImpliedVolatility,
         profitLoss: profitLoss,
+        signalList: selectedSignals,
       })
     ).unwrap();
   };
@@ -134,9 +152,13 @@ export default function OptionsOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || isSaving}
+                  disabled={saveDisabled || investingOrdersStatus === "saving"}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {investingOrdersStatus === "saving" ? (
+                    <LoadingSpinner />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
               </div>
             </section>
@@ -194,6 +216,13 @@ export default function OptionsOrderNew(props) {
                   />
                 </div>
               </div>
+            </section>
+
+            <section>
+              <SignalsListGroup
+                handleSignalSelection={handleSignalSelection}
+                selectedSignals={selectedSignals}
+              />
             </section>
 
             <section className="order-form-section">
@@ -320,61 +349,29 @@ export default function OptionsOrderNew(props) {
               <div className="order-form-row-group">
                 <div className="order-form-greek-group-wrapper">
                   <div className="order-form-greek-header">
-                    <label>Delta</label>
+                    <label>Underlying Share Price</label>
                   </div>
                   <div className="order-form-greek-group">
                     <div className="form-group">
-                      <label htmlFor="openDelta">Open</label>
+                      <label htmlFor="openUnderlyingPrice">Open</label>
                       <input
                         className="form-control"
                         type="text"
-                        id="openDelta"
-                        name="openDelta"
-                        value={fields.openDelta}
+                        id="openUnderlyingPrice"
+                        name="openUnderlyingPrice"
+                        value={fields.openUnderlyingPrice}
                         onChange={handleOnChange}
                         data-lpignore="true"
                       />
                     </div>
                     <div className="form-group">
-                      <label htmlFor="closeDelta">Close</label>
+                      <label htmlFor="closeUnderlyingPrice">Close</label>
                       <input
                         className="form-control"
                         type="text"
-                        id="closeDelta"
-                        name="closeDelta"
-                        value={fields.closeDelta}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="order-form-greek-group-wrapper">
-                  <div className="order-form-greek-header">
-                    <label>Gamma</label>
-                  </div>
-                  <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openGamma">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openGamma"
-                        name="openGamma"
-                        value={fields.openGamma}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="closeGamma">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closeGamma"
-                        name="closeGamma"
-                        value={fields.closeGamma}
+                        id="closeUnderlyingPrice"
+                        name="closeUnderlyingPrice"
+                        value={fields.closeUnderlyingPrice}
                         onChange={handleOnChange}
                         data-lpignore="true"
                       />
@@ -382,97 +379,186 @@ export default function OptionsOrderNew(props) {
                   </div>
                 </div>
               </div>
+            </section>
 
-              <div className="order-form-row-group">
-                <div className="order-form-greek-group-wrapper">
-                  <div className="order-form-greek-header">
-                    <label>Vega</label>
-                  </div>
-                  <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openVega">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openVega"
-                        name="openVega"
-                        value={fields.openVega}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
-                      />
+            <section className="order-accordian-section">
+              <div className="order-type-accordian">
+                <div className="order-type-accordian-item">
+                  <div
+                    className="order-type-accordian-title"
+                    onClick={() => setOpenGreeks(!openGreeks)}
+                  >
+                    <div>
+                      Greeks <span>(optional)</span>
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="closeVega">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closeVega"
-                        name="closeVega"
-                        value={fields.closeVega}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
-                      />
-                    </div>
+                    <div>{openGreeks ? "-" : "+"}</div>
                   </div>
-                </div>
+                  {openGreeks && (
+                    <div>
+                      <div className="order-form-row-group">
+                        <div className="order-form-greek-group-wrapper">
+                          <div className="order-form-greek-header">
+                            <label>Delta</label>
+                          </div>
+                          <div className="order-form-greek-group">
+                            <div className="form-group">
+                              <label htmlFor="openDelta">Open</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="openDelta"
+                                name="openDelta"
+                                value={fields.openDelta}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label htmlFor="closeDelta">Close</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="closeDelta"
+                                name="closeDelta"
+                                value={fields.closeDelta}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                          </div>
+                        </div>
 
-                <div className="order-form-greek-group-wrapper">
-                  <div className="order-form-greek-header">
-                    <label>Theta</label>
-                  </div>
-                  <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openTheta">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openTheta"
-                        name="openTheta"
-                        value={fields.openTheta}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label htmlFor="closeTheta">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closeTheta"
-                        name="closeTheta"
-                        value={fields.closeTheta}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
+                        <div className="order-form-greek-group-wrapper">
+                          <div className="order-form-greek-header">
+                            <label>Gamma</label>
+                          </div>
+                          <div className="order-form-greek-group">
+                            <div className="form-group">
+                              <label htmlFor="openGamma">Open</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="openGamma"
+                                name="openGamma"
+                                value={fields.openGamma}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label htmlFor="closeGamma">Close</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="closeGamma"
+                                name="closeGamma"
+                                value={fields.closeGamma}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-              <div className="order-form-row-group">
-                <div className="form-group">
-                  <label htmlFor="openImpliedVolatility">Open I.V.</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="openImpliedVolatility"
-                    name="openImpliedVolatility"
-                    value={fields.openImpliedVolatility}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="closeImpliedVolatility">Close I.V.</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="closeImpliedVolatility"
-                    name="closeImpliedVolatility"
-                    value={fields.closeImpliedVolatility}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
-                  />
+                      <div className="order-form-row-group">
+                        <div className="order-form-greek-group-wrapper">
+                          <div className="order-form-greek-header">
+                            <label>Vega</label>
+                          </div>
+                          <div className="order-form-greek-group">
+                            <div className="form-group">
+                              <label htmlFor="openVega">Open</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="openVega"
+                                name="openVega"
+                                value={fields.openVega}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label htmlFor="closeVega">Close</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="closeVega"
+                                name="closeVega"
+                                value={fields.closeVega}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="order-form-greek-group-wrapper">
+                          <div className="order-form-greek-header">
+                            <label>Theta</label>
+                          </div>
+                          <div className="order-form-greek-group">
+                            <div className="form-group">
+                              <label htmlFor="openTheta">Open</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="openTheta"
+                                name="openTheta"
+                                value={fields.openTheta}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <label htmlFor="closeTheta">Close</label>
+                              <input
+                                className="form-control"
+                                type="text"
+                                id="closeTheta"
+                                name="closeTheta"
+                                value={fields.closeTheta}
+                                onChange={handleOnChange}
+                                data-lpignore="true"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="order-form-row-group">
+                        <div className="form-group">
+                          <label htmlFor="openImpliedVolatility">
+                            Open I.V.
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="openImpliedVolatility"
+                            name="openImpliedVolatility"
+                            value={fields.openImpliedVolatility}
+                            onChange={handleOnChange}
+                            data-lpignore="true"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="closeImpliedVolatility">
+                            Close I.V.
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            id="closeImpliedVolatility"
+                            name="closeImpliedVolatility"
+                            value={fields.closeImpliedVolatility}
+                            onChange={handleOnChange}
+                            data-lpignore="true"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </section>

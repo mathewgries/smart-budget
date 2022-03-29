@@ -17,7 +17,8 @@ const initialState = {
 export const fetchAllOrders = createAsyncThunk(
   "investingOrders/fetchAllOrders",
   async () => {
-    return await getAllOrders();
+    const results = await getAllOrders();
+    return results;
   }
 );
 
@@ -54,31 +55,46 @@ export const investingOrdersSlice = createSlice({
       .addCase(fetchAllOrders.fulfilled, (state, action) => {
         state.status = "succeeded";
         state.items.shares = action.payload.filter(
-          (order) => order.type === "INVESTING#ORDER#SHARES#"
+          (order) => order.type === "ORDER#SHARES#"
         );
         state.items.options = action.payload.filter(
-          (order) => order.type === "INVESTING#ORDER#OPTIONS#"
+          (order) => order.type === "ORDER#OPTIONS#"
         );
         state.items.verticalSpreads = action.payload.filter(
-          (order) => order.type === "INVESTING#ORDER#VERTSPREAD#"
+          (order) => order.type === "ORDER#VERTSPREADS#"
         );
       })
       .addCase(fetchAllOrders.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
-    builder.addCase(saveNewSharesOrder.fulfilled, (state, action) => {
-      const { order } = action.payload;
-      state.items.shares.push(order);
-    });
-    builder.addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
-      const { order } = action.payload;
-      state.items.options.push(order);
-    });
-    builder.addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
-      const { order } = action.payload;
-      state.items.verticalSpreads.push(order);
-    });
+    builder
+      .addCase(saveNewSharesOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(saveNewSharesOrder.fulfilled, (state, action) => {
+				state.status = "succeeded";
+        const { order } = action.payload;
+        state.items.shares.push(order);
+      });
+    builder
+      .addCase(saveNewOptionsOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { order } = action.payload;
+        state.items.options.push(order);
+      });
+    builder
+      .addCase(saveNewVerticalSpreadsOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
+				state.status = "succeeded";
+        const { order } = action.payload;
+        state.items.verticalSpreads.push(order);
+      });
   },
 });
 
@@ -103,6 +119,27 @@ export const selectOrderCountByTypeAndAccountId = (state, type, accountId) =>
   state.investingOrders.items[type].filter(
     (order) => order.GSI1_PK.replace("ACCT#INVESTING#", "") === accountId
   ).length;
+
+export const selectProfitLossByAccountId = (state, accountId) => {
+  let totals = state.investingOrders.items.shares
+    .map((order) => Number.parseFloat(order.profitLoss))
+    .concat(
+      state.investingOrders.items.options.map((order) =>
+        Number.parseFloat(order.profitLoss)
+      )
+    )
+    .concat(
+      state.investingOrders.items.verticalSpreads.map((order) =>
+        Number.parseFloat(order.profitLoss)
+      )
+    );
+
+  let initialValue = 0;
+  return totals.reduce(
+    (previousValue, currentValue) => previousValue + currentValue,
+    initialValue
+  );
+};
 
 export const selectOrdersByAccountId = (state, accountId) => {
   return {

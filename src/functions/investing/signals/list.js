@@ -12,7 +12,7 @@ export const main = handler(async (event) => {
     },
     ExpressionAttributeValues: {
       ":PK": `USER#${userId}`,
-      ":SK": "ORDER#",
+      ":SK": "INVESTING#SIGNAL#",
     },
   };
 

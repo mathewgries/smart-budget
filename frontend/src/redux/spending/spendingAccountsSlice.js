@@ -54,9 +54,13 @@ export const spendingAccountsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
-    builder.addCase(addNewSpendingAccount.fulfilled, (state, action) => {
-      state.items.push(action.payload);
-    });
+    builder
+			.addCase(addNewSpendingAccount.pending, (state, action) => {
+				state.status = "loading"
+			})
+			.addCase(addNewSpendingAccount.fulfilled, (state, action) => {
+      	state.items.push(action.payload);
+    	});
     builder.addCase(updateSpendingAccount.fulfilled, (state, action) => {
       const { id, accountName, accountBalance } = action.payload;
       const existingAccount = state.items.find((account) => account.id === id);

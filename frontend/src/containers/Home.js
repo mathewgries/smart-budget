@@ -7,9 +7,11 @@ import { fetchCategories } from "../redux/spending/categoriesSlice";
 import { fetchInvestingAccounts } from "../redux/investing/investingAccountsSlice";
 import { fetchInvestingTransactions } from "../redux/investing/investingTransactionsSlice";
 import { fetchAllOrders } from "../redux/investing/investingOrdersSlice";
+import { fetchSignals } from "../redux/investing/investingSignalsSlice";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
+import LoadingSpinner from "../components/LoadingSpinner";
 import "./style.css";
 
 export default function Home() {
@@ -29,6 +31,9 @@ export default function Home() {
   );
   const investingOrdersStatus = useSelector(
     (state) => state.investingOrders.status
+  );
+  const investingSignalsStatus = useSelector(
+    (state) => state.investingSignals.status
   );
   const { isAuthenticated } = useAppContext();
 
@@ -61,6 +66,9 @@ export default function Home() {
       if (investingOrdersStatus === "idle") {
         dispatch(fetchAllOrders());
       }
+      if (investingSignalsStatus === "idle") {
+        dispatch(fetchSignals());
+      }
     }
 
     onLoad();
@@ -71,7 +79,8 @@ export default function Home() {
     categoriesStatus,
     investingAccountsStatus,
     investingTransactionsStatus,
-		investingOrdersStatus,
+    investingOrdersStatus,
+		investingSignalsStatus,
     dispatch,
   ]);
 
@@ -91,14 +100,24 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                <Link to="/spending">
+                {spendingAccountsState === "loading" ? (
                   <h5>Spending Accounts</h5>
-                </Link>
+                ) : (
+                  <Link to="/spending">
+                    <h5>Spending Accounts</h5>
+                  </Link>
+                )}
               </header>
               <div className="form-group">
-                <Link to="/spending/accounts/new" className="btn btn-primary">
-                  Add
-                </Link>
+                {spendingAccountsState === "loading" ? (
+                  <button disabled={true} className="btn btn-secondary">
+                    <LoadingSpinner />
+                  </button>
+                ) : (
+                  <Link to="/spending/accounts/new" className="btn btn-primary">
+                    Add
+                  </Link>
+                )}
               </div>
             </div>
             <div className="home-list-section">
@@ -108,14 +127,27 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                <Link to="/investing">
+                {investingAccountsStatus === "loading" ? (
                   <h5>Investing Accounts</h5>
-                </Link>
+                ) : (
+                  <Link to="/investing">
+                    <h5>Investing Accounts</h5>
+                  </Link>
+                )}
               </header>
               <div className="form-group">
-                <Link to="/investing/accounts/new" className="btn btn-primary">
-                  Add
-                </Link>
+                {investingAccountsStatus === "loading" ? (
+                  <button disabled={true} className="btn btn-secondary">
+                    <LoadingSpinner />
+                  </button>
+                ) : (
+                  <Link
+                    to="/investing/accounts/new"
+                    className="btn btn-primary"
+                  >
+                    Add
+                  </Link>
+                )}
               </div>
             </div>
             <div className="home-list-section">

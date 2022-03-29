@@ -12,6 +12,7 @@ import {
   sharesProfitLossHandler,
   addOrderHandler,
 } from "../../../../helpers/currencyHandler";
+import SignalsListGroup from "../SignalListGroup";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function SharesOrderNew(props) {
@@ -19,7 +20,10 @@ export default function SharesOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const [isSaving, setIsSaving] = useState(false);
+  const investingOrdersStatus = useSelector(
+    (state) => state.investingOrders.status
+  );
+  const [selectedSignals, setSelectedSignals] = useState([]);
   const [fields, setFields] = useState({
     ticker: "",
     openDate: inputDateFormat(new Date()),
@@ -47,12 +51,19 @@ export default function SharesOrderNew(props) {
     }));
   }
 
+  function handleSignalSelection(signal, action) {
+    if (action) {
+      setSelectedSignals([...selectedSignals, signal]);
+    } else {
+      setSelectedSignals(selectedSignals.filter((item) => item !== signal));
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-      setIsSaving(true);
       const profitLoss = sharesProfitLossHandler(
         orderSize,
         openPrice,
@@ -89,6 +100,7 @@ export default function SharesOrderNew(props) {
         closePrice: fields.closePrice,
         tradeSide: fields.tradeSide,
         profitLoss: profitLoss,
+        signalList: selectedSignals,
       })
     ).unwrap();
   };
@@ -106,9 +118,13 @@ export default function SharesOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || isSaving}
+                  disabled={saveDisabled || investingOrdersStatus === "saving"}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {investingOrdersStatus === "saving" ? (
+                    <LoadingSpinner />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
               </div>
             </section>
@@ -235,6 +251,12 @@ export default function SharesOrderNew(props) {
                   </div>
                 </div>
               </div>
+            </section>
+            <section>
+              <SignalsListGroup
+                handleSignalSelection={handleSignalSelection}
+                selectedSignals={selectedSignals}
+              />
             </section>
           </form>
         </div>
