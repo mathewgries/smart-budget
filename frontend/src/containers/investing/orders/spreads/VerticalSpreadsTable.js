@@ -1,19 +1,24 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectVerticalSpreadsOrdersByAccountId } from "../../../../redux/investing/investingOrdersSlice";
 
 export default function VerticalSpreadsTable(props) {
   const { id } = useParams();
+  const history = useHistory();
   const orders = useSelector((state) =>
     selectVerticalSpreadsOrdersByAccountId(state, id)
   );
+
+  const handleOnClick = (id) => {
+    history.push(`/investing/orders/spreads/vertical/${id}`);
+  };
 
   return (
     <div className="orders-table-container">
       <div className="orders-table-wrapper">
         <table className="table-bordered orders-table">
-					<caption>Vertical Spread Orders</caption>
+          <caption>Vertical Spread Orders</caption>
           <thead className="">
             <tr>
               <th>Ticker</th>
@@ -37,6 +42,7 @@ export default function VerticalSpreadsTable(props) {
                     ? "table-success"
                     : "table-danger"
                 }
+                onClick={() => handleOnClick(order.id)}
               >
                 <td>{order.ticker}</td>
                 <td>{new Date(order.openDate).toLocaleDateString()}</td>

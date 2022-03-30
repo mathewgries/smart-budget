@@ -1,13 +1,18 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectSharesOrdersByAccountId } from "../../../../redux/investing/investingOrdersSlice";
 
 export default function SharesOrdersTable(props) {
   const { id } = useParams();
+  const history = useHistory();
   const orders = useSelector((state) =>
     selectSharesOrdersByAccountId(state, id)
   );
+
+  const handleOnClick = (id) => {
+    history.push(`/investing/orders/shares/${id}`);
+  };
 
   return (
     <div className="orders-table-container">
@@ -35,6 +40,7 @@ export default function SharesOrdersTable(props) {
                     ? "table-success"
                     : "table-danger"
                 }
+                onClick={() => handleOnClick(order.id)}
               >
                 <td>{order.ticker}</td>
                 <td>{new Date(order.openDate).toLocaleDateString()}</td>

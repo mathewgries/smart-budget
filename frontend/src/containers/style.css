@@ -220,6 +220,35 @@ caption {
     font-size: 2.5vw;
   }
 
+	.card-body{
+		/* padding: 0; */
+	}
+
+	.row {
+		font-size: 1vw;
+	}
+
+
+	/* .orders-table-table {
+		width: 100%;
+		border: 1px solid red;
+		font-size: 2.5vw;
+	} */
+
+	/* .orders-table-row{
+		display: flex;
+		flex-flow: row nowrap;
+		justify-content: space-between;
+		border: 1px solid blue;
+		width: 100%;
+	} */
+
+	/* .orders-table-cell,
+	.orders-table-th {
+		border: 1px solid orange;
+		display: inline;
+	} */
+
 	.order-type-accordian-title span {
 		color: slategray;
 	}

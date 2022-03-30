@@ -5,6 +5,7 @@ import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 import Signup from "./containers/auth/Signup";
 import Login from "./containers/auth/Login";
 import Home from "./containers/Home";
+
 import SpendingAccounts from "./containers/spending/accounts/SpendingAccounts";
 import SpendingAccount from "./containers/spending/accounts/SpendingAccount";
 import SpendingAccountNew from "./containers/spending/accounts/SpendingAccountNew";
@@ -21,9 +22,14 @@ import InvestingAccountsEdit from "./containers/investing/accounts/InvestingAcco
 import InvestingTransaction from "./containers/investing/transactions/InvestingTransaction";
 import InvestingTransactionNew from "./containers/investing/transactions/InvestingTransactionNew";
 import InvestingTransactionEdit from "./containers/investing/transactions/InvestingTransactionEdit";
+
 import InvestingJournal from "./containers/investing/orders/InvestingJournal";
+import OptionsOrder from "./containers/investing/orders/options/OptionsOrder";
 import OptionsOrderNew from "./containers/investing/orders/options/OptionsOrderNew";
+import OptionsOrderEdit from "./containers/investing/orders/options/OptionsOrderEdit";
+import SharesOrder from "./containers/investing/orders/shares/SharesOrder";
 import SharesOrderNew from "./containers/investing/orders/shares/SharesOrderNew";
+import VerticalSpreadsOrder from "./containers/investing/orders/spreads/VerticalSpreadsOrder";
 import VerticalSpreadsOrderNew from "./containers/investing/orders/spreads/VerticalSpreadsOrderNew";
 import StrategyTracker from "./containers/investing/strategyTracker/StrategyTracker";
 import StrategySignals from "./containers/investing/strategyTracker/StrategySignals";
@@ -106,24 +112,43 @@ export default function Routes() {
         <InvestingTransactionEdit />
       </AuthenticatedRoute>
 
-      {/* INVESTING ACCOUNTS */}
+      {/* INVESTING ORDERS */}
+      <AuthenticatedRoute exact path="/investing/orders/options/:id">
+        <OptionsOrder />
+      </AuthenticatedRoute>
+
       <AuthenticatedRoute exact path="/investing/orders/options/new/:id">
         <OptionsOrderNew />
+      </AuthenticatedRoute>
+
+      <AuthenticatedRoute exact path="/investing/orders/options/edit/:id">
+        <OptionsOrderEdit />
+      </AuthenticatedRoute>
+
+      <AuthenticatedRoute exact path="/investing/orders/shares/:id">
+        <SharesOrder />
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path="/investing/orders/shares/new/:id">
         <SharesOrderNew />
       </AuthenticatedRoute>
 
-      <AuthenticatedRoute exact path="/investing/orders/spreads/vertical/new/:id">
+      <AuthenticatedRoute exact path="/investing/orders/spreads/vertical/:id">
+        <VerticalSpreadsOrder />
+      </AuthenticatedRoute>
+
+      <AuthenticatedRoute
+        exact
+        path="/investing/orders/spreads/vertical/new/:id"
+      >
         <VerticalSpreadsOrderNew />
       </AuthenticatedRoute>
 
-			<AuthenticatedRoute exact path="/investing/strategy-tracker">
+      <AuthenticatedRoute exact path="/investing/strategy-tracker">
         <StrategyTracker />
       </AuthenticatedRoute>
 
-			<AuthenticatedRoute exact path="/investing/signals">
+      <AuthenticatedRoute exact path="/investing/signals">
         <StrategySignals />
       </AuthenticatedRoute>
 

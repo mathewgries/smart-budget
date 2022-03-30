@@ -73,7 +73,7 @@ export const investingOrdersSlice = createSlice({
         state.status = "saving";
       })
       .addCase(saveNewSharesOrder.fulfilled, (state, action) => {
-				state.status = "succeeded";
+        state.status = "succeeded";
         const { order } = action.payload;
         state.items.shares.push(order);
       });
@@ -91,7 +91,7 @@ export const investingOrdersSlice = createSlice({
         state.status = "saving";
       })
       .addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
-				state.status = "succeeded";
+        state.status = "succeeded";
         const { order } = action.payload;
         state.items.verticalSpreads.push(order);
       });
@@ -140,6 +140,17 @@ export const selectProfitLossByAccountId = (state, accountId) => {
     initialValue
   );
 };
+
+export const selectSharesOrderById = (state, orderId) =>
+  state.investingOrders.items.shares.find((order) => order.id === orderId);
+
+export const selectOptionsOrderById = (state, orderId) =>
+  state.investingOrders.items.options.find((order) => order.id === orderId);
+
+export const selectVerticalSpreadsOrderById = (state, orderId) =>
+  state.investingOrders.items.verticalSpreads.find(
+    (order) => order.id === orderId
+  );
 
 export const selectOrdersByAccountId = (state, accountId) => {
   return {
