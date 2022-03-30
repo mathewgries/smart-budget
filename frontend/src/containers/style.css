@@ -121,23 +121,34 @@ caption {
   caption-side: top;
 }
 
-@media (max-width: 400px) {
-	.btn {
-		font-size: 3.25vw;
-		font-weight: bold;
-	}
+.signal-input-group {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 5px;
 }
 
-.signal-input-group{
+.order-signal-list-item{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.option-order-container table {
+	text-align: center;
+	/* margin-bottom: 0; */
+}
+
+.order-page-header {
 	display: flex;
 	flex-flow: row nowrap;
-	gap: 5px;
+	justify-content: space-between;
 }
 
-.order-signal-list-item {
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: space-between;
+@media (max-width: 400px) {
+  .btn {
+    font-size: 3.25vw;
+    font-weight: bold;
+  }
 }
 
 @media (max-width: 600px) {
@@ -220,38 +231,27 @@ caption {
     font-size: 2.5vw;
   }
 
-	.card-body{
-		/* padding: 0; */
-	}
+  .order-type-accordian-title span {
+    color: slategray;
+  }
 
-	.row {
-		font-size: 1vw;
-	}
-
-
-	/* .orders-table-table {
-		width: 100%;
-		border: 1px solid red;
-		font-size: 2.5vw;
-	} */
-
-	/* .orders-table-row{
+  /* .option-order-ticker-section {
 		display: flex;
 		flex-flow: row nowrap;
 		justify-content: space-between;
-		border: 1px solid blue;
-		width: 100%;
-	} */
-
-	/* .orders-table-cell,
-	.orders-table-th {
-		border: 1px solid orange;
-		display: inline;
-	} */
-
-	.order-type-accordian-title span {
-		color: slategray;
 	}
+
+	.option-order-ticker {
+		display: flex;
+		flex-flow: row nowrap;
+		gap: 10px;
+	}
+
+	.option-order-contract-section {
+		display: flex;
+		flex-flow: row nowrap;
+		gap: 5px;
+	} */
 }
 
 @media (min-width: 601px) {

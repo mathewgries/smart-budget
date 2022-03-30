@@ -124,7 +124,7 @@ export default function OptionsOrderNew(props) {
         tradeSide: fields.tradeSide,
         contractExpirationDate: fields.contractExpirationDate,
         openDelta: fields.openDelta,
-        closeDelta: fields.closeDate,
+        closeDelta: fields.closeDelta,
         openGamma: fields.openGamma,
         closeGamma: fields.closeGamma,
         openVega: fields.openVega,

@@ -103,3 +103,11 @@ export function addOrderHandler(profitLoss, accountBalance) {
     100
   ).toFixed(2);
 }
+
+export function optionPLPercent(openPrice, closePrice, tradeSide,){
+	const openConv = dollarsToCents(openPrice)
+	const cloesConv = dollarsToCents(closePrice)
+
+	const num = ((cloesConv - openConv)/openConv)*100
+	return (tradeSide === "LONG" ? num : num * -1).toFixed(2)
+}
