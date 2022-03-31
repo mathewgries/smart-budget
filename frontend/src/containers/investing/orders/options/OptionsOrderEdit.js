@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveNewOptionsOrder } from "../../../../redux/investing/investingOrdersSlice";
+import { selectOptionsOrderById } from "../../../../redux/investing/optionsOrdersSlice";
 import {
-  selectInvestingAccountById,
+  selectInvestingAccountByGSI,
   updateInvestingAccountBalance,
 } from "../../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../../lib/errorLib";
@@ -19,9 +19,12 @@ export default function OptionsOrderEdit(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-  const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const investingOrdersStatus = useSelector(
-    (state) => state.investingOrders.status
+  const order = useSelector((state) => selectOptionsOrderById(state, id));
+  const account = useSelector((state) =>
+    selectInvestingAccountByGSI(state, order.GSI1_PK)
+  );
+  const optionsStatus = useSelector(
+    (state) => state.optionsOrders.status
   );
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
@@ -50,6 +53,34 @@ export default function OptionsOrderEdit(props) {
     openImpliedVolatility: "",
     closeImpliedVolatility: "",
   });
+
+  useEffect(() => {
+    setFields({
+      ticker: order.ticker,
+      openDate: order.openDate,
+      closeDate: order.closeDate,
+      orderSize: order.orderSize,
+      openPrice: order.openPrice,
+      closePrice: order.closePrice,
+      openUnderlyingPrice: order.openUnderlyingPrice,
+      closeUnderlyingPrice: order.closeUnderlyingPrice,
+      strikePrice: order.strikePrice,
+      contractType: order.contractType,
+      tradeSide: order.tradeSide,
+      contractExpirationDate: order.contractExpirationDate,
+      openDelta: order.openDelta || "",
+      closeDelta: order.closeDelta || "",
+      openGamma: order.openGamma || "",
+      closeGamma: order.closeGamma || "",
+      openVega: order.openVega || "",
+      closeVega: order.closeVega || "",
+      openTheta: order.openTheta || "",
+      closeTheta: order.closeTheta || "",
+      openImpliedVolatility: order.openImpliedVolatility || "",
+      closeImpliedVolatility: order.closeImpliedVolatility || "",
+    });
+    setSelectedSignals(order.signalList);
+  }, [order]);
 
   const saveDisabled =
     fields.ticker === "" ||
@@ -83,23 +114,23 @@ export default function OptionsOrderEdit(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-      const profitLoss = optionsProfitLossHandler(
-        orderSize,
-        openPrice,
-        closePrice,
-        tradeSide
-      );
-      const newAccountBalance = addOrderHandler(
-        profitLoss,
-        account.accountBalance
-      );
-      await handleSaveNewOrder(newAccountBalance, profitLoss);
-      dispatch(
-        updateInvestingAccountBalance({
-          accountId: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
+      // const profitLoss = optionsProfitLossHandler(
+      //   orderSize,
+      //   openPrice,
+      //   closePrice,
+      //   tradeSide
+      // );
+      // const newAccountBalance = addOrderHandler(
+      //   profitLoss,
+      //   account.accountBalance
+      // );
+      // await handleSaveNewOrder(newAccountBalance, profitLoss);
+      // dispatch(
+      //   updateInvestingAccountBalance({
+      //     accountId: account.id,
+      //     accountBalance: newAccountBalance,
+      //   })
+      // );
       history.push(`/investing/journal/${id}`);
     } catch (e) {
       onError(e);
@@ -107,36 +138,36 @@ export default function OptionsOrderEdit(props) {
   };
 
   const handleSaveNewOrder = async (newAccountBalance, profitLoss) => {
-    await dispatch(
-      saveNewOptionsOrder({
-        accountId: account.id,
-        accountBalance: newAccountBalance,
-        ticker: fields.ticker,
-        openDate: fields.openDate,
-        closeDate: fields.closeDate,
-        orderSize: fields.orderSize,
-        openPrice: fields.openPrice,
-        closePrice: fields.closePrice,
-        openUnderlyingPrice: fields.openUnderlyingPrice,
-        closeUnderlyingPrice: fields.closeUnderlyingPrice,
-        strikePrice: fields.strikePrice,
-        contractType: fields.contractType,
-        tradeSide: fields.tradeSide,
-        contractExpirationDate: fields.contractExpirationDate,
-        openDelta: fields.openDelta,
-        closeDelta: fields.closeDate,
-        openGamma: fields.openGamma,
-        closeGamma: fields.closeGamma,
-        openVega: fields.openVega,
-        closeVega: fields.closeVega,
-        openTheta: fields.openTheta,
-        closeTheta: fields.closeTheta,
-        openImpliedVolatility: fields.openImpliedVolatility,
-        closeImpliedVolatility: fields.closeImpliedVolatility,
-        profitLoss: profitLoss,
-        signalList: selectedSignals,
-      })
-    ).unwrap();
+    // await dispatch(
+    //   saveNewOptionsOrder({
+    //     accountId: account.id,
+    //     accountBalance: newAccountBalance,
+    //     ticker: fields.ticker,
+    //     openDate: fields.openDate,
+    //     closeDate: fields.closeDate,
+    //     orderSize: fields.orderSize,
+    //     openPrice: fields.openPrice,
+    //     closePrice: fields.closePrice,
+    //     openUnderlyingPrice: fields.openUnderlyingPrice,
+    //     closeUnderlyingPrice: fields.closeUnderlyingPrice,
+    //     strikePrice: fields.strikePrice,
+    //     contractType: fields.contractType,
+    //     tradeSide: fields.tradeSide,
+    //     contractExpirationDate: fields.contractExpirationDate,
+    //     openDelta: fields.openDelta,
+    //     closeDelta: fields.closeDelta,
+    //     openGamma: fields.openGamma,
+    //     closeGamma: fields.closeGamma,
+    //     openVega: fields.openVega,
+    //     closeVega: fields.closeVega,
+    //     openTheta: fields.openTheta,
+    //     closeTheta: fields.closeTheta,
+    //     openImpliedVolatility: fields.openImpliedVolatility,
+    //     closeImpliedVolatility: fields.closeImpliedVolatility,
+    //     profitLoss: profitLoss,
+    //     signalList: selectedSignals,
+    //   })
+    // ).unwrap();
   };
 
   return (
@@ -146,15 +177,15 @@ export default function OptionsOrderEdit(props) {
           <form onSubmit={handleSubmit}>
             <section className="order-form-header">
               <header>
-                <h5>New Option Order</h5>
+                <h5>Edit Option Order</h5>
               </header>
               <div className="form-group">
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || investingOrdersStatus === "saving"}
+                  disabled={saveDisabled || optionsStatus === "saving"}
                 >
-                  {investingOrdersStatus === "saving" ? (
+                  {optionsStatus === "saving" ? (
                     <LoadingSpinner />
                   ) : (
                     "Save"
@@ -222,6 +253,7 @@ export default function OptionsOrderEdit(props) {
               <SignalsListGroup
                 handleSignalSelection={handleSignalSelection}
                 selectedSignals={selectedSignals}
+								editPage={true}
               />
             </section>
 

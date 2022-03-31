@@ -1,11 +1,18 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/investing/transaction";
 
-const initialState = {
-  items: [],
+const investingTransactionAdapter = createEntityAdapter({
+  sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
+});
+
+const initialState = investingTransactionAdapter.getInitialState({
   status: "idle",
   error: null,
-};
+});
 
 export const fetchInvestingTransactions = createAsyncThunk(
   "investingTransactions/fetchInvestingTransactions",
@@ -38,44 +45,51 @@ export const investingTransactionsSlice = createSlice({
       .addCase(fetchInvestingTransactions.pending, (state, action) => {
         state.status = "loading";
       })
-      .addCase(fetchInvestingTransactions.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.items = state.items.concat(action.payload);
-      })
+      .addCase(
+        fetchInvestingTransactions.fulfilled,
+        investingTransactionAdapter.upsertMany
+      )
       .addCase(fetchInvestingTransactions.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
-    builder.addCase(saveNewInvestingTransaction.fulfilled, (state, action) => {
-      const { transaction } = action.payload;
-      state.items.push(transaction);
-    });
-    builder.addCase(updateInvestingTransaction.fulfilled, (state, action) => {
-      const {
-        id,
-        transactionAmount,
-        transactionDate,
-        transactionNote,
-        transactionType,
-      } = action.payload;
-      const existingTransaction = state.items.find(
-        (transaction) => transaction.id === id
-      );
-      existingTransaction.transactionAmount = transactionAmount;
-      existingTransaction.transactionDate = transactionDate;
-      existingTransaction.transactionNote = transactionNote;
-      existingTransaction.transactionType = transactionType;
-    });
+    builder
+      .addCase(saveNewInvestingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        saveNewInvestingTransaction.fulfilled,
+        investingTransactionAdapter.addOne
+      )
+      .addCase(saveNewInvestingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateInvestingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        updateInvestingTransaction.fulfilled,
+        investingTransactionAdapter.upsertOne
+      )
+      .addCase(updateInvestingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 
 export default investingTransactionsSlice.reducer;
 
-export const selectInvestingTransactionsByAccountId = (state, accountId) =>
-  state.investingTransactions.items.filter(
-    (transaction) => transaction.GSI1_PK === accountId
+export const selectInvestingTransactionsByGSI = (state, gsi) =>
+  Object.values(state.investingTransactions.entities).filter(
+    (transaction) => transaction.GSI1_PK === gsi
   );
-export const selectInvestingTransactionById = (state, transactionId) =>
-  state.investingTransactions.items.find(
-    (transaction) => transaction.id === transactionId
-  );
+
+export const { 
+	selectAll: selectAllInvestingTransactions,
+	selectById: selectInvestingTransactionById
+} = investingTransactionAdapter.getSelectors(
+  (state) => state.investingTransactions
+);

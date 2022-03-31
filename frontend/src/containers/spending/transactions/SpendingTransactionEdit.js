@@ -13,7 +13,7 @@ import {
   updateActiveSubCategory,
 } from "../../../redux/spending/categoriesSlice";
 import {
-  selectSpendingAccountById,
+  selectSpendingAccountByGSI,
   updateSpendingAccountBalance,
 } from "../../../redux/spending/spendingAccountsSlice";
 // Helper imports
@@ -28,16 +28,14 @@ export default function SpendingTransactionEdit(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-	const typeList = ["Withdrawal", "Deposit"];
+  const typeList = ["Withdrawal", "Deposit"];
   const transaction = useSelector((state) =>
     selectSpendingTransactionById(state, id)
   );
   const account = useSelector((state) =>
-    selectSpendingAccountById(
-      state,
-      transaction.GSI1_PK.replace("ACCT#SPENDING#", "")
-    )
+    selectSpendingAccountByGSI(state, transaction.GSI1_PK)
   );
+	console.log(account)
   const activeCategory = useSelector(selectActiveCategory);
   const activeSubCategory = useSelector(selectActiveSubCategory);
   const [isSaving, setIsSaving] = useState(false);
@@ -51,8 +49,6 @@ export default function SpendingTransactionEdit(props) {
 
   dispatch(updateActiveCategory(transaction.category));
   dispatch(updateActiveSubCategory(transaction.subCategory));
-
-  
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -70,7 +66,7 @@ export default function SpendingTransactionEdit(props) {
 
       dispatch(
         updateSpendingAccountBalance({
-          accountId: account.id,
+          id: account.id,
           accountBalance: newAccountBalance,
         })
       );

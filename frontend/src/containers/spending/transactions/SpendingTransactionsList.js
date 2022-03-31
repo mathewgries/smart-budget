@@ -1,12 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectSpendingTransactionsByAccountId } from "../../../redux/spending/spendingTransactionsSlice";
+import { selectSpendingTransactionsByGSI } from "../../../redux/spending/spendingTransactionsSlice";
 import { Link } from "react-router-dom";
 import SpendingTransactionCard from "./SpendingTransactionCard";
 
 export default function SpendingTransactionsList(props) {
   const transactions = useSelector((state) =>
-    selectSpendingTransactionsByAccountId(state, props.accountId)
+    selectSpendingTransactionsByGSI(state, props.accountId)
   );
 
   return (

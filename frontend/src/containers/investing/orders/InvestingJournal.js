@@ -3,9 +3,17 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
 import {
-  selectOrderCountByTypeAndAccountId,
-  selectProfitLossByAccountId,
-} from "../../../redux/investing/investingOrdersSlice";
+  selectSharesOrdersByAccounGSI,
+  selectSharesPLByAccountGSI,
+} from "../../../redux/investing/sharesOrdersSlice";
+import {
+  selectOptionsOrdersByAccountGSI,
+  selectOptionsPLByAccountGSI,
+} from "../../../redux/investing/optionsOrdersSlice";
+import {
+  selectVerticalSpreadsOrdersByAccountGSI,
+  selectVerticalSpreadsPLByAccountGSI,
+} from "../../../redux/investing/verticalSpreadsOrdersSlice";
 import { Link } from "react-router-dom";
 import InvestingBalance from "./InvestingBalance";
 import GrowthRate from "./GrowthRate";
@@ -16,17 +24,26 @@ import VerticalSpreadsTable from "./spreads/VerticalSpreadsTable";
 export default function InvestingJournal(props) {
   const { id } = useParams();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const sharesCount = useSelector((state) =>
-    selectOrderCountByTypeAndAccountId(state, "shares", id)
+
+  const shares = useSelector((state) =>
+    selectSharesOrdersByAccounGSI(state, account.GSI1_PK)
   );
-  const optionsCount = useSelector((state) =>
-    selectOrderCountByTypeAndAccountId(state, "options", id)
+  const options = useSelector((state) =>
+    selectOptionsOrdersByAccountGSI(state, account.GSI1_PK)
   );
-  const verticalSpreadsCount = useSelector((state) =>
-    selectOrderCountByTypeAndAccountId(state, "verticalSpreads", id)
+  const verticalSpreads = useSelector((state) =>
+    selectVerticalSpreadsOrdersByAccountGSI(state, account.GSI1_PK)
   );
-  const profitLossTotal = useSelector((state) =>
-    selectProfitLossByAccountId(state, id)
+  const optionsPL = useSelector((state) =>
+    selectOptionsPLByAccountGSI(state, account.GSI1_PK)
+  );
+
+  const sharesPL = useSelector((state) =>
+    selectSharesPLByAccountGSI(state, account.GSI1_PK)
+  );
+
+  const vertSpreadsPL = useSelector((state) =>
+    selectVerticalSpreadsPLByAccountGSI(state, account.GSI1_PK)
   );
   const [openOrderSelect, setOpenOrderSelect] = useState(false);
   const [openViewSelect, setOpenViewSelect] = useState(false);
@@ -37,6 +54,10 @@ export default function InvestingJournal(props) {
     setSelectedView(innerText);
   }
 
+  function handlePLCalculate() {
+    return sharesPL + optionsPL + vertSpreadsPL;
+  }
+
   return (
     <div className="page-container">
       <div className="page-wrapper">
@@ -45,14 +66,14 @@ export default function InvestingJournal(props) {
             <InvestingBalance account={account} />
           </div>
           <div>
-            <GrowthRate growthRate={`P/L$: ${profitLossTotal}`} />
+            <GrowthRate growthRate={`P/L$: ${handlePLCalculate()}`} />
           </div>
           <div>
             <GrowthRate
               growthRate={`P/L%: ${(
                 ((account.accountBalance -
-                  (account.accountBalance - profitLossTotal)) /
-                  (account.accountBalance - profitLossTotal)) *
+                  (account.accountBalance - handlePLCalculate())) /
+                  (account.accountBalance - handlePLCalculate())) *
                 100
               ).toFixed(2)}`}
             />
@@ -139,40 +160,40 @@ export default function InvestingJournal(props) {
         </section>
 
         <section className="journal-table-section">
-          {sharesCount === 0 &&
-          optionsCount === 0 &&
-          verticalSpreadsCount === 0 ? (
+          {shares.length === 0 &&
+          options.length === 0 &&
+          verticalSpreads.length === 0 ? (
             <div>
               <p>Add your first order...</p>
             </div>
           ) : (
             <div>
               <div>
-                {sharesCount > 0 && (
+                {shares.length > 0 && (
                   <div>
                     {selectedView === "View All" ||
                     selectedView === "Shares" ? (
-                      <SharesOrdersTable />
+                      <SharesOrdersTable orders={shares} />
                     ) : null}
                   </div>
                 )}
               </div>
               <div>
-                {optionsCount > 0 && (
+                {options.length > 0 && (
                   <div>
                     {selectedView === "View All" ||
                     selectedView === "Options" ? (
-                      <OptionsOrdersTable />
+                      <OptionsOrdersTable orders={options} />
                     ) : null}
                   </div>
                 )}
               </div>
               <div>
-                {verticalSpreadsCount > 0 && (
+                {verticalSpreads.length > 0 && (
                   <div>
                     {selectedView === "View All" ||
                     selectedView === "Vertical Spreads" ? (
-                      <VerticalSpreadsTable />
+                      <VerticalSpreadsTable orders={verticalSpreads} />
                     ) : null}
                   </div>
                 )}

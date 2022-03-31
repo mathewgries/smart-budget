@@ -104,7 +104,7 @@ export function addOrderHandler(profitLoss, accountBalance) {
   ).toFixed(2);
 }
 
-export function optionPLPercent(openPrice, closePrice, tradeSide,){
+export function getPLPercent(openPrice, closePrice, tradeSide,){
 	const openConv = dollarsToCents(openPrice)
 	const cloesConv = dollarsToCents(closePrice)
 

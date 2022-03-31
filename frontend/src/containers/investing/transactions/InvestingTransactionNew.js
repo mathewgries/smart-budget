@@ -40,7 +40,7 @@ export default function InvestingTransactionNew(props) {
       await handleSaveNewTransaction(newAccountBalance);
       dispatch(
         updateInvestingAccountBalance({
-          accountId: account.id,
+          id: account.id,
           accountBalance: newAccountBalance,
         })
       );

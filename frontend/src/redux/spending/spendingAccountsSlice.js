@@ -1,12 +1,18 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/spending/accounts";
 
-const initialState = {
-	history: [],
-  items: [],
+const spendingAccountsAdapter = createEntityAdapter({
+  sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
+});
+
+const initialState = spendingAccountsAdapter.getInitialState({
   status: "idle",
   error: null,
-};
+});
 
 export const fetchSpendingAccounts = createAsyncThunk(
   "spendingAccounts/fetchSpendingAccounts",
@@ -24,9 +30,9 @@ export const addNewSpendingAccount = createAsyncThunk(
 
 export const updateSpendingAccount = createAsyncThunk(
   "spendingAccounts/updateSpendingAccount",
-  async (updatedSpendingAccount) => {
-    const results = await put(updatedSpendingAccount);
-    return results.Attributes;
+  async (updatedAccount) => {
+    await put(updatedAccount);
+    return updatedAccount;
   }
 );
 
@@ -34,12 +40,7 @@ export const spendingAccountsSlice = createSlice({
   name: "spendingAccounts",
   initialState,
   reducers: {
-    updateSpendingAccountBalance(state, action) {
-			state.history = { ...state, history: state.history };
-			const {accountBalance, accountId} = action.payload
-			const existingAccount = state.items.find((account) => account.id === accountId)
-			existingAccount.accountBalance = accountBalance
-		},
+    updateSpendingAccountBalance: spendingAccountsAdapter.upsertOne
   },
   extraReducers(builder) {
     builder
@@ -48,25 +49,25 @@ export const spendingAccountsSlice = createSlice({
       })
       .addCase(fetchSpendingAccounts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = state.items.concat(action.payload);
+        spendingAccountsAdapter.upsertMany(state, action.payload);
       })
       .addCase(fetchSpendingAccounts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
     builder
-			.addCase(addNewSpendingAccount.pending, (state, action) => {
-				state.status = "loading"
-			})
-			.addCase(addNewSpendingAccount.fulfilled, (state, action) => {
-      	state.items.push(action.payload);
-    	});
-    builder.addCase(updateSpendingAccount.fulfilled, (state, action) => {
-      const { id, accountName, accountBalance } = action.payload;
-      const existingAccount = state.items.find((account) => account.id === id);
-      existingAccount.accountName = accountName;
-      existingAccount.accountBalance = accountBalance;
-    });
+      .addCase(addNewSpendingAccount.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(addNewSpendingAccount.fulfilled, spendingAccountsAdapter.addOne);
+    builder
+      .addCase(updateSpendingAccount.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        updateSpendingAccount.fulfilled,
+        spendingAccountsAdapter.upsertOne
+      );
   },
 });
 
@@ -74,7 +75,12 @@ export const { updateSpendingAccountBalance } = spendingAccountsSlice.actions;
 
 export default spendingAccountsSlice.reducer;
 
-export const selectAllSpendingAcounts = (state) => state.spendingAccounts.items;
+export const selectSpendingAccountByGSI = (state, accountGSI) =>
+  Object.values(state.spendingAccounts.entities).find(
+    (account) => account.GSI1_PK === accountGSI
+  );
 
-export const selectSpendingAccountById = (state, accountId) =>
-  state.spendingAccounts.items.find((account) => account.id === accountId);
+export const {
+  selectAll: selectAllSpendingAcounts,
+  selectById: selectSpendingAccountById,
+} = spendingAccountsAdapter.getSelectors((state) => state.spendingAccounts);

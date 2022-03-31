@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveNewSharesOrder } from "../../../../redux/investing/investingOrdersSlice";
+import { saveNewSharesOrder } from "../../../../redux/investing/sharesOrdersSlice";
 import {
   selectInvestingAccountById,
   updateInvestingAccountBalance,
@@ -20,8 +20,8 @@ export default function SharesOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const investingOrdersStatus = useSelector(
-    (state) => state.investingOrders.status
+  const sharesStatus = useSelector(
+    (state) => state.sharesOrders.status
   );
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [fields, setFields] = useState({
@@ -118,9 +118,9 @@ export default function SharesOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || investingOrdersStatus === "saving"}
+                  disabled={saveDisabled || sharesStatus === "saving"}
                 >
-                  {investingOrdersStatus === "saving" ? (
+                  {sharesStatus === "saving" ? (
                     <LoadingSpinner />
                   ) : (
                     "Save"

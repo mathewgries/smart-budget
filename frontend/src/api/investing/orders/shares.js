@@ -1,7 +1,11 @@
 import { API } from "aws-amplify";
 
-export async function postShares(order) {
-	return await API.post("smartbudget", "/investing/orders/shares", {
-		body: order,
-	});
+export async function post(order) {
+  return await API.post("smartbudget", "/investing/orders/shares", {
+    body: order,
+  });
+}
+
+export async function get() {
+  return await API.get("smartbudget", "/investing/orders/shares");
 }

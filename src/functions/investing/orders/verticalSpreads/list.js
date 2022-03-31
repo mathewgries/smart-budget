@@ -1,8 +1,9 @@
-import handler from "../../../util/handler";
-import dynamoDb from "../../../util/dynamodb";
+import handler from "../../../../util/handler";
+import dynamoDb from "../../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
+
   const params = {
     TableName: process.env.TABLE_NAME,
     KeyConditionExpression: "#PK = :PK and begins_with(#SK, :SK)",
@@ -12,7 +13,7 @@ export const main = handler(async (event) => {
     },
     ExpressionAttributeValues: {
       ":PK": `USER#${userId}`,
-      ":SK": "TRANS#INVESTING#",
+      ":SK": "ORDER#VERTSPREADS#",
     },
   };
 

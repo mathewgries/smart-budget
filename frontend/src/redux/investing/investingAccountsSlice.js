@@ -1,11 +1,18 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/investing/accounts";
 
-const initialState = {
-  items: [],
+const investingAccountsAdapter = createEntityAdapter({
+  sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
+});
+
+const initialState = investingAccountsAdapter.getInitialState({
   status: "idle",
   error: null,
-};
+});
 
 export const fetchInvestingAccounts = createAsyncThunk(
   "investingAccounts/fetchInvestingAccounts",
@@ -22,23 +29,18 @@ export const addNewInvestingAccount = createAsyncThunk(
 );
 
 export const updateInvestingAccount = createAsyncThunk(
-	"investingAccounts/updateInvestingAccount",
-	async (updatedAccount) => {
-		const results = await put(updatedAccount);
-    return results.Attributes;
-	}
-)
+  "investingAccounts/updateInvestingAccount",
+  async (updatedAccount) => {
+    await put(updatedAccount);
+    return updatedAccount;
+  }
+);
 
 export const investingAccountsSlice = createSlice({
   name: "investingAccounts",
   initialState,
-	reducers: {
-    updateInvestingAccountBalance(state, action) {
-			state.history = { ...state, history: state.history };
-			const {accountBalance, accountId} = action.payload
-			const existingAccount = state.items.find((account) => account.id === accountId)
-			existingAccount.accountBalance = accountBalance
-		},
+  reducers: {
+    updateInvestingAccountBalance: investingAccountsAdapter.upsertOne,
   },
   extraReducers(builder) {
     builder
@@ -47,21 +49,36 @@ export const investingAccountsSlice = createSlice({
       })
       .addCase(fetchInvestingAccounts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = state.items.concat(action.payload);
+        investingAccountsAdapter.upsertMany(state, action.payload);
       })
       .addCase(fetchInvestingAccounts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
-    builder.addCase(addNewInvestingAccount.fulfilled, (state, action) => {
-      state.items.push(action.payload);
-    });
-		builder.addCase(updateInvestingAccount.fulfilled, (state, action) => {
-      const { id, accountName, accountBalance } = action.payload;
-      const existingAccount = state.items.find((account) => account.id === id);
-      existingAccount.accountName = accountName;
-      existingAccount.accountBalance = accountBalance;
-    });
+    builder
+      .addCase(addNewInvestingAccount.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        addNewInvestingAccount.fulfilled,
+        investingAccountsAdapter.addOne
+      )
+      .addCase(addNewInvestingAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateInvestingAccount.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        updateInvestingAccount.fulfilled,
+        investingAccountsAdapter.upsertOne
+      )
+      .addCase(updateInvestingAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -69,8 +86,12 @@ export const { updateInvestingAccountBalance } = investingAccountsSlice.actions;
 
 export default investingAccountsSlice.reducer;
 
-export const selectAllInvestingAccounts = (state) =>
-  state.investingAccounts.items;
+export const selectInvestingAccountByGSI = (state, accountGSI) =>
+  Object.values(state.investingAccounts.entities).find(
+    (account) => account.GSI1_PK === accountGSI
+  );
 
-export const selectInvestingAccountById = (state, accountId) => 
-  state.investingAccounts.items.find((account) => account.id === accountId);
+export const {
+  selectAll: selectAllInvestingAccounts,
+  selectById: selectInvestingAccountById,
+} = investingAccountsAdapter.getSelectors((state) => state.investingAccounts);

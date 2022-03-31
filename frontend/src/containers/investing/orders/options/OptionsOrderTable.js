@@ -1,14 +1,9 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectOptionsOrdersByAccountId } from "../../../../redux/investing/investingOrdersSlice";
+import { useHistory } from "react-router-dom";
 
 export default function OptionsOrdersTable(props) {
-  const { id } = useParams();
   const history = useHistory();
-  const orders = useSelector((state) =>
-    selectOptionsOrdersByAccountId(state, id)
-  );
+  const { orders } = props;
 
   const handleOnClick = (id) => {
     history.push(`/investing/orders/options/${id}`);

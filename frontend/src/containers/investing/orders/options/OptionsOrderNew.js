@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveNewOptionsOrder } from "../../../../redux/investing/investingOrdersSlice";
+import { saveNewOptionsOrder } from "../../../../redux/investing/optionsOrdersSlice";
 import {
   selectInvestingAccountById,
   updateInvestingAccountBalance,
@@ -20,8 +20,8 @@ export default function OptionsOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const investingOrdersStatus = useSelector(
-    (state) => state.investingOrders.status
+  const optionsStatus = useSelector(
+    (state) => state.optionsOrders.status
   );
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
@@ -152,9 +152,9 @@ export default function OptionsOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || investingOrdersStatus === "saving"}
+                  disabled={saveDisabled || optionsStatus === "saving"}
                 >
-                  {investingOrdersStatus === "saving" ? (
+                  {optionsStatus === "saving" ? (
                     <LoadingSpinner />
                   ) : (
                     "Save"

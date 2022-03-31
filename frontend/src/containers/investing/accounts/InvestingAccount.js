@@ -59,7 +59,7 @@ export default function InvestingAccount() {
                 <h6>Transactions</h6>
               </header>
             </div>
-            <InvestingTransactionsList accountId={account.GSI1_PK} />
+            <InvestingTransactionsList accountGSI={account.GSI1_PK} />
           </section>
         </div>
       </div>

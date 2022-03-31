@@ -1,12 +1,18 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/spending/transactions";
 
-const initialState = {
-  history: [],
-  items: [],
+const spendingTransactionsAdapter = createEntityAdapter({
+  sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
+});
+
+const initialState = spendingTransactionsAdapter.getInitialState({
   status: "idle",
   error: null,
-};
+});
 
 export const fetchSpendingTransactions = createAsyncThunk(
   "spendingTransactions/fetchSpendingTransactions",
@@ -41,45 +47,41 @@ export const spendingTransactionsSlice = createSlice({
       })
       .addCase(fetchSpendingTransactions.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = state.items.concat(action.payload);
+        spendingTransactionsAdapter.upsertMany(state, action.payload);
       })
       .addCase(fetchSpendingTransactions.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
-    builder.addCase(saveNewSpendingTransaction.fulfilled, (state, action) => {
-      const { transaction } = action.payload;
-      state.items.push(transaction);
-    });
-    builder.addCase(updateSpendingTransaction.fulfilled, (state, action) => {
-      const {
-        id,
-        category,
-        subCategory,
-        transactionAmount,
-        transactionDate,
-        transactionNote,
-        transactionType,
-      } = action.payload;
-      const existingTransaction = state.items.find((transaction) => transaction.id === id);
-      existingTransaction.category = category;
-      existingTransaction.subCategory = subCategory;
-			existingTransaction.transactionAmount = transactionAmount;
-			existingTransaction.transactionDate = transactionDate;
-			existingTransaction.transactionNote = transactionNote;
-			existingTransaction.transactionType = transactionType;
-    });
+    builder
+      .addCase(saveNewSpendingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        saveNewSpendingTransaction.fulfilled,
+        spendingTransactionsAdapter.addOne
+      );
+    builder
+      .addCase(updateSpendingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        updateSpendingTransaction.fulfilled,
+        spendingTransactionsAdapter.upsertOne
+      );
   },
 });
 
 export default spendingTransactionsSlice.reducer;
 
-export const selectAllSpendingTransactions = (state) => state.spendingTransactions.items;
-export const selectSpendingTransactionsByAccountId = (state, accountId) =>
-  state.spendingTransactions.items.filter(
-    (transaction) => transaction.GSI1_PK === accountId
+export const selectSpendingTransactionsByGSI = (state, gsi) =>
+  Object.values(state.spendingTransactions.entities).filter(
+    (transaction) => transaction.GSI1_PK === gsi
   );
-export const selectSpendingTransactionById = (state, transactionId) =>
-  state.spendingTransactions.items.find(
-    (transaction) => transaction.id === transactionId
-  );
+
+export const {
+  selectAll: selectAllSpendingTransactions,
+  selectById: selectSpendingTransactionById,
+} = spendingTransactionsAdapter.getSelectors(
+  (state) => state.spendingTransactions
+);

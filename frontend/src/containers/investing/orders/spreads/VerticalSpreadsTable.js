@@ -1,14 +1,9 @@
 import React from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectVerticalSpreadsOrdersByAccountId } from "../../../../redux/investing/investingOrdersSlice";
+import { useHistory } from "react-router-dom";
 
 export default function VerticalSpreadsTable(props) {
-  const { id } = useParams();
   const history = useHistory();
-  const orders = useSelector((state) =>
-    selectVerticalSpreadsOrdersByAccountId(state, id)
-  );
+  const { orders } = props;
 
   const handleOnClick = (id) => {
     history.push(`/investing/orders/spreads/vertical/${id}`);

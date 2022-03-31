@@ -7,7 +7,7 @@ import {
   updateInvestingTransaction,
 } from "../../../redux/investing/investingTransactionsSlice";
 import {
-  selectInvestingAccountById,
+  selectInvestingAccountByGSI,
   updateInvestingAccountBalance,
 } from "../../../redux/investing/investingAccountsSlice";
 // Helper imports
@@ -21,23 +21,20 @@ export default function InvestingTransactionEdit(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-	const typeList = ["Withdrawal", "Deposit"];
+  const typeList = ["Withdrawal", "Deposit"];
   const transaction = useSelector((state) =>
     selectInvestingTransactionById(state, id)
   );
   const account = useSelector((state) =>
-    selectInvestingAccountById(
-      state,
-      transaction.GSI1_PK.replace("ACCT#INVESTING#", "")
-    )
+    selectInvestingAccountByGSI(state, transaction.GSI1_PK)
   );
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     transactionAmount: transaction.transactionAmount,
-      transactionDate: inputDateFormat(transaction.transactionDate),
-      transactionType:
-        transaction.transactionType === "W" ? typeList[0] : typeList[1],
-      transactionNote: transaction.transactionNote,
+    transactionDate: inputDateFormat(transaction.transactionDate),
+    transactionType:
+      transaction.transactionType === "W" ? typeList[0] : typeList[1],
+    transactionNote: transaction.transactionNote,
   });
 
   function handleChange(e) {
@@ -54,14 +51,14 @@ export default function InvestingTransactionEdit(props) {
       await handleUpdateTransaction(newAccountBalance);
       dispatch(
         updateInvestingAccountBalance({
-          accountId: account.id,
+          id: account.id,
           accountBalance: newAccountBalance,
         })
       );
-			history.push(`/investing/transactions/${id}`)
+      history.push(`/investing/transactions/${id}`);
     } catch (e) {
       onError(e);
-    } 
+    }
   };
 
   const getNewAccountBalance = () => {

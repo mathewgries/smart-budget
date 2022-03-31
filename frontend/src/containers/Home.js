@@ -6,7 +6,9 @@ import { fetchSpendingTransactions } from "../redux/spending/spendingTransaction
 import { fetchCategories } from "../redux/spending/categoriesSlice";
 import { fetchInvestingAccounts } from "../redux/investing/investingAccountsSlice";
 import { fetchInvestingTransactions } from "../redux/investing/investingTransactionsSlice";
-import { fetchAllOrders } from "../redux/investing/investingOrdersSlice";
+import { fetchSharesOrders } from "../redux/investing/sharesOrdersSlice";
+import { fetchOptionsOrders } from "../redux/investing/optionsOrdersSlice";
+import { fetchVerticalSpreadsOrders } from "../redux/investing/verticalSpreadsOrdersSlice";
 import { fetchSignals } from "../redux/investing/investingSignalsSlice";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
@@ -19,18 +21,21 @@ export default function Home() {
   const spendingAccountsState = useSelector(
     (state) => state.spendingAccounts.status
   );
-  const categoriesStatus = useSelector((state) => state.categories.status);
   const spendingTransactionsStatus = useSelector(
     (state) => state.spendingTransactions.status
   );
+  const categoriesStatus = useSelector((state) => state.categories.status);
+
   const investingAccountsStatus = useSelector(
     (state) => state.investingAccounts.status
   );
   const investingTransactionsStatus = useSelector(
     (state) => state.investingTransactions.status
   );
-  const investingOrdersStatus = useSelector(
-    (state) => state.investingOrders.status
+  const sharesStatus = useSelector((state) => state.sharesOrders.status);
+  const optionsStatus = useSelector((state) => state.optionsOrders.status);
+  const vertSpreadsStatus = useSelector(
+    (state) => state.verticalSpreadsOrders.status
   );
   const investingSignalsStatus = useSelector(
     (state) => state.investingSignals.status
@@ -63,9 +68,18 @@ export default function Home() {
         dispatch(fetchInvestingTransactions());
       }
 
-      if (investingOrdersStatus === "idle") {
-        dispatch(fetchAllOrders());
+      if (sharesStatus === "idle") {
+        dispatch(fetchSharesOrders());
       }
+
+      if (optionsStatus === "idle") {
+        dispatch(fetchOptionsOrders());
+      }
+
+      if (vertSpreadsStatus === "idle") {
+        dispatch(fetchVerticalSpreadsOrders());
+      }
+
       if (investingSignalsStatus === "idle") {
         dispatch(fetchSignals());
       }
@@ -79,8 +93,10 @@ export default function Home() {
     categoriesStatus,
     investingAccountsStatus,
     investingTransactionsStatus,
-    investingOrdersStatus,
-		investingSignalsStatus,
+    sharesStatus,
+    optionsStatus,
+    vertSpreadsStatus,
+    investingSignalsStatus,
     dispatch,
   ]);
 

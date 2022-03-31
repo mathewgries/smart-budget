@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveNewVerticalSpreadsOrder } from "../../../../redux/investing/investingOrdersSlice";
+import { saveNewVerticalSpreadsOrder } from "../../../../redux/investing/verticalSpreadsOrdersSlice";
 import {
   selectInvestingAccountById,
   updateInvestingAccountBalance,
@@ -20,8 +20,8 @@ export default function VerticalSpreadsOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const investingOrdersStatus = useSelector(
-    (state) => state.investingOrders.status
+  const vertSpreadStatus = useSelector(
+    (state) => state.verticalSpreadsOrders.status
   );
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
@@ -158,9 +158,9 @@ export default function VerticalSpreadsOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || investingOrdersStatus === "saving"}
+                  disabled={saveDisabled || vertSpreadStatus === "saving"}
                 >
-                  {investingOrdersStatus === "saving" ? (
+                  {vertSpreadStatus === "saving" ? (
                     <LoadingSpinner />
                   ) : (
                     "Save"

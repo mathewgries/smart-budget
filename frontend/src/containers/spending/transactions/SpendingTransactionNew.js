@@ -50,7 +50,7 @@ export default function SpendingTransactionNew(props) {
       await handleSaveNewTransaction(newAccountBalance);
       dispatch(
         updateSpendingAccountBalance({
-          accountId: account.id,
+          id: account.id,
           accountBalance: newAccountBalance,
         })
       );

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { selectAllSignals } from "../../../redux/investing/investingSignalsSlice"
+import { selectAllSignals } from "../../../redux/investing/investingSignalsSlice";
 
 function SignalListItem(props) {
   const { signal, handleSignalSelection, persistState } = props;
-	const [isAdded, setIsAdded] = useState(persistState);
+  const [isAdded, setIsAdded] = useState(persistState);
 
   function handleToggle() {
     setIsAdded(!isAdded);
@@ -27,10 +27,9 @@ function SignalListItem(props) {
 }
 
 export default function SignalsListGroup(props) {
-	const signals = useSelector((state) => selectAllSignals(state));
+  const signals = useSelector((state) => selectAllSignals(state));
   const [openSignals, setOpenSignals] = useState(false);
-  const { handleSignalSelection, selectedSignals } = props;
-
+  const { handleSignalSelection, selectedSignals, editPage } = props;
 
   return (
     <div className="order-accordian-section">
@@ -40,7 +39,15 @@ export default function SignalsListGroup(props) {
             className="order-type-accordian-title"
             onClick={() => setOpenSignals(!openSignals)}
           >
-            <div>Add Signals <span>(optional)</span></div>
+            <div>
+              {editPage ? (
+                <div>Edit Signals</div>
+              ) : (
+                <div>
+                  Add Signals<span>(optional)</span>
+                </div>
+              )}
+            </div>
             <div>{openSignals ? "-" : "+"}</div>
           </div>
           {openSignals && (
@@ -50,7 +57,9 @@ export default function SignalsListGroup(props) {
                   <SignalListItem
                     signal={signal}
                     handleSignalSelection={handleSignalSelection}
-										persistState={selectedSignals.includes(signal) ? true : false}
+                    persistState={
+                      selectedSignals.includes(signal) ? true : false
+                    }
                   />
                 </div>
               ))}
