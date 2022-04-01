@@ -16,7 +16,7 @@ export default function InvestingTransactionNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSaving, setIsSaving] = useState(false)
   const [fields, setFields] = useState({
     transactionAmount: 0.01,
     transactionDate: inputDateFormat(new Date()),
@@ -35,7 +35,7 @@ export default function InvestingTransactionNew(props) {
     e.preventDefault();
 
     try {
-      setIsSaving(true);
+			setIsSaving(true)
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
       dispatch(
@@ -44,7 +44,7 @@ export default function InvestingTransactionNew(props) {
           accountBalance: newAccountBalance,
         })
       );
-			history.push(`/investing/accounts/${id}`)
+      history.push(`/investing/accounts/${id}`);
     } catch (e) {
       onError(e);
     }

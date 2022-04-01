@@ -11,7 +11,7 @@ import { onError } from "../../../lib/errorLib";
 export default function StrategySignals(props) {
   const dispatch = useDispatch();
   const signals = useSelector((state) => selectAllSignals(state));
-  const signalStatus = useSelector((state) => state.investingSignals.status);
+  const status = useSelector((state) => state.investingSignals.status);
   const [newSignal, setNewSignal] = useState("");
 
   function handleOnChange(e) {
@@ -45,7 +45,7 @@ export default function StrategySignals(props) {
                 placeholder="Add new signal..."
               />
               <button className="btn btn-primary">
-                {signalStatus === "saving" ? <LoadingSpinner /> : "Add"}
+                {status === "saving" ? <LoadingSpinner /> : "Add"}
               </button>
             </div>
           </form>

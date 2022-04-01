@@ -34,11 +34,11 @@ export default function SpendingAccountEdit(props) {
     const { accountName, accountBalance } = fields;
 
     try {
-      setIsSaving(true);
+			setIsSaving(true);
       await dispatch(
         updateSpendingAccount({ id, accountName, accountBalance })
       ).unwrap();
-      history.push(`/spending/accounts/${id}`)
+      history.push(`/spending/accounts/${id}`);
     } catch (e) {
       onError(e);
     }

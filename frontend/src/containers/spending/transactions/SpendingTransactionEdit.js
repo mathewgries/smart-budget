@@ -35,7 +35,6 @@ export default function SpendingTransactionEdit(props) {
   const account = useSelector((state) =>
     selectSpendingAccountByGSI(state, transaction.GSI1_PK)
   );
-	console.log(account)
   const activeCategory = useSelector(selectActiveCategory);
   const activeSubCategory = useSelector(selectActiveSubCategory);
   const [isSaving, setIsSaving] = useState(false);
@@ -59,11 +58,9 @@ export default function SpendingTransactionEdit(props) {
     e.preventDefault();
 
     try {
-      setIsSaving(true);
+			setIsSaving(true)
       const newAccountBalance = getNewAccountBalance();
-
       await handleUpdateTransaction(newAccountBalance);
-
       dispatch(
         updateSpendingAccountBalance({
           id: account.id,

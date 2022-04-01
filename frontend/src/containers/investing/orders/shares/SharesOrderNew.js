@@ -20,9 +20,7 @@ export default function SharesOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const sharesStatus = useSelector(
-    (state) => state.sharesOrders.status
-  );
+  const [isSaving, setIsSaving] = useState(false);
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [fields, setFields] = useState({
     ticker: "",
@@ -64,6 +62,7 @@ export default function SharesOrderNew(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
+      setIsSaving(true);
       const profitLoss = sharesProfitLossHandler(
         orderSize,
         openPrice,
@@ -77,7 +76,7 @@ export default function SharesOrderNew(props) {
       await handleSaveNewOrder(newAccountBalance, profitLoss);
       dispatch(
         updateInvestingAccountBalance({
-          accountId: account.id,
+          id: account.id,
           accountBalance: newAccountBalance,
         })
       );
@@ -118,13 +117,9 @@ export default function SharesOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || sharesStatus === "saving"}
+                  disabled={saveDisabled || isSaving}
                 >
-                  {sharesStatus === "saving" ? (
-                    <LoadingSpinner />
-                  ) : (
-                    "Save"
-                  )}
+                  {isSaving ? <LoadingSpinner /> : "Save"}
                 </button>
               </div>
             </section>

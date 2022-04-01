@@ -5,6 +5,11 @@
   width: 100%;
 }
 
+.lander-wrapper {
+	padding: 80px 0;
+	text-align: center;
+}
+
 .order-accordian-section,
 .account-card-container,
 .spending-transaction-card-container,

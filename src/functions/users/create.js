@@ -28,7 +28,7 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Item: {
             PK: `USER#${userId}`,
-            SK: `USER#$CATEGORY`,
+            SK: `USER#CATEGORY`,
             type: type,
             categoryMap: categories,
             createDate: Date.now(),

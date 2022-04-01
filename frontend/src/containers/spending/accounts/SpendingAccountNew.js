@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import LoadingSpinner from "../../../components/LoadingSpinner";
@@ -8,7 +8,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 export default function SpendingAccountNew() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     accountName: "",
     accountBalance: "",
@@ -27,7 +27,7 @@ export default function SpendingAccountNew() {
     event.preventDefault();
 
     try {
-      setAddRequestStatus("pending");
+			setIsSaving(true)
       await dispatch(addNewSpendingAccount(fields)).unwrap();
       history.push("/");
     } catch (e) {
@@ -71,7 +71,7 @@ export default function SpendingAccountNew() {
                 className="btn btn-primary form-control"
                 disabled={!validateForm()}
               >
-                {addRequestStatus === "pending" ? <LoadingSpinner /> : "Create"}
+                {isSaving ? <LoadingSpinner /> : "Create"}
               </button>
             </div>
           </form>

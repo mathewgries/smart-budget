@@ -20,9 +20,7 @@ export default function VerticalSpreadsOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const vertSpreadStatus = useSelector(
-    (state) => state.verticalSpreadsOrders.status
-  );
+  const [isSaving, setIsSaving] = useState(false);
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
 
@@ -88,6 +86,7 @@ export default function VerticalSpreadsOrderNew(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
+			setIsSaving(true)
       const profitLoss = optionsProfitLossHandler(
         orderSize,
         openPrice,
@@ -101,7 +100,7 @@ export default function VerticalSpreadsOrderNew(props) {
       await handleSaveNewOrder(newAccountBalance, profitLoss);
       dispatch(
         updateInvestingAccountBalance({
-          accountId: account.id,
+          id: account.id,
           accountBalance: newAccountBalance,
         })
       );
@@ -158,13 +157,9 @@ export default function VerticalSpreadsOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || vertSpreadStatus === "saving"}
+                  disabled={saveDisabled || isSaving}
                 >
-                  {vertSpreadStatus === "saving" ? (
-                    <LoadingSpinner />
-                  ) : (
-                    "Save"
-                  )}
+                  { isSaving ? <LoadingSpinner /> : "Save"}
                 </button>
               </div>
             </section>

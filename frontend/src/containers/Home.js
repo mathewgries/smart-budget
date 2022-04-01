@@ -56,10 +56,6 @@ export default function Home() {
         dispatch(fetchSpendingTransactions());
       }
 
-      if (categoriesStatus === "idle") {
-        dispatch(fetchCategories());
-      }
-
       if (investingAccountsStatus === "idle") {
         dispatch(fetchInvestingAccounts());
       }
@@ -83,6 +79,10 @@ export default function Home() {
       if (investingSignalsStatus === "idle") {
         dispatch(fetchSignals());
       }
+
+			if (categoriesStatus === "idle") {
+        dispatch(fetchCategories());
+      }
     }
 
     onLoad();
@@ -102,9 +102,11 @@ export default function Home() {
 
   function renderLander() {
     return (
-      <div className="lander">
-        <h1>Smart Budget</h1>
-        <p className="text-muted">Control your money habits</p>
+      <div className="page-wrapper">
+        <div className="lander-wrapper">
+          <h1>Smart Budget</h1>
+          <p className="text-muted">Control your money habits</p>
+        </div>
       </div>
     );
   }

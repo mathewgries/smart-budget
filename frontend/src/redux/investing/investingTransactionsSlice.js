@@ -24,7 +24,8 @@ export const fetchInvestingTransactions = createAsyncThunk(
 export const saveNewInvestingTransaction = createAsyncThunk(
   "investingTransactions/saveNewInvestingTransaction",
   async (newTransaction) => {
-    return await post(newTransaction);
+    const result = await post(newTransaction);
+		return result.transaction
   }
 );
 

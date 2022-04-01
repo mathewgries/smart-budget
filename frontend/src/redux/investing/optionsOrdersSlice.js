@@ -25,7 +25,8 @@ export const fetchOptionsOrders = createAsyncThunk(
 export const saveNewOptionsOrder = createAsyncThunk(
   "optionsOrders/saveNewOptionsOrder",
   async (newOptionsOrder) => {
-    return await post(newOptionsOrder);
+    const result =  await post(newOptionsOrder);
+		return result.order
   }
 );
 

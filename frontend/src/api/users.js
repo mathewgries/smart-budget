@@ -1,9 +1,17 @@
-import { Auth} from 'aws-amplify'
+import { Auth, API } from "aws-amplify";
 
-export async function signInUser({email, password}){
-	return await Auth.signIn(email, password);
+export async function signInUser({ email, password }) {
+  return await Auth.signIn(email, password);
 }
 
-export async function logOutUser(){
-	return await Auth.signOut();
+export async function logOutUser() {
+  return await Auth.signOut();
+}
+
+export async function setupNewUser(userInfo) {
+  return await API.post("smartbudget", "/users", {
+    body: {
+      email: userInfo.attributes.email,
+    },
+  });
 }

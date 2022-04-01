@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewInvestingAccount } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import LoadingSpinner from "../../../components/LoadingSpinner";
@@ -8,7 +8,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 export default function InvestingAccountNew() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     accountName: "",
     accountBalance: "",
@@ -27,8 +27,7 @@ export default function InvestingAccountNew() {
     event.preventDefault();
 
     try {
-      setAddRequestStatus("pending");
-      console.log("FIELDS: ", fields);
+      setIsSaving(true);
       await dispatch(addNewInvestingAccount(fields)).unwrap();
       history.push("/investing");
     } catch (e) {
@@ -72,7 +71,7 @@ export default function InvestingAccountNew() {
                 className="btn btn-primary form-control"
                 disabled={!validateForm()}
               >
-                {addRequestStatus === "pending" ? <LoadingSpinner /> : "Create"}
+                {isSaving ? <LoadingSpinner /> : "Create"}
               </button>
             </div>
           </form>

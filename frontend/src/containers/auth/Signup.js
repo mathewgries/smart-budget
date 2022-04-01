@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { API, Auth } from "aws-amplify";
+import { useDispatch } from "react-redux";
 import Form from "react-bootstrap/Form";
 import { useHistory } from "react-router-dom";
 import LoaderButton from "../../components/LoaderButton";
 import { useAppContext } from "../../lib/contextLib";
 import { useFormFields } from "../../lib/hooksLib";
 import { onError } from "../../lib/errorLib";
+import { addNewUser } from "../../redux/users/usersSlice";
 import getUserInfo from "../../helpers/GetUserInfo";
 import "./style.css";
 
 export default function Signup() {
+  const dispatch = useDispatch();
   const [fields, handleFieldChange] = useFormFields({
     email: "",
     password: "",
@@ -54,22 +57,15 @@ export default function Signup() {
   async function handleConfirmationSubmit(event) {
     event.preventDefault();
 
-    setIsLoading(true);
+    
 
     try {
+			setIsLoading(true);
       await Auth.confirmSignUp(fields.email, fields.confirmationCode);
       await Auth.signIn(fields.email, fields.password);
-
       userHasAuthenticated(true);
-
-			const userInfo = await getUserInfo();
-
-			API.post("smartbudget", "/users", {
-				body: {
-					email: userInfo.attributes.email
-				}
-			})
-
+      const userInfo = await getUserInfo();
+      await dispatch(addNewUser(userInfo)).unwrap();
       history.push("/");
     } catch (e) {
       onError(e);

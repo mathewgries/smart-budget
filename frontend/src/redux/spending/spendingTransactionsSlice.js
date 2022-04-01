@@ -24,7 +24,8 @@ export const fetchSpendingTransactions = createAsyncThunk(
 export const saveNewSpendingTransaction = createAsyncThunk(
   "spendingTransactions/saveNewSpendingTransaction",
   async (newTransaction) => {
-    return await post(newTransaction);
+    const result = await post(newTransaction);
+		return result.transaction
   }
 );
 
@@ -57,10 +58,7 @@ export const spendingTransactionsSlice = createSlice({
       .addCase(saveNewSpendingTransaction.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(
-        saveNewSpendingTransaction.fulfilled,
-        spendingTransactionsAdapter.addOne
-      );
+      .addCase(saveNewSpendingTransaction.fulfilled, spendingTransactionsAdapter.addOne);
     builder
       .addCase(updateSpendingTransaction.pending, (state, action) => {
         state.status = "saving";

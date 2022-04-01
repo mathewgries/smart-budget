@@ -23,9 +23,7 @@ export default function OptionsOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-  const optionsStatus = useSelector(
-    (state) => state.optionsOrders.status
-  );
+  const [isSaving, setIsSaving] = useState(false);
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
 
@@ -114,6 +112,7 @@ export default function OptionsOrderEdit(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
+			//setIsSaving(true)
       // const profitLoss = optionsProfitLossHandler(
       //   orderSize,
       //   openPrice,
@@ -183,13 +182,9 @@ export default function OptionsOrderEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || optionsStatus === "saving"}
+                  disabled={saveDisabled || isSaving}
                 >
-                  {optionsStatus === "saving" ? (
-                    <LoadingSpinner />
-                  ) : (
-                    "Save"
-                  )}
+                  {isSaving ? <LoadingSpinner /> : "Save"}
                 </button>
               </div>
             </section>
@@ -253,7 +248,7 @@ export default function OptionsOrderEdit(props) {
               <SignalsListGroup
                 handleSignalSelection={handleSignalSelection}
                 selectedSignals={selectedSignals}
-								editPage={true}
+                editPage={true}
               />
             </section>
 

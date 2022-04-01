@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import usersReducer from "./users/usersSlice"
 import spendingAccountsReducer from "./spending/spendingAccountsSlice";
 import categoriesReducer from "./spending/categoriesSlice";
 import spendingTransactionReducer from "./spending/spendingTransactionsSlice";
@@ -11,6 +12,7 @@ import investingSignalsReducer from "./investing/investingSignalsSlice";
 
 export default configureStore({
   reducer: {
+		users: usersReducer,
     spendingAccounts: spendingAccountsReducer,
     spendingTransactions: spendingTransactionReducer,
     categories: categoriesReducer,
