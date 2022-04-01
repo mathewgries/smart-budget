@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/investing/transaction";
+import { fetchAllData } from "../users/usersSlice";
 
 const investingTransactionAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
@@ -25,7 +26,7 @@ export const saveNewInvestingTransaction = createAsyncThunk(
   "investingTransactions/saveNewInvestingTransaction",
   async (newTransaction) => {
     const result = await post(newTransaction);
-		return result.transaction
+    return result.transaction;
   }
 );
 
@@ -42,6 +43,20 @@ export const investingTransactionsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
+		builder
+      .addCase(fetchAllData.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchAllData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const trans = action.payload.filter(
+          (item) => item.type === "TRANS#INVESTING#"
+        );
+        investingTransactionAdapter.setAll(state, trans)
+      })
+      .addCase(fetchAllData.rejected, (state, action) => {
+        state.status = "failed";
+      });
     builder
       .addCase(fetchInvestingTransactions.pending, (state, action) => {
         state.status = "loading";
@@ -88,9 +103,9 @@ export const selectInvestingTransactionsByGSI = (state, gsi) =>
     (transaction) => transaction.GSI1_PK === gsi
   );
 
-export const { 
-	selectAll: selectAllInvestingTransactions,
-	selectById: selectInvestingTransactionById
+export const {
+  selectAll: selectAllInvestingTransactions,
+  selectById: selectInvestingTransactionById,
 } = investingTransactionAdapter.getSelectors(
   (state) => state.investingTransactions
 );

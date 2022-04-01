@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { API, Auth } from "aws-amplify";
+import { Auth } from "aws-amplify";
 import { useDispatch } from "react-redux";
 import Form from "react-bootstrap/Form";
 import { useHistory } from "react-router-dom";

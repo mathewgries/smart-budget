@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { selectOptionsOrderById } from "../../../../redux/investing/optionsOrdersSlice";
+import {
+  selectOptionsOrderById,
+  updateOptionsOrder,
+} from "../../../../redux/investing/optionsOrdersSlice";
 import {
   selectInvestingAccountByGSI,
   updateInvestingAccountBalance,
@@ -10,7 +13,7 @@ import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
   optionsProfitLossHandler,
-  addOrderHandler,
+  updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
@@ -112,61 +115,64 @@ export default function OptionsOrderEdit(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-			//setIsSaving(true)
-      // const profitLoss = optionsProfitLossHandler(
-      //   orderSize,
-      //   openPrice,
-      //   closePrice,
-      //   tradeSide
-      // );
-      // const newAccountBalance = addOrderHandler(
-      //   profitLoss,
-      //   account.accountBalance
-      // );
-      // await handleSaveNewOrder(newAccountBalance, profitLoss);
-      // dispatch(
-      //   updateInvestingAccountBalance({
-      //     accountId: account.id,
-      //     accountBalance: newAccountBalance,
-      //   })
-      // );
-      history.push(`/investing/journal/${id}`);
+      setIsSaving(true)
+      const newPL = optionsProfitLossHandler(
+        orderSize,
+        openPrice,
+        closePrice,
+        tradeSide
+      );
+      const newAccountBalance = updateOrderHandler(
+				order.profitLoss,
+        newPL,
+        account.accountBalance
+      );
+      await handleSaveNewOrder(newAccountBalance, newPL);
+      dispatch(
+        updateInvestingAccountBalance({
+          id: account.id,
+          accountBalance: newAccountBalance,
+        })
+      );
+      history.push(`/investing/journal/${account.id}`);
     } catch (e) {
       onError(e);
+			setIsSaving(false)
     }
   };
 
   const handleSaveNewOrder = async (newAccountBalance, profitLoss) => {
-    // await dispatch(
-    //   saveNewOptionsOrder({
-    //     accountId: account.id,
-    //     accountBalance: newAccountBalance,
-    //     ticker: fields.ticker,
-    //     openDate: fields.openDate,
-    //     closeDate: fields.closeDate,
-    //     orderSize: fields.orderSize,
-    //     openPrice: fields.openPrice,
-    //     closePrice: fields.closePrice,
-    //     openUnderlyingPrice: fields.openUnderlyingPrice,
-    //     closeUnderlyingPrice: fields.closeUnderlyingPrice,
-    //     strikePrice: fields.strikePrice,
-    //     contractType: fields.contractType,
-    //     tradeSide: fields.tradeSide,
-    //     contractExpirationDate: fields.contractExpirationDate,
-    //     openDelta: fields.openDelta,
-    //     closeDelta: fields.closeDelta,
-    //     openGamma: fields.openGamma,
-    //     closeGamma: fields.closeGamma,
-    //     openVega: fields.openVega,
-    //     closeVega: fields.closeVega,
-    //     openTheta: fields.openTheta,
-    //     closeTheta: fields.closeTheta,
-    //     openImpliedVolatility: fields.openImpliedVolatility,
-    //     closeImpliedVolatility: fields.closeImpliedVolatility,
-    //     profitLoss: profitLoss,
-    //     signalList: selectedSignals,
-    //   })
-    // ).unwrap();
+    await dispatch(
+      updateOptionsOrder({
+				id: order.id,
+        accountId: account.id,
+        accountBalance: newAccountBalance,
+        ticker: fields.ticker,
+        openDate: fields.openDate,
+        closeDate: fields.closeDate,
+        orderSize: fields.orderSize,
+        openPrice: fields.openPrice,
+        closePrice: fields.closePrice,
+        openUnderlyingPrice: fields.openUnderlyingPrice,
+        closeUnderlyingPrice: fields.closeUnderlyingPrice,
+        strikePrice: fields.strikePrice,
+        contractType: fields.contractType,
+        tradeSide: fields.tradeSide,
+        contractExpirationDate: fields.contractExpirationDate,
+        openDelta: fields.openDelta,
+        closeDelta: fields.closeDelta,
+        openGamma: fields.openGamma,
+        closeGamma: fields.closeGamma,
+        openVega: fields.openVega,
+        closeVega: fields.closeVega,
+        openTheta: fields.openTheta,
+        closeTheta: fields.closeTheta,
+        openImpliedVolatility: fields.openImpliedVolatility,
+        closeImpliedVolatility: fields.closeImpliedVolatility,
+        profitLoss: profitLoss,
+        signalList: selectedSignals,
+      })
+    ).unwrap();
   };
 
   return (

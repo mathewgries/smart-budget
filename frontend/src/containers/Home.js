@@ -1,45 +1,18 @@
 import React, { useEffect } from "react";
 import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchSpendingAccounts } from "../redux/spending/spendingAccountsSlice";
-import { fetchSpendingTransactions } from "../redux/spending/spendingTransactionsSlice";
-import { fetchCategories } from "../redux/spending/categoriesSlice";
-import { fetchInvestingAccounts } from "../redux/investing/investingAccountsSlice";
-import { fetchInvestingTransactions } from "../redux/investing/investingTransactionsSlice";
-import { fetchSharesOrders } from "../redux/investing/sharesOrdersSlice";
-import { fetchOptionsOrders } from "../redux/investing/optionsOrdersSlice";
-import { fetchVerticalSpreadsOrders } from "../redux/investing/verticalSpreadsOrdersSlice";
-import { fetchSignals } from "../redux/investing/investingSignalsSlice";
+import { fetchAllData } from "../redux/users/usersSlice";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
 import LoadingSpinner from "../components/LoadingSpinner";
 import "./style.css";
+import { onError } from "../lib/errorLib";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const spendingAccountsState = useSelector(
-    (state) => state.spendingAccounts.status
-  );
-  const spendingTransactionsStatus = useSelector(
-    (state) => state.spendingTransactions.status
-  );
-  const categoriesStatus = useSelector((state) => state.categories.status);
 
-  const investingAccountsStatus = useSelector(
-    (state) => state.investingAccounts.status
-  );
-  const investingTransactionsStatus = useSelector(
-    (state) => state.investingTransactions.status
-  );
-  const sharesStatus = useSelector((state) => state.sharesOrders.status);
-  const optionsStatus = useSelector((state) => state.optionsOrders.status);
-  const vertSpreadsStatus = useSelector(
-    (state) => state.verticalSpreadsOrders.status
-  );
-  const investingSignalsStatus = useSelector(
-    (state) => state.investingSignals.status
-  );
+  const appStatus = useSelector((state) => state.users.status);
   const { isAuthenticated } = useAppContext();
 
   useEffect(() => {
@@ -48,57 +21,17 @@ export default function Home() {
         return;
       }
 
-      if (spendingAccountsState === "idle") {
-        dispatch(fetchSpendingAccounts());
-      }
-
-      if (spendingTransactionsStatus === "idle") {
-        dispatch(fetchSpendingTransactions());
-      }
-
-      if (investingAccountsStatus === "idle") {
-        dispatch(fetchInvestingAccounts());
-      }
-
-      if (investingTransactionsStatus === "idle") {
-        dispatch(fetchInvestingTransactions());
-      }
-
-      if (sharesStatus === "idle") {
-        dispatch(fetchSharesOrders());
-      }
-
-      if (optionsStatus === "idle") {
-        dispatch(fetchOptionsOrders());
-      }
-
-      if (vertSpreadsStatus === "idle") {
-        dispatch(fetchVerticalSpreadsOrders());
-      }
-
-      if (investingSignalsStatus === "idle") {
-        dispatch(fetchSignals());
-      }
-
-			if (categoriesStatus === "idle") {
-        dispatch(fetchCategories());
+      if (appStatus === "idle") {
+        try {
+          dispatch(fetchAllData());
+        } catch (e) {
+          onError(e);
+        }
       }
     }
 
     onLoad();
-  }, [
-    isAuthenticated,
-    spendingAccountsState,
-    spendingTransactionsStatus,
-    categoriesStatus,
-    investingAccountsStatus,
-    investingTransactionsStatus,
-    sharesStatus,
-    optionsStatus,
-    vertSpreadsStatus,
-    investingSignalsStatus,
-    dispatch,
-  ]);
+  }, [isAuthenticated, appStatus, dispatch]);
 
   function renderLander() {
     return (
@@ -118,7 +51,7 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                {spendingAccountsState === "loading" ? (
+                {appStatus === "loading" ? (
                   <h5>Spending Accounts</h5>
                 ) : (
                   <Link to="/spending">
@@ -127,7 +60,7 @@ export default function Home() {
                 )}
               </header>
               <div className="form-group">
-                {spendingAccountsState === "loading" ? (
+                {appStatus === "loading" ? (
                   <button disabled={true} className="btn btn-secondary">
                     <LoadingSpinner />
                   </button>
@@ -145,7 +78,7 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                {investingAccountsStatus === "loading" ? (
+                {appStatus === "loading" ? (
                   <h5>Investing Accounts</h5>
                 ) : (
                   <Link to="/investing">
@@ -154,7 +87,7 @@ export default function Home() {
                 )}
               </header>
               <div className="form-group">
-                {investingAccountsStatus === "loading" ? (
+                {appStatus === "loading" ? (
                   <button disabled={true} className="btn btn-secondary">
                     <LoadingSpinner />
                   </button>

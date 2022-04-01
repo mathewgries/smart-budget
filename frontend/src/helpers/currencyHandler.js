@@ -62,6 +62,26 @@ export function deleteTransactionHandler(
   }
 }
 
+export function addOrderHandler(profitLoss, accountBalance) {
+  return (
+    (dollarsToCents(accountBalance) + dollarsToCents(profitLoss)) /
+    100
+  ).toFixed(2);
+}
+
+export function updateOrderHandler(orignalPL, newPL, accountBalance){
+	const origPLCon = dollarsToCents(orignalPL)
+	const newPLCon = dollarsToCents(newPL)
+	const acctBalCon = dollarsToCents(accountBalance)
+
+	if(origPLCon === newPLCon){
+		return accountBalance
+	}else{
+		const revertBlanace = acctBalCon - origPLCon
+		return ((revertBlanace + newPLCon)/100).toFixed(2)
+	}
+}
+
 function calculateProfitLoss(orderSize, openPrice, closePrice, tradeSide) {
   const openCost = dollarsToCents(openPrice) * orderSize;
   const closeCost = dollarsToCents(closePrice) * orderSize;
@@ -97,12 +117,6 @@ export function optionsProfitLossHandler(
   ).toFixed(2);
 }
 
-export function addOrderHandler(profitLoss, accountBalance) {
-  return (
-    (dollarsToCents(accountBalance) + dollarsToCents(profitLoss)) /
-    100
-  ).toFixed(2);
-}
 
 export function getPLPercent(openPrice, closePrice, tradeSide,){
 	const openConv = dollarsToCents(openPrice)

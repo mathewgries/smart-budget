@@ -27,8 +27,11 @@ import InvestingJournal from "./containers/investing/orders/InvestingJournal";
 import OptionsOrder from "./containers/investing/orders/options/OptionsOrder";
 import OptionsOrderNew from "./containers/investing/orders/options/OptionsOrderNew";
 import OptionsOrderEdit from "./containers/investing/orders/options/OptionsOrderEdit";
+
 import SharesOrder from "./containers/investing/orders/shares/SharesOrder";
 import SharesOrderNew from "./containers/investing/orders/shares/SharesOrderNew";
+import SharesOrderEdit from "./containers/investing/orders/shares/SharesOrderEdit"
+
 import VerticalSpreadsOrder from "./containers/investing/orders/spreads/VerticalSpreadsOrder";
 import VerticalSpreadsOrderNew from "./containers/investing/orders/spreads/VerticalSpreadsOrderNew";
 import StrategyTracker from "./containers/investing/strategyTracker/StrategyTracker";
@@ -131,6 +134,10 @@ export default function Routes() {
 
       <AuthenticatedRoute exact path="/investing/orders/shares/new/:id">
         <SharesOrderNew />
+      </AuthenticatedRoute>
+
+			<AuthenticatedRoute exact path="/investing/orders/shares/edit/:id">
+        <SharesOrderEdit />
       </AuthenticatedRoute>
 
       <AuthenticatedRoute exact path="/investing/orders/spreads/vertical/:id">

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { get, put } from "../../api/investing/signals";
+import { fetchAllData } from "../users/usersSlice";
 
 const initialState = {
   items: [],
@@ -30,6 +31,18 @@ export const investingSignalsSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder
+      .addCase(fetchAllData.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchAllData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const signals = action.payload.filter((item) => item.type === "SIGNAL");
+        state.items = signals[0];
+      })
+      .addCase(fetchAllData.rejected, (state, action) => {
+        state.status = "failed";
+      });
     builder
       .addCase(fetchSignals.pending, (state, action) => {
         state.status = "loading";

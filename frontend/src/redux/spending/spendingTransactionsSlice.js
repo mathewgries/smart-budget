@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/spending/transactions";
+import { fetchAllData } from "../users/usersSlice";
 
 const spendingTransactionsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
@@ -25,7 +26,7 @@ export const saveNewSpendingTransaction = createAsyncThunk(
   "spendingTransactions/saveNewSpendingTransaction",
   async (newTransaction) => {
     const result = await post(newTransaction);
-		return result.transaction
+    return result.transaction;
   }
 );
 
@@ -43,6 +44,20 @@ export const spendingTransactionsSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(fetchAllData.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchAllData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const trans = action.payload.filter(
+          (item) => item.type === "TRANS#SPENDING#"
+        );
+        spendingTransactionsAdapter.setAll(state, trans)
+      })
+      .addCase(fetchAllData.rejected, (state, action) => {
+        state.status = "failed";
+      });
+    builder
       .addCase(fetchSpendingTransactions.pending, (state, action) => {
         state.status = "loading";
       })
@@ -58,7 +73,10 @@ export const spendingTransactionsSlice = createSlice({
       .addCase(saveNewSpendingTransaction.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(saveNewSpendingTransaction.fulfilled, spendingTransactionsAdapter.addOne);
+      .addCase(
+        saveNewSpendingTransaction.fulfilled,
+        spendingTransactionsAdapter.addOne
+      );
     builder
       .addCase(updateSpendingTransaction.pending, (state, action) => {
         state.status = "saving";

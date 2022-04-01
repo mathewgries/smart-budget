@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import LoadingSpinner from "../../../components/LoadingSpinner";

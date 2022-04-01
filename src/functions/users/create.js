@@ -18,6 +18,7 @@ export const main = handler(async (event) => {
             username: data.email || null,
             email: data.email || null,
             dateOfBirth: data.dateOfBirth || null,
+						type: 'USER#INFO',
             createDate: Date.now(),
             modifyDate: Date.now(),
           },

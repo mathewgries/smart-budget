@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { post, get } from "../../api/investing/orders/verticalSpreads";
+import { fetchAllData } from "../users/usersSlice";
 
 const vertSpreadsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.openDate.localeCompare(a.openDate),
@@ -34,6 +35,20 @@ export const verticalSpreadsOrdersSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
+    builder
+      .addCase(fetchAllData.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchAllData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const verts = action.payload.filter(
+          (item) => item.type === "ORDER#VERTSPREADS#"
+        );
+        vertSpreadsAdapter.setAll(state, verts);
+      })
+      .addCase(fetchAllData.rejected, (state, action) => {
+        state.status = "failed";
+      });
     builder
       .addCase(fetchVerticalSpreadsOrders.pending, (state, action) => {
         state.status = "loading";

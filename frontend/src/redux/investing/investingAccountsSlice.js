@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/investing/accounts";
+import { fetchAllData } from "../users/usersSlice";
 
 const investingAccountsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
@@ -43,6 +44,20 @@ export const investingAccountsSlice = createSlice({
     updateInvestingAccountBalance: investingAccountsAdapter.upsertOne,
   },
   extraReducers(builder) {
+    builder
+      .addCase(fetchAllData.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchAllData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const accounts = action.payload.filter(
+          (items) => items.type === "ACCT#INVESTING#"
+        );
+        investingAccountsAdapter.setAll(state, accounts)
+      })
+      .addCase(fetchAllData.rejected, (state, action) => {
+        state.status = "failed";
+      });
     builder
       .addCase(fetchInvestingAccounts.pending, (state, action) => {
         state.status = "loading";

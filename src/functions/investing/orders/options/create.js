@@ -33,7 +33,7 @@ export const main = handler(async (event) => {
             tradeSide: data.tradeSide,
             contractExpirationDate: data.contractExpirationDate,
             openDelta: data.openDelta || null,
-            closeDelta: data.closeDate || null,
+            closeDelta: data.closeDelta || null,
             openGamma: data.openGamma || null,
             closeGamma: data.closeGamma || null,
             openVega: data.openVega || null,

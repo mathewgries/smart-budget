@@ -15,3 +15,7 @@ export async function setupNewUser(userInfo) {
     },
   });
 }
+
+export async function getAllData(){
+	return await API.get("smartbudget", "/users")
+}

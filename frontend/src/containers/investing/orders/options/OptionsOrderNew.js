@@ -102,6 +102,7 @@ export default function OptionsOrderNew(props) {
       history.push(`/investing/journal/${id}`);
     } catch (e) {
       onError(e);
+			setIsSaving(false)
     }
   };
 

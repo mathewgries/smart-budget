@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { get, put } from "../../api/spending/categories"
+import { get, put } from "../../api/spending/categories";
+import { fetchAllData } from "../users/usersSlice";
 
 const initialState = {
-  history: [],
   items: {},
   categories: [],
   subCategories: [],
@@ -31,17 +31,14 @@ export const categoriesSlice = createSlice({
   initialState,
   reducers: {
     updateActiveCategory(state, action) {
-      state.history = { ...state, history: state.history };
       state.activeCategory = action.payload;
       state.subCategories = state.items[state.activeCategory];
       state.activeSubCategory = state.subCategories[0];
     },
     updateActiveSubCategory(state, action) {
-      state.history = { ...state, history: state.history };
       state.activeSubCategory = action.payload;
     },
     addNewCategory(state, action) {
-      state.history = { ...state, history: state.history };
       const category = action.payload;
       state.items = {
         ...state.items,
@@ -49,11 +46,10 @@ export const categoriesSlice = createSlice({
       };
       state.categories.push(category);
       state.activeCategory = category;
-			state.subCategories = state.items[state.activeCategory];
-			state.activeSubCategory = state.subCategories[0];
+      state.subCategories = state.items[state.activeCategory];
+      state.activeSubCategory = state.subCategories[0];
     },
     addNewSubCategory(state, action) {
-      state.history = { ...state, history: state.history };
       const subCategory = action.payload;
       state.subCategories.push(subCategory);
       state.activeSubCategory = subCategory;
@@ -64,6 +60,25 @@ export const categoriesSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder
+      .addCase(fetchAllData.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchAllData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const categories = action.payload.filter(
+          (item) => item.type === "CATEGORY"
+        );
+        const { categoryMap } = categories[0];
+        state.items = categoryMap;
+        state.categories = Object.keys(categoryMap);
+        state.activeCategory = state.categories[0];
+        state.subCategories = state.items[state.activeCategory];
+        state.activeSubCategory = state.subCategories[0];
+      })
+      .addCase(fetchAllData.rejected, (state, action) => {
+        state.status = "failed";
+      });
     builder
       .addCase(fetchCategories.pending, (state, action) => {
         state.status = "loading";
@@ -81,9 +96,7 @@ export const categoriesSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
-    builder.addCase(saveCategories.fulfilled, (state, action) => {
-      
-    });
+    builder.addCase(saveCategories.fulfilled, (state, action) => {});
   },
 });
 

@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { post, put, get } from "../../api/investing/orders/options";
+import { fetchAllData } from "../users/usersSlice";
 
 const optionsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.openDate.localeCompare(a.openDate),
@@ -25,15 +26,18 @@ export const fetchOptionsOrders = createAsyncThunk(
 export const saveNewOptionsOrder = createAsyncThunk(
   "optionsOrders/saveNewOptionsOrder",
   async (newOptionsOrder) => {
-    const result =  await post(newOptionsOrder);
-		return result.order
+    const result = await post(newOptionsOrder);
+    return result.order;
   }
 );
 
 export const updateOptionsOrder = createAsyncThunk(
   "optionsOrders/updateOptionsOrder",
   async (updatedOrder) => {
-    return await put(updatedOrder);
+    await put(updatedOrder);
+    delete updatedOrder.accountId;
+    delete updatedOrder.accountBalance;
+    return updatedOrder;
   }
 );
 
@@ -42,6 +46,20 @@ export const optionsOrdersSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers(builder) {
+    builder
+      .addCase(fetchAllData.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(fetchAllData.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const options = action.payload.filter(
+          (item) => item.type === "ORDER#OPTIONS#"
+        );
+        optionsAdapter.setAll(state, options);
+      })
+      .addCase(fetchAllData.rejected, (state, action) => {
+        state.status = "failed";
+      });
     builder
       .addCase(fetchOptionsOrders.pending, (state, action) => {
         state.status = "loading";
