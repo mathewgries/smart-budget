@@ -412,7 +412,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                       <CurrencyInput
                         inputName={"openUnderlyingPrice"}
                         inputLabel={"Open"}
-                        inputValue={fields.openUnderlyingPrice}
+                        inputValue={fields.openUnderlyingPrice || "0.00"}
                         inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
@@ -421,7 +421,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                       <CurrencyInput
                         inputName={"closeUnderlyingPrice"}
                         inputLabel={"Close"}
-                        inputValue={fields.closeUnderlyingPrice}
+                        inputValue={fields.closeUnderlyingPrice || "0.00"}
                         inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
@@ -450,28 +450,21 @@ export default function VerticalSpreadsOrderEdit(props) {
                             <label>Delta</label>
                           </div>
                           <div className="order-form-greek-group">
-                            <div className="form-group">
-                              <label htmlFor="openDelta">Open</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="openDelta"
-                                name="openDelta"
-                                value={fields.openDelta}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+                            <div>
+                              <CurrencyInput
+                                inputName={"openDelta"}
+                                inputLabel={"Open"}
+                                inputValue={fields.openDelta || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
-                            <div className="form-group">
-                              <label htmlFor="closeDelta">Close</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="closeDelta"
-                                name="closeDelta"
-                                value={fields.closeDelta}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+
+                            <div>
+                              <CurrencyInput
+                                inputName={"closeDelta"}
+                                inputLabel={"Close"}
+                                inputValue={fields.closeDelta || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
                           </div>
@@ -482,28 +475,21 @@ export default function VerticalSpreadsOrderEdit(props) {
                             <label>Gamma</label>
                           </div>
                           <div className="order-form-greek-group">
-                            <div className="form-group">
-                              <label htmlFor="openGamma">Open</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="openGamma"
-                                name="openGamma"
-                                value={fields.openGamma}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+                            <div>
+                              <CurrencyInput
+                                inputName={"openGamma"}
+                                inputLabel={"Open"}
+                                inputValue={fields.openGamma || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
-                            <div className="form-group">
-                              <label htmlFor="closeGamma">Close</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="closeGamma"
-                                name="closeGamma"
-                                value={fields.closeGamma}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+
+                            <div>
+                              <CurrencyInput
+                                inputName={"closeGamma"}
+                                inputLabel={"Close"}
+                                inputValue={fields.closeGamma || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
                           </div>
@@ -516,28 +502,21 @@ export default function VerticalSpreadsOrderEdit(props) {
                             <label>Vega</label>
                           </div>
                           <div className="order-form-greek-group">
-                            <div className="form-group">
-                              <label htmlFor="openVega">Open</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="openVega"
-                                name="openVega"
-                                value={fields.openVega}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+                            <div>
+                              <CurrencyInput
+                                inputName={"openVega"}
+                                inputLabel={"Open"}
+                                inputValue={fields.openVega || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
-                            <div className="form-group">
-                              <label htmlFor="closeVega">Close</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="closeVega"
-                                name="closeVega"
-                                value={fields.closeVega}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+
+                            <div>
+                              <CurrencyInput
+                                inputName={"closeVega"}
+                                inputLabel={"Close"}
+                                inputValue={fields.closeVega || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
                           </div>
@@ -548,28 +527,21 @@ export default function VerticalSpreadsOrderEdit(props) {
                             <label>Theta</label>
                           </div>
                           <div className="order-form-greek-group">
-                            <div className="form-group">
-                              <label htmlFor="openTheta">Open</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="openTheta"
-                                name="openTheta"
-                                value={fields.openTheta}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+                            <div>
+                              <CurrencyInput
+                                inputName={"openTheta"}
+                                inputLabel={"Open"}
+                                inputValue={fields.openTheta || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
-                            <div className="form-group">
-                              <label htmlFor="closeTheta">Close</label>
-                              <input
-                                className="form-control"
-                                type="text"
-                                id="closeTheta"
-                                name="closeTheta"
-                                value={fields.closeTheta}
-                                onChange={handleOnChange}
-                                data-lpignore="true"
+
+                            <div>
+                              <CurrencyInput
+                                inputName={"closeTheta"}
+                                inputLabel={"Close"}
+                                inputValue={fields.closeTheta || "0.00"}
+                                inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
                           </div>
@@ -577,32 +549,21 @@ export default function VerticalSpreadsOrderEdit(props) {
                       </div>
 
                       <div className="order-form-row-group">
-                        <div className="form-group">
-                          <label htmlFor="openImpliedVolatility">
-                            Open I.V.
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            id="openImpliedVolatility"
-                            name="openImpliedVolatility"
-                            value={fields.openImpliedVolatility}
-                            onChange={handleOnChange}
-                            data-lpignore="true"
+                        <div>
+                          <CurrencyInput
+                            inputName={"openImpliedVolatility"}
+                            inputLabel={"Open I.V."}
+                            inputValue={fields.openImpliedVolatility || "0.00"}
+                            inputChangeHandler={handleCurrencyInput}
                           />
                         </div>
-                        <div className="form-group">
-                          <label htmlFor="closeImpliedVolatility">
-                            Close I.V.
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            id="closeImpliedVolatility"
-                            name="closeImpliedVolatility"
-                            value={fields.closeImpliedVolatility}
-                            onChange={handleOnChange}
-                            data-lpignore="true"
+
+                        <div>
+                          <CurrencyInput
+                            inputName={"closeImpliedVolatility"}
+                            inputLabel={"Close I.V."}
+                            inputValue={fields.closeImpliedVolatility || "0.00"}
+                            inputChangeHandler={handleCurrencyInput}
                           />
                         </div>
                       </div>

@@ -85,6 +85,7 @@ export default function SpendingAccountEdit(props) {
                   inputLabel={"Account Balance"}
 									inputValue={fields.accountBalance}
                   inputChangeHandler={handleCurrencyInput}
+									allowNegative={true}
                 />
               </div>
             </section>

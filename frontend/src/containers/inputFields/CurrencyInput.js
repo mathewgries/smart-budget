@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 
 export default function CurrencyInput(props) {
-  const { inputLabel, inputName, inputValue, minValue, inputChangeHandler } =
-    props;
+  const { inputLabel, inputName, inputValue, inputChangeHandler } = props;
   const [keyEvent, setKeyEvent] = useState("");
 
   function handleOnChange(e) {
@@ -67,10 +66,10 @@ export default function CurrencyInput(props) {
         className="form-control currency-input-control"
         type="text"
         name={inputName}
-        value={inputValue}
+        value={inputValue || "0.00"}
         onKeyDown={handleKeyPress}
         onChange={handleOnChange}
-				data-lpignore="true"
+        data-lpignore="true"
       />
     </div>
   );
