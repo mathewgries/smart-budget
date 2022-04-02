@@ -1,11 +1,12 @@
-import handler from "../../../util/handler";
-import dynamoDb from "../../../util/dynamodb";
+import handler from "../../../../util/handler"
+import dynamoDb from "../../../../util/dynamodb"
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const accountId = data.accountId;
-  const transactionId = event.pathParameters.id;
+  const orderId = event.pathParameters.id;
+  const type = "ORDER#SHARES#";
 
   const params = {
     TransactItems: [
@@ -13,20 +14,30 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `TRANS#INVESTING#${transactionId}`,
+            SK: `${type}${orderId}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression: `SET 
-          transactionAmount = :transactionAmount, 
-          transactionDate = :transactionDate, 
-          transactionType = :transactionType, 
-					transactionNote = :transactionNote,
-          modifyDate = :modifyDate`,
+          	ticker = :ticker,
+            openDate = :openDate,
+            closeDate = :closeDate,
+            orderSize = :orderSize,
+            openPrice = :openPrice,
+            closePrice = :closePrice,
+            tradeSide = :tradeSide,
+            profitLoss = :profitLoss,
+						signalList = :signalList,
+          	modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
-            ":transactionAmount": data.transactionAmount,
-            ":transactionDate": Date.parse(data.transactionDate),
-            ":transactionType": data.transactionType,
-            ":transactionNote": data.transactionNote,
+            ":ticker": data.ticker,
+            ":openDate": data.openDate,
+            ":closeDate": data.closeDate,
+            ":orderSize": data.orderSize,
+            ":openPrice": data.openPrice,
+            ":closePrice": data.closePrice,
+            ":tradeSide": data.tradeSide,
+            ":profitLoss": data.profitLoss,
+            ":signalList": data.signalList,
             ":modifyDate": Date.now(),
           },
         },

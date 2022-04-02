@@ -7,7 +7,7 @@ export async function post(order) {
 }
 
 export async function put(order) {
-  return await API.post("smartbudget", `/investing/orders/shares/${order.id}`, {
+  return await API.put("smartbudget", `/investing/orders/shares/${order.id}`, {
     body: order,
   });
 }

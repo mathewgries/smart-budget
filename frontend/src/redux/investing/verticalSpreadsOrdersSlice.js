@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { post, get } from "../../api/investing/orders/verticalSpreads";
+import { put, post, get } from "../../api/investing/orders/verticalSpreads";
 import { fetchAllData } from "../users/usersSlice";
 
 const vertSpreadsAdapter = createEntityAdapter({
@@ -27,6 +27,16 @@ export const saveNewVerticalSpreadsOrder = createAsyncThunk(
   "verticalSpreadsOrders/saveNewVerticalSpreadsOrder",
   async (newVerticalSpreadsOrder) => {
     return await post(newVerticalSpreadsOrder);
+  }
+);
+
+export const updateVerticalSpreadOrder = createAsyncThunk(
+  "verticalSpreadsOrders/updateVerticalSpreadOrder",
+  async (updatedOrder) => {
+    await put(updatedOrder);
+    delete updatedOrder.accountId;
+    delete updatedOrder.accountBalance;
+    return updatedOrder;
   }
 );
 
@@ -65,8 +75,23 @@ export const verticalSpreadsOrdersSlice = createSlice({
       .addCase(saveNewVerticalSpreadsOrder.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(saveNewVerticalSpreadsOrder.fulfilled, vertSpreadsAdapter.addOne)
+      .addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        vertSpreadsAdapter.addOne(state, action.payload.order);
+      })
       .addCase(saveNewVerticalSpreadsOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateVerticalSpreadOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(
+        updateVerticalSpreadOrder.fulfilled,
+        vertSpreadsAdapter.upsertOne
+      )
+      .addCase(updateVerticalSpreadOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

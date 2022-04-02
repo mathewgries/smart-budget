@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { saveNewVerticalSpreadsOrder } from "../../../../redux/investing/verticalSpreadsOrdersSlice";
 import {
-  selectInvestingAccountById,
+  updateVerticalSpreadOrder,
+  selectVerticalSpreadsOrderById,
+} from "../../../../redux/investing/verticalSpreadsOrdersSlice";
+import {
+  selectInvestingAccountByGSI,
   updateInvestingAccountBalance,
 } from "../../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
   optionsProfitLossHandler,
-  addOrderHandler,
+  updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
@@ -19,7 +22,12 @@ export default function VerticalSpreadsOrderNew(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
-  const account = useSelector((state) => selectInvestingAccountById(state, id));
+  const order = useSelector((state) =>
+    selectVerticalSpreadsOrderById(state, id)
+  );
+  const account = useSelector((state) =>
+    selectInvestingAccountByGSI(state, order.GSI1_PK)
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
@@ -49,6 +57,35 @@ export default function VerticalSpreadsOrderNew(props) {
     openImpliedVolatility: "",
     closeImpliedVolatility: "",
   });
+
+  useEffect(() => {
+    setFields({
+      ticker: order.ticker,
+      openDate: order.openDate,
+      closeDate: order.closeDate,
+      orderSize: order.orderSize,
+      openPrice: order.openPrice,
+      closePrice: order.closePrice,
+      openUnderlyingPrice: order.openUnderlyingPrice,
+      closeUnderlyingPrice: order.closeUnderlyingPrice,
+      strikeUpperLegPrice: order.strikeUpperLegPrice,
+      strikeLowerLegPrice: order.strikeLowerLegPrice,
+      contractType: order.contractType,
+      tradeSide: order.tradeSide,
+      spreadExpirationDate: order.spreadExpirationDate,
+      openDelta: order.openDelta,
+      closeDelta: order.closeDelta,
+      openGamma: order.openGamma,
+      closeGamma: order.closeGamma,
+      openVega: order.openVega,
+      closeVega: order.closeVega,
+      openTheta: order.openTheta,
+      closeTheta: order.closeTheta,
+      openImpliedVolatility: order.openImpliedVolatility,
+      closeImpliedVolatility: order.closeImpliedVolatility,
+    });
+    setSelectedSignals(order.signalList);
+  }, [order]);
 
   const saveDisabled =
     fields.ticker === "" ||
@@ -84,33 +121,35 @@ export default function VerticalSpreadsOrderNew(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-			setIsSaving(true)
-      const profitLoss = optionsProfitLossHandler(
+      setIsSaving(true);
+      const newPL = optionsProfitLossHandler(
         orderSize,
         openPrice,
         closePrice,
         tradeSide
       );
-      const newAccountBalance = addOrderHandler(
-        profitLoss,
+      const newAccountBalance = updateOrderHandler(
+        order.profitLoss,
+        newPL,
         account.accountBalance
       );
-      await handleSaveNewOrder(newAccountBalance, profitLoss);
+      await handleEditOrder(newAccountBalance, newPL);
       dispatch(
         updateInvestingAccountBalance({
           id: account.id,
           accountBalance: newAccountBalance,
         })
       );
-      history.push(`/investing/journal/${id}`);
+      history.push(`/investing/journal/${account.id}`);
     } catch (e) {
       onError(e);
     }
   };
 
-  const handleSaveNewOrder = async (newAccountBalance, profitLoss) => {
+  const handleEditOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
-      saveNewVerticalSpreadsOrder({
+      updateVerticalSpreadOrder({
+        id: order.id,
         accountId: account.id,
         accountBalance: newAccountBalance,
         ticker: fields.ticker,
@@ -157,7 +196,7 @@ export default function VerticalSpreadsOrderNew(props) {
                   className="btn btn-primary"
                   disabled={saveDisabled || isSaving}
                 >
-                  { isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner /> : "Save"}
                 </button>
               </div>
             </section>

@@ -1,16 +1,14 @@
 import {
   createSlice,
-  createAsyncThunk,
-  createEntityAdapter,
+  createAsyncThunk
 } from "@reduxjs/toolkit";
 import { setupNewUser, getAllData } from "../../api/users";
 
-const usersAdapter = createEntityAdapter();
-
-const initialState = usersAdapter.getInitialState({
+const initialState = {
+	user: {},
   status: "idle",
   error: null,
-});
+};
 
 export const fetchAllData = createAsyncThunk("users/fetchAllData", async () => {
   const results = await getAllData();
@@ -35,8 +33,8 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const user = action.payload.filter((item) => item.type === "USER#INFO");
-				console.log("US: ", user)
+        const data = action.payload.filter((item) => item.type === "USER#INFO");
+				state.user = data[0]
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";

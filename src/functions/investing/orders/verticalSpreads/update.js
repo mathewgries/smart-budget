@@ -1,11 +1,11 @@
-import handler from "../../../util/handler";
-import dynamoDb from "../../../util/dynamodb";
+import handler from "../../../../util/handler";
+import dynamoDb from "../../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const accountId = data.accountId;
-  const transactionId = event.pathParameters.id;
+  const orderId = event.pathParameters.id;
 
   const params = {
     TransactItems: [
@@ -13,20 +13,62 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `TRANS#INVESTING#${transactionId}`,
+            SK: `ORDER#VERTSPREADS#${orderId}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression: `SET 
-          transactionAmount = :transactionAmount, 
-          transactionDate = :transactionDate, 
-          transactionType = :transactionType, 
-					transactionNote = :transactionNote,
-          modifyDate = :modifyDate`,
+          	ticker = :ticker,
+            openDate = :openDate,
+            closeDate = :closeDate,
+            orderSize = :orderSize,
+            openPrice = :openPrice,
+            closePrice = :closePrice,
+            openUnderlyingPrice = :openUnderlyingPrice,
+            closeUnderlyingPrice = :closeUnderlyingPrice,
+            strikeUpperLegPrice = :strikeUpperLegPrice,
+            strikeLowerLegPrice = :strikeLowerLegPrice,
+            contractType = :contractType,
+            tradeSide = :tradeSide,
+            spreadExpirationDate = :spreadExpirationDate,
+            openDelta = :openDelta,
+            closeDelta = :closeDelta,
+            openGamma = :openGamma,
+            closeGamma = :closeGamma,
+            openVega = :openVega,
+            closeVega = :closeVega,
+            openTheta = :openTheta,
+            closeTheta = :closeTheta,
+            openImpliedVolatility = :openImpliedVolatility,
+            closeImpliedVolatility = :closeImpliedVolatility,
+            profitLoss = :profitLoss,
+            signalList = :signalList,
+          	modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
-            ":transactionAmount": data.transactionAmount,
-            ":transactionDate": Date.parse(data.transactionDate),
-            ":transactionType": data.transactionType,
-            ":transactionNote": data.transactionNote,
+            ":ticker": data.ticker,
+            ":openDate": data.openDate,
+            ":closeDate": data.closeDate,
+            ":orderSize": data.orderSize,
+            ":openPrice": data.openPrice,
+            ":closePrice": data.closePrice,
+            ":openUnderlyingPrice": data.openUnderlyingPrice,
+            ":closeUnderlyingPrice": data.closeUnderlyingPrice,
+            ":strikeUpperLegPrice": data.strikeUpperLegPrice,
+            ":strikeLowerLegPrice": data.strikeLowerLegPrice,
+            ":contractType": data.contractType,
+            ":tradeSide": data.tradeSide,
+            ":spreadExpirationDate": data.spreadExpirationDate,
+            ":openDelta": data.openDelta || null,
+            ":closeDelta": data.closeDelta || null,
+            ":openGamma": data.openGamma || null,
+            ":closeGamma": data.closeGamma || null,
+            ":openVega": data.openVega || null,
+            ":closeVega": data.closeVega || null,
+            ":openTheta": data.openTheta || null,
+            ":closeTheta": data.closeTheta || null,
+            ":openImpliedVolatility": data.openImpliedVolatility || null,
+            ":closeImpliedVolatility": data.closeImpliedVolatility || null,
+            ":profitLoss": data.profitLoss,
+            ":signalList": data.signalList,
             ":modifyDate": Date.now(),
           },
         },

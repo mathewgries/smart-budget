@@ -7,7 +7,7 @@ import { put, post, get } from "../../api/investing/orders/shares";
 import { fetchAllData } from "../users/usersSlice";
 
 const sharesAdapter = createEntityAdapter({
-  sortComparer: (a, b) => (a, b) => b.openDate.localeCompare(a.openDate),
+  sortComparer: (a, b) => b.openDate.localeCompare(a.openDate),
 });
 
 const initialState = sharesAdapter.getInitialState({
@@ -81,6 +81,15 @@ export const sharesOrdersSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
+			builder
+			.addCase(updateSharesOrder.pending, (state, action) => {
+				state.status = "saving"
+			})
+			.addCase(updateSharesOrder.fulfilled, sharesAdapter.upsertOne)
+			.addCase(updateSharesOrder.rejected, (state, action) => {
+				state.status = "failed"
+				state.error = action.error.message;
+			})
   },
 });
 
