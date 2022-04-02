@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
+import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function SpendingAccountNew() {
@@ -11,11 +12,15 @@ export default function SpendingAccountNew() {
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     accountName: "",
-    accountBalance: "",
+    accountBalance: "0.00",
   });
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
+    setFields({ ...fields, [name]: value });
+  };
+
+  const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
 
@@ -27,7 +32,7 @@ export default function SpendingAccountNew() {
     event.preventDefault();
 
     try {
-			setIsSaving(true)
+      setIsSaving(true);
       await dispatch(addNewSpendingAccount(fields)).unwrap();
       history.push("/");
     } catch (e) {
@@ -40,40 +45,41 @@ export default function SpendingAccountNew() {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <div>
+            <section className="order-form-header">
               <header>
-                <h4>New Spending Account</h4>
+                <h5>Add Spending Account</h5>
               </header>
-            </div>
-            <div className="form-group">
-              <label>Account Name</label>
-              <input
-                className="form-control"
-                type="text"
-                name="accountName"
-                value={fields.accountName}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>Starting Balance</label>
-              <input
-                className="form-control"
-                type="text"
-                name="accountBalance"
-                value={fields.accountBalance}
-                onChange={handleOnChange}
-              />
-            </div>
-            <div className="form-group">
-              <button
-                type="submit"
-                className="btn btn-primary form-control"
-                disabled={!validateForm()}
-              >
-                {isSaving ? <LoadingSpinner /> : "Create"}
-              </button>
-            </div>
+              <div className="form-group">
+                <button
+                  type="submit"
+                  className="btn btn-primary form-control"
+                  disabled={!validateForm() || isSaving}
+                >
+                  {isSaving ? <LoadingSpinner /> : "Save"}
+                </button>
+              </div>
+            </section>
+
+            <section className="order-form-section">
+              <div className="form-group">
+                <label>Account Name</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="accountName"
+                  value={fields.accountName}
+                  onChange={handleOnChange}
+                />
+              </div>
+              <div>
+                <CurrencyInput
+                  inputName={"accountBalance"}
+                  inputLabel={"Starting Balance"}
+									inputValue={fields.accountBalance}
+                  inputChangeHandler={handleCurrencyInput}
+                />
+              </div>
+            </section>
           </form>
         </div>
       </div>

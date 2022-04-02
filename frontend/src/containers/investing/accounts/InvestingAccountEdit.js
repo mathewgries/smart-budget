@@ -6,6 +6,7 @@ import {
   updateInvestingAccount,
 } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
+import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function InvestingAccountsEdit(props) {
@@ -32,6 +33,14 @@ export default function InvestingAccountsEdit(props) {
     setFields((prev) => ({ ...prev, [name]: value }));
   }
 
+	const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
+
+  function validateForm() {
+    return fields.accountName.length > 0;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { accountName, accountBalance } = fields;
@@ -52,36 +61,46 @@ export default function InvestingAccountsEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <div>
+            <section className="order-form-header">
               <header>
-                <h4>Edit Investing Account</h4>
+                <h5>Edit Investing Account</h5>
               </header>
-            </div>
-            <div className="form-group">
-              <label>Account Name</label>
-              <input
-                className="form-control"
-                type="text"
-                name="accountName"
-                value={fields.accountName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>Account Balance</label>
-              <input
-                className="form-control"
-                type="text"
-                name="accountBalance"
-                value={fields.accountBalance}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary form-control">
-                {isSaving ? <LoadingSpinner /> : "Save Changes"}
-              </button>
-            </div>
+              <div className="form-group">
+                <button
+                  type="submit"
+                  className="btn btn-primary form-control"
+                  disabled={!validateForm() || isSaving}
+                >
+                  {isSaving ? <LoadingSpinner /> : "Update"}
+                </button>
+              </div>
+            </section>
+
+            <section className="order-form-section">
+              <div>
+                <header>
+                  <h4>Edit Investing Account</h4>
+                </header>
+              </div>
+              <div className="form-group">
+                <label>Account Name</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="accountName"
+                  value={fields.accountName}
+                  onChange={handleChange}
+                />
+              </div>
+							<div>
+                <CurrencyInput
+                  inputName={"accountBalance"}
+                  inputLabel={"Starting Balance"}
+                  inputValue={fields.accountBalance}
+                  inputChangeHandler={handleCurrencyInput}
+                />
+              </div>
+            </section>
           </form>
         </div>
       </div>

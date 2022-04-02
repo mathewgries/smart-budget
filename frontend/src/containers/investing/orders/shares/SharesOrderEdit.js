@@ -16,6 +16,7 @@ import {
   updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
+import CurrencyInput from "../../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function SharesOrderEdit(props) {
@@ -48,7 +49,7 @@ export default function SharesOrderEdit(props) {
       closePrice: order.closePrice,
       tradeSide: order.tradeSide,
     });
-		setSelectedSignals(order.signalList)
+    setSelectedSignals(order.signalList);
   }, [order]);
 
   const saveDisabled =
@@ -67,6 +68,10 @@ export default function SharesOrderEdit(props) {
       [name]: value,
     }));
   }
+
+  const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
 
   function handleSignalSelection(signal, action) {
     if (action) {
@@ -89,7 +94,7 @@ export default function SharesOrderEdit(props) {
         tradeSide
       );
       const newAccountBalance = updateOrderHandler(
-				order.profitLoss,
+        order.profitLoss,
         newPL,
         account.accountBalance
       );
@@ -110,7 +115,7 @@ export default function SharesOrderEdit(props) {
   const handleUpdateOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
       updateSharesOrder({
-				id: order.id,
+        id: order.id,
         accountId: account.id,
         accountBalance: newAccountBalance,
         ticker: fields.ticker,
@@ -133,7 +138,7 @@ export default function SharesOrderEdit(props) {
           <form onSubmit={handleSubmit}>
             <section className="order-form-header">
               <header>
-                <h5>Edit Stock Order</h5>
+                <h5>Edit Share Order</h5>
               </header>
               <div className="form-group">
                 <button
@@ -141,7 +146,7 @@ export default function SharesOrderEdit(props) {
                   className="btn btn-primary"
                   disabled={saveDisabled || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner /> : "Update"}
                 </button>
               </div>
             </section>
@@ -209,30 +214,24 @@ export default function SharesOrderEdit(props) {
                     <label>Share Price</label>
                   </div>
                   <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openPrice">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openPrice"
-                        name="openPrice"
-                        value={fields.openPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+                    <div>
+                      <CurrencyInput
+                        inputName={"openPrice"}
+                        inputLabel={"Open"}
+                        inputValue={fields.openPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="closePrice">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closePrice"
-                        name="closePrice"
-                        value={fields.closePrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+
+                    <div>
+                      <CurrencyInput
+                        inputName={"closePrice"}
+                        inputLabel={"Close"}
+                        inputValue={fields.closePrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
+
                   </div>
                 </div>
 

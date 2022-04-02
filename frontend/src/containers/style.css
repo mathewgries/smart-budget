@@ -148,6 +148,10 @@ caption {
 	justify-content: space-between;
 }
 
+.currency-input-control{
+	text-align: right;
+}
+
 @media (max-width: 400px) {
   .btn {
     font-size: 3.25vw;

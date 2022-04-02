@@ -9,14 +9,16 @@ import {
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
+import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function InvestingTransactionNew(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
+  const typeList = ["Withdrawal", "Deposit"];
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const [isSaving, setIsSaving] = useState(false)
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     transactionAmount: 0.01,
     transactionDate: inputDateFormat(new Date()),
@@ -24,18 +26,24 @@ export default function InvestingTransactionNew(props) {
     transactionNote: "",
   });
 
-  const typeList = ["Withdrawal", "Deposit"];
-
   function handleChange(e) {
     const { name, value } = e.target;
     setFields({ ...fields, [name]: value });
+  }
+
+  const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
+
+  function validateForm() {
+    return fields.transactionAmount > 0.0;
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-			setIsSaving(true)
+      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
       dispatch(
@@ -76,18 +84,28 @@ export default function InvestingTransactionNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <div>
+            <section className="order-form-header">
+              <header>
+                <h5>Add Investing Transaction</h5>
+              </header>
               <div className="form-group">
-                <label>Amount</label>
-                <input
-                  className="form-control"
-                  type="number"
-                  min=".01"
-                  step="any"
-                  name="transactionAmount"
-                  value={fields.transactionAmount}
-                  onChange={handleChange}
-                  placeholder="0.00"
+                <button
+                  type="submit"
+                  className="btn btn-primary form-control"
+                  disabled={!validateForm() || isSaving}
+                >
+                  {isSaving ? <LoadingSpinner /> : "Save"}
+                </button>
+              </div>
+            </section>
+
+            <section className="order-form-section">
+              <div>
+                <CurrencyInput
+                  inputName={"transactionAmount"}
+                  inputLabel={"Transaction Amount"}
+                  inputValue={fields.transactionAmount}
+                  inputChangeHandler={handleCurrencyInput}
                 />
               </div>
 
@@ -106,36 +124,30 @@ export default function InvestingTransactionNew(props) {
                   ))}
                 </select>
               </div>
-            </div>
 
-            <div className="form-group">
-              <label>Transaction Date</label>
-              <input
-                className="form-control"
-                type="date"
-                name="transactionDate"
-                value={fields.transactionDate}
-                onChange={handleChange}
-              />
-            </div>
+              <div className="form-group">
+                <label>Transaction Date</label>
+                <input
+                  className="form-control"
+                  type="date"
+                  name="transactionDate"
+                  value={fields.transactionDate}
+                  onChange={handleChange}
+                />
+              </div>
 
-            <div className="form-group">
-              <label>Transaction Note</label>
-              <input
-                className="form-control"
-                type="text"
-                name="transactionNote"
-                value={fields.transactionNote}
-                onChange={handleChange}
-                placeholder="Enter transaction detail..."
-              />
-            </div>
-
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary form-control">
-                {isSaving ? <LoadingSpinner /> : "Save Transaction"}
-              </button>
-            </div>
+              <div className="form-group">
+                <label>Transaction Note</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="transactionNote"
+                  value={fields.transactionNote}
+                  onChange={handleChange}
+                  placeholder="Enter transaction detail..."
+                />
+              </div>
+            </section>
           </form>
         </div>
       </div>

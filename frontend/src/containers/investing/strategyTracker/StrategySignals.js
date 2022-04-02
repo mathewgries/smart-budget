@@ -35,6 +35,7 @@ export default function StrategySignals(props) {
       <div className="page-wrapper">
         <section>
           <form onSubmit={handleSubmit}>
+						
             <div className="form-group signal-input-group">
               <input
                 type="text"
@@ -48,8 +49,10 @@ export default function StrategySignals(props) {
                 {status === "saving" ? <LoadingSpinner /> : "Add"}
               </button>
             </div>
+
           </form>
         </section>
+				
         <section>
           <ul className="list-group">
             {signals.map((signal) => (

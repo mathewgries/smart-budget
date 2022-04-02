@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,6 +6,7 @@ import {
   updateSpendingAccount,
 } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
+import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function SpendingAccountEdit(props) {
@@ -14,19 +15,22 @@ export default function SpendingAccountEdit(props) {
   const dispatch = useDispatch();
   const account = useSelector((state) => selectSpendingAccountById(state, id));
   const [isSaving, setIsSaving] = useState(false);
-  const [fields, setFields] = useState({ accountName: "", accountBalance: "" });
-
-  useEffect(() => {
-    setFields((prev) => ({
-      ...prev,
-      accountName: account.accountName,
-      accountBalance: account.accountBalance,
-    }));
-  }, [account]);
+  const [fields, setFields] = useState({
+    accountName: account.accountName,
+    accountBalance: account.accountBalance,
+  });
 
   function handleChange(e) {
     const { name, value } = e.target;
     setFields({ ...fields, [name]: value });
+  }
+
+  const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
+
+  function validateForm() {
+    return fields.accountName.length > 0;
   }
 
   const handleSubmit = async (e) => {
@@ -34,7 +38,7 @@ export default function SpendingAccountEdit(props) {
     const { accountName, accountBalance } = fields;
 
     try {
-			setIsSaving(true);
+      setIsSaving(true);
       await dispatch(
         updateSpendingAccount({ id, accountName, accountBalance })
       ).unwrap();
@@ -49,36 +53,41 @@ export default function SpendingAccountEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <div>
+            <section className="order-form-header">
               <header>
-                <h4>Edit Spending Account</h4>
+                <h5>Edit Spending Account</h5>
               </header>
-            </div>
-            <div className="form-group">
-              <label>Account Name</label>
-              <input
-                className="form-control"
-                type="text"
-                name="accountName"
-                value={fields.accountName}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <label>Account Balance</label>
-              <input
-                className="form-control"
-                type="text"
-                name="accountBalance"
-                value={fields.accountBalance}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary form-control">
-                {isSaving ? <LoadingSpinner /> : "Save Changes"}
-              </button>
-            </div>
+              <div className="form-group">
+                <button
+                  type="submit"
+                  className="btn btn-primary form-control"
+                  disabled={!validateForm() || isSaving}
+                >
+                  {isSaving ? <LoadingSpinner /> : "Update"}
+                </button>
+              </div>
+            </section>
+
+            <section className="order-form-section">
+              <div className="form-group">
+                <label>Account Name</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="accountName"
+                  value={fields.accountName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div>
+                <CurrencyInput
+                  inputName={"accountBalance"}
+                  inputLabel={"Account Balance"}
+									inputValue={fields.accountBalance}
+                  inputChangeHandler={handleCurrencyInput}
+                />
+              </div>
+            </section>
           </form>
         </div>
       </div>

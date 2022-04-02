@@ -69,4 +69,5 @@ export const { addNewSignal } = investingSignalsSlice.actions;
 
 export default investingSignalsSlice.reducer;
 
-export const selectAllSignals = (state) => state.investingSignals.items;
+export const selectAllSignals = (state) =>
+  state.investingSignals.items.signalList;

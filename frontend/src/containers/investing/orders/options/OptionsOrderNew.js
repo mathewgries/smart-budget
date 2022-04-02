@@ -13,6 +13,7 @@ import {
   addOrderHandler,
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
+import CurrencyInput from "../../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function OptionsOrderNew(props) {
@@ -29,10 +30,10 @@ export default function OptionsOrderNew(props) {
     openDate: inputDateFormat(new Date()),
     closeDate: inputDateFormat(new Date()),
     orderSize: "",
-    openPrice: "",
-    closePrice: "",
-    openUnderlyingPrice: "",
-    closeUnderlyingPrice: "",
+    openPrice: "0.01",
+    closePrice: "0.01",
+    openUnderlyingPrice: "0.00",
+    closeUnderlyingPrice: "0.00",
     strikePrice: "",
     contractType: "",
     tradeSide: "",
@@ -54,8 +55,6 @@ export default function OptionsOrderNew(props) {
     fields.orderSize === "" ||
     fields.openPrice === "" ||
     fields.closePrice === "" ||
-    fields.openUnderlyingPrice === "" ||
-    fields.closeUnderlyingPrice === "" ||
     fields.strikePrice === "" ||
     fields.contractType === "" ||
     fields.tradeSide === "";
@@ -67,6 +66,10 @@ export default function OptionsOrderNew(props) {
       [name]: value,
     }));
   }
+
+  const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
 
   function handleSignalSelection(signal, action) {
     if (action) {
@@ -81,7 +84,7 @@ export default function OptionsOrderNew(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-			setIsSaving(true)
+      setIsSaving(true);
       const profitLoss = optionsProfitLossHandler(
         orderSize,
         openPrice,
@@ -102,7 +105,7 @@ export default function OptionsOrderNew(props) {
       history.push(`/investing/journal/${id}`);
     } catch (e) {
       onError(e);
-			setIsSaving(false)
+      setIsSaving(false);
     }
   };
 
@@ -223,30 +226,24 @@ export default function OptionsOrderNew(props) {
 
             <section className="order-form-section">
               <div className="order-form-row-group">
-                <div className="form-group">
-                  <label htmlFor="openPrice">Open Price</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="openPrice"
-                    name="openPrice"
-                    value={fields.openPrice}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
+                <div>
+                  <CurrencyInput
+                    inputName={"openPrice"}
+                    inputLabel={"Open Price"}
+                    inputValue={fields.openPrice}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="closePrice">Close Price</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="closePrice"
-                    name="closePrice"
-                    value={fields.closePrice}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
+
+                <div>
+                  <CurrencyInput
+                    inputName={"closePrice"}
+                    inputLabel={"Close Price"}
+                    inputValue={fields.closePrice}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="orderSize">Order Size</label>
                   <input
@@ -348,28 +345,21 @@ export default function OptionsOrderNew(props) {
                     <label>Underlying Share Price</label>
                   </div>
                   <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openUnderlyingPrice">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openUnderlyingPrice"
-                        name="openUnderlyingPrice"
-                        value={fields.openUnderlyingPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+                    <div>
+                      <CurrencyInput
+                        inputName={"openUnderlyingPrice"}
+                        inputLabel={"Open"}
+                        inputValue={fields.openUnderlyingPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="closeUnderlyingPrice">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closeUnderlyingPrice"
-                        name="closeUnderlyingPrice"
-                        value={fields.closeUnderlyingPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+
+                    <div>
+                      <CurrencyInput
+                        inputName={"closeUnderlyingPrice"}
+                        inputLabel={"Close"}
+                        inputValue={fields.closeUnderlyingPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
                   </div>

@@ -13,6 +13,7 @@ import {
   addOrderHandler,
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
+import CurrencyInput from "../../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function SharesOrderNew(props) {
@@ -27,8 +28,8 @@ export default function SharesOrderNew(props) {
     openDate: inputDateFormat(new Date()),
     closeDate: inputDateFormat(new Date()),
     orderSize: "",
-    openPrice: "",
-    closePrice: "",
+    openPrice: "0.00",
+    closePrice: "0.00",
     tradeSide: "",
   });
 
@@ -48,6 +49,10 @@ export default function SharesOrderNew(props) {
       [name]: value,
     }));
   }
+
+	const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
 
   function handleSignalSelection(signal, action) {
     if (action) {
@@ -111,7 +116,7 @@ export default function SharesOrderNew(props) {
           <form onSubmit={handleSubmit}>
             <section className="order-form-header">
               <header>
-                <h5>New Stock Order</h5>
+                <h5>New Share Order</h5>
               </header>
               <div className="form-group">
                 <button
@@ -187,28 +192,21 @@ export default function SharesOrderNew(props) {
                     <label>Share Price</label>
                   </div>
                   <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openPrice">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openPrice"
-                        name="openPrice"
-                        value={fields.openPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+									<div>
+                      <CurrencyInput
+                        inputName={"openPrice"}
+                        inputLabel={"Open"}
+                        inputValue={fields.openPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="closePrice">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closePrice"
-                        name="closePrice"
-                        value={fields.closePrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+
+                    <div>
+                      <CurrencyInput
+                        inputName={"closePrice"}
+                        inputLabel={"Close"}
+                        inputValue={fields.closePrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
                   </div>

@@ -16,6 +16,7 @@ import {
   updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
+import CurrencyInput from "../../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function OptionsOrderEdit(props) {
@@ -88,8 +89,6 @@ export default function OptionsOrderEdit(props) {
     fields.orderSize === "" ||
     fields.openPrice === "" ||
     fields.closePrice === "" ||
-    fields.openUnderlyingPrice === "" ||
-    fields.closeUnderlyingPrice === "" ||
     fields.strikePrice === "" ||
     fields.contractType === "" ||
     fields.tradeSide === "";
@@ -101,6 +100,10 @@ export default function OptionsOrderEdit(props) {
       [name]: value,
     }));
   }
+
+  const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
 
   function handleSignalSelection(signal, action) {
     if (action) {
@@ -115,7 +118,7 @@ export default function OptionsOrderEdit(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-      setIsSaving(true)
+      setIsSaving(true);
       const newPL = optionsProfitLossHandler(
         orderSize,
         openPrice,
@@ -123,11 +126,11 @@ export default function OptionsOrderEdit(props) {
         tradeSide
       );
       const newAccountBalance = updateOrderHandler(
-				order.profitLoss,
+        order.profitLoss,
         newPL,
         account.accountBalance
       );
-      await handleSaveNewOrder(newAccountBalance, newPL);
+      await handleUpdateOrder(newAccountBalance, newPL);
       dispatch(
         updateInvestingAccountBalance({
           id: account.id,
@@ -137,14 +140,14 @@ export default function OptionsOrderEdit(props) {
       history.push(`/investing/journal/${account.id}`);
     } catch (e) {
       onError(e);
-			setIsSaving(false)
+      setIsSaving(false);
     }
   };
 
-  const handleSaveNewOrder = async (newAccountBalance, profitLoss) => {
+  const handleUpdateOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
       updateOptionsOrder({
-				id: order.id,
+        id: order.id,
         accountId: account.id,
         accountBalance: newAccountBalance,
         ticker: fields.ticker,
@@ -190,7 +193,7 @@ export default function OptionsOrderEdit(props) {
                   className="btn btn-primary"
                   disabled={saveDisabled || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner /> : "Update"}
                 </button>
               </div>
             </section>
@@ -260,30 +263,24 @@ export default function OptionsOrderEdit(props) {
 
             <section className="order-form-section">
               <div className="order-form-row-group">
-                <div className="form-group">
-                  <label htmlFor="openPrice">Open Price</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="openPrice"
-                    name="openPrice"
-                    value={fields.openPrice}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
+                <div>
+                  <CurrencyInput
+                    inputName={"openPrice"}
+                    inputLabel={"Open Price"}
+                    inputValue={fields.openPrice}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="closePrice">Close Price</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="closePrice"
-                    name="closePrice"
-                    value={fields.closePrice}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
+
+                <div>
+                  <CurrencyInput
+                    inputName={"closePrice"}
+                    inputLabel={"Close Price"}
+                    inputValue={fields.closePrice}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="orderSize">Order Size</label>
                   <input
@@ -385,28 +382,21 @@ export default function OptionsOrderEdit(props) {
                     <label>Underlying Share Price</label>
                   </div>
                   <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openUnderlyingPrice">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openUnderlyingPrice"
-                        name="openUnderlyingPrice"
-                        value={fields.openUnderlyingPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+                    <div>
+                      <CurrencyInput
+                        inputName={"openUnderlyingPrice"}
+                        inputLabel={"Open"}
+                        inputValue={fields.openUnderlyingPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="closeUnderlyingPrice">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closeUnderlyingPrice"
-                        name="closeUnderlyingPrice"
-                        value={fields.closeUnderlyingPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+
+                    <div>
+                      <CurrencyInput
+                        inputName={"closeUnderlyingPrice"}
+                        inputLabel={"Close"}
+                        inputValue={fields.closeUnderlyingPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
                   </div>

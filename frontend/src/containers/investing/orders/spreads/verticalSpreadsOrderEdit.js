@@ -16,9 +16,10 @@ import {
   updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
+import CurrencyInput from "../../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../../components/LoadingSpinner";
 
-export default function VerticalSpreadsOrderNew(props) {
+export default function VerticalSpreadsOrderEdit(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -108,6 +109,10 @@ export default function VerticalSpreadsOrderNew(props) {
     }));
   }
 
+  const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
+
   function handleSignalSelection(signal, action) {
     if (action) {
       setSelectedSignals([...selectedSignals, signal]);
@@ -133,7 +138,7 @@ export default function VerticalSpreadsOrderNew(props) {
         newPL,
         account.accountBalance
       );
-      await handleEditOrder(newAccountBalance, newPL);
+      await handleUpdateOrder(newAccountBalance, newPL);
       dispatch(
         updateInvestingAccountBalance({
           id: account.id,
@@ -146,7 +151,7 @@ export default function VerticalSpreadsOrderNew(props) {
     }
   };
 
-  const handleEditOrder = async (newAccountBalance, profitLoss) => {
+  const handleUpdateOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
       updateVerticalSpreadOrder({
         id: order.id,
@@ -188,7 +193,7 @@ export default function VerticalSpreadsOrderNew(props) {
           <form onSubmit={handleSubmit}>
             <section className="order-form-header">
               <header>
-                <h5>New Vertical Spread Order</h5>
+                <h5>Edit Vertical Spread Order</h5>
               </header>
               <div className="form-group">
                 <button
@@ -196,7 +201,7 @@ export default function VerticalSpreadsOrderNew(props) {
                   className="btn btn-primary"
                   disabled={saveDisabled || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner /> : "Update"}
                 </button>
               </div>
             </section>
@@ -265,30 +270,24 @@ export default function VerticalSpreadsOrderNew(props) {
 
             <section className="order-form-section">
               <div className="order-form-row-group">
-                <div className="form-group">
-                  <label htmlFor="openPrice">Open Value</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="openPrice"
-                    name="openPrice"
-                    value={fields.openPrice}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
+                <div>
+                  <CurrencyInput
+                    inputName={"openPrice"}
+                    inputLabel={"Open Value"}
+                    inputValue={fields.openPrice}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
-                <div className="form-group">
-                  <label htmlFor="closePrice">Close Value</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="closePrice"
-                    name="closePrice"
-                    value={fields.closePrice}
-                    onChange={handleOnChange}
-                    data-lpignore="true"
+
+                <div>
+                  <CurrencyInput
+                    inputName={"closePrice"}
+                    inputLabel={"Close Value"}
+                    inputValue={fields.closePrice}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
+
                 <div className="form-group">
                   <label htmlFor="orderSize">Order Size</label>
                   <input
@@ -409,28 +408,21 @@ export default function VerticalSpreadsOrderNew(props) {
                     <label>Underlying Share Price</label>
                   </div>
                   <div className="order-form-greek-group">
-                    <div className="form-group">
-                      <label htmlFor="openUnderlyingPrice">Open</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="openUnderlyingPrice"
-                        name="openUnderlyingPrice"
-                        value={fields.openUnderlyingPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+                    <div>
+                      <CurrencyInput
+                        inputName={"openUnderlyingPrice"}
+                        inputLabel={"Open"}
+                        inputValue={fields.openUnderlyingPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="closeUnderlyingPrice">Close</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        id="closeUnderlyingPrice"
-                        name="closeUnderlyingPrice"
-                        value={fields.closeUnderlyingPrice}
-                        onChange={handleOnChange}
-                        data-lpignore="true"
+
+                    <div>
+                      <CurrencyInput
+                        inputName={"closeUnderlyingPrice"}
+                        inputLabel={"Close"}
+                        inputValue={fields.closeUnderlyingPrice}
+                        inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
                   </div>

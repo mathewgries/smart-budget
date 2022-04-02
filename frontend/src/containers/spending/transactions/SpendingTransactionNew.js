@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-// redux imports
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewSpendingTransaction } from "../../../redux/spending/spendingTransactionsSlice";
 import {
@@ -11,34 +10,40 @@ import {
   updateSpendingAccountBalance,
   selectSpendingAccountById,
 } from "../../../redux/spending/spendingAccountsSlice";
-// Helper imports
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
-// Component imports
 import Categories from "../categories/Categories";
+import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function SpendingTransactionNew(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
+  const typeList = ["Withdrawal", "Deposit"];
   const account = useSelector((state) => selectSpendingAccountById(state, id));
   const activeCategory = useSelector(selectActiveCategory);
   const activeSubCategory = useSelector(selectActiveSubCategory);
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
-    transactionAmount: 0.01,
+    transactionAmount: "0.01",
     transactionDate: inputDateFormat(new Date()),
     transactionType: "Withdrawal",
     transactionNote: "",
   });
 
-  const typeList = ["Withdrawal", "Deposit"];
-
   function handleChange(e) {
     const { name, value } = e.target;
     setFields({ ...fields, [name]: value });
+  }
+
+  const handleCurrencyInput = ({ name, value }) => {
+    setFields({ ...fields, [name]: value });
+  };
+
+  function validateForm() {
+    return fields.transactionAmount > 0.0;
   }
 
   const handleSubmit = async (e) => {
@@ -88,66 +93,72 @@ export default function SpendingTransactionNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label>Amount</label>
-              <input
-                className="form-control"
-                type="number"
-                min=".01"
-                step="any"
-                name="transactionAmount"
-                value={fields.transactionAmount}
-                onChange={handleChange}
-                placeholder="0.00"
-              />
-            </div>
+            <section className="order-form-header">
+              <header>
+                <h5>Add Spending Transaction</h5>
+              </header>
+              <div className="form-group">
+                <button
+                  type="submit"
+                  className="btn btn-primary form-control"
+                  disabled={!validateForm() || isSaving}
+                >
+                  {isSaving ? <LoadingSpinner /> : "Save"}
+                </button>
+              </div>
+            </section>
 
-            <div className="form-group">
-              <label>Transaction Type</label>
-              <select
-                className="form-control"
-                name="transactionType"
-                value={fields.transactionType}
-                onChange={handleChange}
-              >
-                {typeList.map((element, index, arr) => (
-                  <option key={index} value={element}>
-                    {element}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <Categories />
-            </div>
-            <div className="form-group">
-              <label>Transaction Date</label>
-              <input
-                className="form-control"
-                type="date"
-                name="transactionDate"
-                value={fields.transactionDate}
-                onChange={handleChange}
-              />
-            </div>
+            <section className="order-form-section">
+              <div>
+                <CurrencyInput
+                  inputName={"transactionAmount"}
+                  inputLabel={"Transaction Amount"}
+                  inputValue={fields.transactionAmount}
+                  inputChangeHandler={handleCurrencyInput}
+                />
+              </div>
 
-            <div className="form-group">
-              <label>Transaction Note</label>
-              <input
-                className="form-control"
-                type="text"
-                name="transactionNote"
-                value={fields.transactionNote}
-                onChange={handleChange}
-                placeholder="Enter transaction detail..."
-              />
-            </div>
+              <div className="form-group">
+                <label>Transaction Type</label>
+                <select
+                  className="form-control"
+                  name="transactionType"
+                  value={fields.transactionType}
+                  onChange={handleChange}
+                >
+                  {typeList.map((element, index, arr) => (
+                    <option key={index} value={element}>
+                      {element}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Categories />
+              </div>
+              <div className="form-group">
+                <label>Transaction Date</label>
+                <input
+                  className="form-control"
+                  type="date"
+                  name="transactionDate"
+                  value={fields.transactionDate}
+                  onChange={handleChange}
+                />
+              </div>
 
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary form-control">
-                {isSaving ? <LoadingSpinner /> : "Save Transaction"}
-              </button>
-            </div>
+              <div className="form-group">
+                <label>Transaction Note</label>
+                <input
+                  className="form-control"
+                  type="text"
+                  name="transactionNote"
+                  value={fields.transactionNote}
+                  onChange={handleChange}
+                  placeholder="Enter transaction detail..."
+                />
+              </div>
+            </section>
           </form>
         </div>
       </div>

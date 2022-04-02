@@ -117,80 +117,93 @@ export default function Categories() {
                 </div>
               )}
             </section>
-            <div>
-              <ListContainer
-                listItems={categories}
-                activeItem={activeCategory}
-                isEdit={isEdit}
-                updateActiveItem={handleActiveCategory}
-              />
-            </div>
-            <div>
-              {isEdit && (
-                <form onSubmit={handleAddCetagory}>
-                  <div className="form-group">
-                    <input
-                      className="form-control"
-                      type="text"
-                      name="categoryInput"
-                      value={fields.categoryInput}
-                      onChange={handleFieldChange}
-                      placeholder="New Category..."
-                    />
-                  </div>
-                  <div className="form-group">
-                    <button
-                      type="submit"
-											className={`btn form-control ${fields.categoryInput === "" ? "btn-secondary" : "btn-primary"}`}
-                      disabled={fields.categoryInput === ""}
-                    >
-                      Add
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </section>
 
-          <section>
-            <header>
-              {isEdit ? <h5>subcategories</h5> : <label>subcategories</label>}
-            </header>
-            <div>
-              <ListContainer
-                listItems={subCategories}
-                activeItem={activeSubCategory}
-                isEdit={isEdit}
-                updateActiveItem={handleActiveSubCategory}
-              />
-            </div>
-            <div>
-              {isEdit && (
-                <form onSubmit={handleAddSubCategory}>
-                  <div className="categories-form-group">
+            <section className={`${isEdit ? "order-form-section" : ""}`}>
+              <div>
+                <ListContainer
+                  listItems={categories}
+                  activeItem={activeCategory}
+                  isEdit={isEdit}
+                  updateActiveItem={handleActiveCategory}
+                />
+              </div>
+              <div>
+                {isEdit && (
+                  <form onSubmit={handleAddCetagory}>
                     <div className="form-group">
                       <input
                         className="form-control"
                         type="text"
-                        name="subCategoryInput"
-                        value={fields.subCategoryInput}
+                        name="categoryInput"
+                        value={fields.categoryInput}
                         onChange={handleFieldChange}
-                        placeholder="New SubCategory..."
+                        placeholder="New Category..."
                       />
                     </div>
                     <div className="form-group">
                       <button
                         type="submit"
-                        className={`btn form-control ${fields.subCategoryInput === "" ? "btn-secondary" : "btn-primary"}`}
-                        disabled={fields.subCategoryInput === ""}
+                        className={`btn form-control ${
+                          fields.categoryInput === ""
+                            ? "btn-secondary"
+                            : "btn-primary"
+                        }`}
+                        disabled={fields.categoryInput === ""}
                       >
                         Add
                       </button>
                     </div>
-                  </div>
-                </form>
-              )}
-            </div>
+                  </form>
+                )}
+              </div>
+            </section>
+          </section>
+
+          <section>
+            <header>
+              {isEdit ? <h5>Subcategories</h5> : <label>Subcategories</label>}
+            </header>
+            <section className={`${isEdit ? "order-form-section" : ""}`}>
+              <div>
+                <ListContainer
+                  listItems={subCategories}
+                  activeItem={activeSubCategory}
+                  isEdit={isEdit}
+                  updateActiveItem={handleActiveSubCategory}
+                />
+              </div>
+              <div>
+                {isEdit && (
+                  <form onSubmit={handleAddSubCategory}>
+                    <div className="categories-form-group">
+                      <div className="form-group">
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="subCategoryInput"
+                          value={fields.subCategoryInput}
+                          onChange={handleFieldChange}
+                          placeholder="New SubCategory..."
+                        />
+                      </div>
+                      <div className="form-group">
+                        <button
+                          type="submit"
+                          className={`btn form-control ${
+                            fields.subCategoryInput === ""
+                              ? "btn-secondary"
+                              : "btn-primary"
+                          }`}
+                          disabled={fields.subCategoryInput === ""}
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </section>
           </section>
         </div>
       </div>
