@@ -90,6 +90,7 @@ export default function InvestingAccountsEdit(props) {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleChange}
+									data-lpignore="true"
                 />
               </div>
 							<div>

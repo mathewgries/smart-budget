@@ -16,6 +16,7 @@ export default function ListContainer(props) {
             className="form-control"
             readOnly={true}
             placeholder="No subcategories..."
+						data-lpignore="true"
           />
         ) : (
           <select

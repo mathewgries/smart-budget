@@ -44,6 +44,7 @@ export default function StrategySignals(props) {
                 value={newSignal}
                 onChange={handleOnChange}
                 placeholder="Add new signal..."
+								data-lpignore="true"
               />
               <button className="btn btn-primary">
                 {status === "saving" ? <LoadingSpinner /> : "Add"}

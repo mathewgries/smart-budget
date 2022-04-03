@@ -133,6 +133,7 @@ export default function InvestingTransactionNew(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
+									data-lpignore="true"
                 />
               </div>
 
@@ -145,6 +146,7 @@ export default function InvestingTransactionNew(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
+									data-lpignore="true"
                 />
               </div>
             </section>

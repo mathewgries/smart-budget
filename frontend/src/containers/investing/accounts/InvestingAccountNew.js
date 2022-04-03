@@ -69,6 +69,7 @@ export default function InvestingAccountNew() {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleOnChange}
+									data-lpignore="true"
                 />
               </div>
               <div>

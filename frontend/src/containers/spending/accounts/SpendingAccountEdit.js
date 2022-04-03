@@ -77,6 +77,7 @@ export default function SpendingAccountEdit(props) {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleChange}
+									data-lpignore="true"
                 />
               </div>
               <div>

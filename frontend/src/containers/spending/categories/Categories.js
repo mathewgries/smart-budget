@@ -138,6 +138,7 @@ export default function Categories() {
                         value={fields.categoryInput}
                         onChange={handleFieldChange}
                         placeholder="New Category..."
+												data-lpignore="true"
                       />
                     </div>
                     <div className="form-group">
@@ -184,6 +185,7 @@ export default function Categories() {
                           value={fields.subCategoryInput}
                           onChange={handleFieldChange}
                           placeholder="New SubCategory..."
+													data-lpignore="true"
                         />
                       </div>
                       <div className="form-group">
