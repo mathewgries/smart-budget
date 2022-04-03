@@ -81,6 +81,7 @@ export default function InvestingTransactionEdit(props) {
         id: transaction.id,
         accountId: account.id,
         ...fields,
+				transactionDate: Date.parse(fields.transactionDate),
         transactionType: fields.transactionType.charAt(0),
         accountBalance: newAccountBalance,
       })

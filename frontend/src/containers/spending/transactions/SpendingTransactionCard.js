@@ -1,4 +1,5 @@
 import React from "react";
+import { dateToString } from "../../../helpers/dateFormat";
 
 export default function SpendingTransactionCard(props) {
   const { transaction } = props;
@@ -17,7 +18,7 @@ export default function SpendingTransactionCard(props) {
       <section>
         <div>
           <div className="transaction-card-date-wrapper">
-            {new Date(transaction.transactionDate).toLocaleDateString()}
+            {dateToString(transaction.transactionDate)}
           </div>
         </div>
       </section>

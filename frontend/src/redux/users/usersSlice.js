@@ -1,11 +1,8 @@
-import {
-  createSlice,
-  createAsyncThunk
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { setupNewUser, getAllData } from "../../api/users";
 
 const initialState = {
-	user: {},
+  user: {},
   status: "idle",
   error: null,
 };
@@ -28,13 +25,28 @@ export const usersSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(addNewUser.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(addNewUser.fulfilled, (state, action) => {
+        state.status = "success";
+        const data = action.payload.find(
+          (item) => item.Put.Item.type === "USER#INFO"
+        );
+        state.user = data.Put.Item;
+      })
+      .addCase(addNewUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
       .addCase(fetchAllData.pending, (state, action) => {
         state.status = "loading";
       })
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
         const data = action.payload.filter((item) => item.type === "USER#INFO");
-				state.user = data[0]
+        state.user = data[0];
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";

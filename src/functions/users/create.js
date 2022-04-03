@@ -55,5 +55,5 @@ export const main = handler(async (event) => {
 
   await dynamoDb.transactWrite(params);
 
-  return params.TransactItems;
+  return params.TransactItems
 });

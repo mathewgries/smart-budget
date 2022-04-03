@@ -79,7 +79,7 @@ export default function SpendingTransactionNew(props) {
         accountId: account.id,
         accountBalance: newAccountBalance,
         transactionAmount: fields.transactionAmount,
-        transactionDate: fields.transactionDate,
+        transactionDate: Date.parse(fields.transactionDate),
         transactionType: fields.transactionType.charAt(0),
         category: activeCategory,
         subCategory: activeSubCategory,

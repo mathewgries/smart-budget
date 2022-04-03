@@ -8,6 +8,10 @@ export async function logOutUser() {
   return await Auth.signOut();
 }
 
+export async function getUserInfo(){
+	return await Auth.currentUserInfo();
+}
+
 export async function setupNewUser(userInfo) {
   return await API.post("smartbudget", "/users", {
     body: {

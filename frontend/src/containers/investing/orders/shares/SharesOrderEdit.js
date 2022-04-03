@@ -31,8 +31,8 @@ export default function SharesOrderEdit(props) {
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [fields, setFields] = useState({
     ticker: "",
-    openDate: inputDateFormat(new Date()),
-    closeDate: inputDateFormat(new Date()),
+    openDate: "",
+    closeDate: "",
     orderSize: "",
     openPrice: "",
     closePrice: "",
@@ -42,8 +42,8 @@ export default function SharesOrderEdit(props) {
   useEffect(() => {
     setFields({
       ticker: order.ticker,
-      openDate: order.openDate,
-      closeDate: order.closeDate,
+      openDate: inputDateFormat(order.openDate),
+      closeDate: inputDateFormat(order.closeDate),
       orderSize: order.orderSize,
       openPrice: order.openPrice,
       closePrice: order.closePrice,
@@ -119,8 +119,8 @@ export default function SharesOrderEdit(props) {
         accountId: account.id,
         accountBalance: newAccountBalance,
         ticker: fields.ticker,
-        openDate: fields.openDate,
-        closeDate: fields.closeDate,
+        openDate: Date.parse(fields.openDate),
+        closeDate: Date.parse(fields.closeDate),
         orderSize: fields.orderSize,
         openPrice: fields.openPrice,
         closePrice: fields.closePrice,

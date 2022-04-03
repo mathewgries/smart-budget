@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { get, put } from "../../api/spending/categories";
-import { fetchAllData } from "../users/usersSlice";
+import { addNewUser, fetchAllData } from "../users/usersSlice";
 
 const initialState = {
   items: {},
@@ -60,6 +60,27 @@ export const categoriesSlice = createSlice({
     },
   },
   extraReducers(builder) {
+    builder
+      .addCase(addNewUser.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(addNewUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const data = action.payload.find(
+          (item) => item.Put.Item.type === "CATEGORY"
+        );
+        const categories = data.Put.Item;
+        const { categoryMap } = categories;
+        state.items = categoryMap;
+        state.categories = Object.keys(categoryMap);
+        state.activeCategory = state.categories[0];
+        state.subCategories = state.items[state.activeCategory];
+        state.activeSubCategory = state.subCategories[0];
+      })
+      .addCase(addNewUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
     builder
       .addCase(fetchAllData.pending, (state, action) => {
         state.status = "pending";

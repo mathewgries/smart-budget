@@ -35,8 +35,8 @@ export default function VerticalSpreadsOrderEdit(props) {
 
   const [fields, setFields] = useState({
     ticker: "",
-    openDate: inputDateFormat(new Date()),
-    closeDate: inputDateFormat(new Date()),
+    openDate: "",
+    closeDate: "",
     orderSize: "",
     openPrice: "",
     closePrice: "",
@@ -46,7 +46,7 @@ export default function VerticalSpreadsOrderEdit(props) {
     strikeLowerLegPrice: "",
     contractType: "",
     tradeSide: "",
-    spreadExpirationDate: inputDateFormat(new Date()),
+    spreadExpirationDate: "",
     openDelta: "",
     closeDelta: "",
     openGamma: "",
@@ -62,8 +62,8 @@ export default function VerticalSpreadsOrderEdit(props) {
   useEffect(() => {
     setFields({
       ticker: order.ticker,
-      openDate: order.openDate,
-      closeDate: order.closeDate,
+      openDate: inputDateFormat(order.openDate),
+      closeDate: inputDateFormat(order.closeDate),
       orderSize: order.orderSize,
       openPrice: order.openPrice,
       closePrice: order.closePrice,
@@ -73,17 +73,17 @@ export default function VerticalSpreadsOrderEdit(props) {
       strikeLowerLegPrice: order.strikeLowerLegPrice,
       contractType: order.contractType,
       tradeSide: order.tradeSide,
-      spreadExpirationDate: order.spreadExpirationDate,
-      openDelta: order.openDelta,
-      closeDelta: order.closeDelta,
-      openGamma: order.openGamma,
-      closeGamma: order.closeGamma,
-      openVega: order.openVega,
-      closeVega: order.closeVega,
-      openTheta: order.openTheta,
-      closeTheta: order.closeTheta,
-      openImpliedVolatility: order.openImpliedVolatility,
-      closeImpliedVolatility: order.closeImpliedVolatility,
+      spreadExpirationDate: inputDateFormat(order.spreadExpirationDate),
+      openDelta: order.openDelta || "0.00",
+      closeDelta: order.closeDelta || "0.00",
+      openGamma: order.openGamma || "0.00",
+      closeGamma: order.closeGamma || "0.00",
+      openVega: order.openVega || "0.00",
+      closeVega: order.closeVega || "0.00",
+      openTheta: order.openTheta || "0.00",
+      closeTheta: order.closeTheta || "0.00",
+      openImpliedVolatility: order.openImpliedVolatility || "0.00",
+      closeImpliedVolatility: order.closeImpliedVolatility || "0.00",
     });
     setSelectedSignals(order.signalList);
   }, [order]);
@@ -158,8 +158,8 @@ export default function VerticalSpreadsOrderEdit(props) {
         accountId: account.id,
         accountBalance: newAccountBalance,
         ticker: fields.ticker,
-        openDate: fields.openDate,
-        closeDate: fields.closeDate,
+        openDate: Date.parse(fields.openDate),
+        closeDate: Date.parse(fields.closeDate),
         orderSize: fields.orderSize,
         openPrice: fields.openPrice,
         closePrice: fields.closePrice,
@@ -169,7 +169,7 @@ export default function VerticalSpreadsOrderEdit(props) {
         strikeLowerLegPrice: fields.strikeLowerLegPrice,
         contractType: fields.contractType,
         tradeSide: fields.tradeSide,
-        spreadExpirationDate: fields.spreadExpirationDate,
+        spreadExpirationDate: Date.parse(fields.spreadExpirationDate),
         openDelta: fields.openDelta,
         closeDelta: fields.closeDelta,
         openGamma: fields.openGamma,
@@ -412,7 +412,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                       <CurrencyInput
                         inputName={"openUnderlyingPrice"}
                         inputLabel={"Open"}
-                        inputValue={fields.openUnderlyingPrice || "0.00"}
+                        inputValue={fields.openUnderlyingPrice}
                         inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
@@ -421,7 +421,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                       <CurrencyInput
                         inputName={"closeUnderlyingPrice"}
                         inputLabel={"Close"}
-                        inputValue={fields.closeUnderlyingPrice || "0.00"}
+                        inputValue={fields.closeUnderlyingPrice}
                         inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
@@ -454,7 +454,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"openDelta"}
                                 inputLabel={"Open"}
-                                inputValue={fields.openDelta || "0.00"}
+                                inputValue={fields.openDelta}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -463,7 +463,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"closeDelta"}
                                 inputLabel={"Close"}
-                                inputValue={fields.closeDelta || "0.00"}
+                                inputValue={fields.closeDelta}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -479,7 +479,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"openGamma"}
                                 inputLabel={"Open"}
-                                inputValue={fields.openGamma || "0.00"}
+                                inputValue={fields.openGamma}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -488,7 +488,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"closeGamma"}
                                 inputLabel={"Close"}
-                                inputValue={fields.closeGamma || "0.00"}
+                                inputValue={fields.closeGamma}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -506,7 +506,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"openVega"}
                                 inputLabel={"Open"}
-                                inputValue={fields.openVega || "0.00"}
+                                inputValue={fields.openVega}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -515,7 +515,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"closeVega"}
                                 inputLabel={"Close"}
-                                inputValue={fields.closeVega || "0.00"}
+                                inputValue={fields.closeVega}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -531,7 +531,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"openTheta"}
                                 inputLabel={"Open"}
-                                inputValue={fields.openTheta || "0.00"}
+                                inputValue={fields.openTheta}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -540,7 +540,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                               <CurrencyInput
                                 inputName={"closeTheta"}
                                 inputLabel={"Close"}
-                                inputValue={fields.closeTheta || "0.00"}
+                                inputValue={fields.closeTheta}
                                 inputChangeHandler={handleCurrencyInput}
                               />
                             </div>
@@ -553,7 +553,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                           <CurrencyInput
                             inputName={"openImpliedVolatility"}
                             inputLabel={"Open I.V."}
-                            inputValue={fields.openImpliedVolatility || "0.00"}
+                            inputValue={fields.openImpliedVolatility}
                             inputChangeHandler={handleCurrencyInput}
                           />
                         </div>
@@ -562,7 +562,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                           <CurrencyInput
                             inputName={"closeImpliedVolatility"}
                             inputLabel={"Close I.V."}
-                            inputValue={fields.closeImpliedVolatility || "0.00"}
+                            inputValue={fields.closeImpliedVolatility}
                             inputChangeHandler={handleCurrencyInput}
                           />
                         </div>

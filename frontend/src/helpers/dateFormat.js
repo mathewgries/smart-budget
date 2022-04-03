@@ -6,12 +6,12 @@ export function inputDateFormat(date) {
     new Date(date).toLocaleDateString()
   ) {
     if (!date instanceof Date && !Date.parse(date)) {
-			date = new Date(date).toLocaleDateString()
+      date = new Date(date).toLocaleDateString();
     }
     const convDate = new Date(date);
-    const year = convDate.getFullYear();
-    let month = convDate.getMonth() + 1;
-    let day = convDate.getDate();
+    const year = convDate.getUTCFullYear();
+    let month = convDate.getUTCMonth() + 1;
+    let day = convDate.getUTCDate();
 
     if ((day + "").length === 1) {
       day = "0" + day;
@@ -24,4 +24,14 @@ export function inputDateFormat(date) {
     result = "Invalid Format";
   }
   return result;
+}
+
+export function dateToString(date) {
+	//{M}M/{D}D/YYYY
+  const convDate = new Date(date);
+  const year = convDate.getUTCFullYear().toString();
+  let month = (convDate.getUTCMonth() + 1).toString();
+  let day = convDate.getUTCDate().toString();
+
+  return `${month}/${day}/${year}`;
 }

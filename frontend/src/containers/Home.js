@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchAllData } from "../redux/users/usersSlice";
+import { fetchAllData, addNewUser } from "../redux/users/usersSlice";
+import { lastRouteUpdated } from "../redux/history/historySlice";
+import { getUserInfo } from "../api/users"
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
@@ -11,7 +13,7 @@ import { onError } from "../lib/errorLib";
 
 export default function Home() {
   const dispatch = useDispatch();
-
+  const prevLocation = useSelector((state) => state.history.lastRoute);
   const appStatus = useSelector((state) => state.users.status);
   const { isAuthenticated } = useAppContext();
 
@@ -21,9 +23,13 @@ export default function Home() {
         return;
       }
 
-      if (appStatus === "idle") {
+      if (prevLocation === "/signup") {
+        dispatch(lastRouteUpdated("/"));
+				const userInfo = await getUserInfo();
+        await dispatch(addNewUser(userInfo)).unwrap();
+      } else if (appStatus === "idle") {
         try {
-          dispatch(fetchAllData());
+          await dispatch(fetchAllData()).unwrap();
         } catch (e) {
           onError(e);
         }

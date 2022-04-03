@@ -21,7 +21,7 @@ export const main = handler(async (event) => {
             id: transactionId,
             type: type,
             transactionAmount: data.transactionAmount,
-            transactionDate: Date.parse(data.transactionDate),
+            transactionDate: data.transactionDate,
             transactionType: data.transactionType,
             category: data.category,
             subCategory: data.subCategory,

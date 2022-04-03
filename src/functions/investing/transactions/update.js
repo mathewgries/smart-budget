@@ -24,7 +24,7 @@ export const main = handler(async (event) => {
           modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
             ":transactionAmount": data.transactionAmount,
-            ":transactionDate": Date.parse(data.transactionDate),
+            ":transactionDate": data.transactionDate,
             ":transactionType": data.transactionType,
             ":transactionNote": data.transactionNote,
             ":modifyDate": Date.now(),
