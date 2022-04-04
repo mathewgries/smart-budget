@@ -45,6 +45,7 @@ export default function InvestingJournal(props) {
   const vertSpreadsPL = useSelector((state) =>
     selectVerticalSpreadsPLByAccountGSI(state, account.GSI1_PK)
   );
+  const status = useSelector((state) => state.investingAccounts.status);
   const [openOrderSelect, setOpenOrderSelect] = useState(false);
   const [openViewSelect, setOpenViewSelect] = useState(false);
   const [selectedView, setSelectedView] = useState("View All");
@@ -159,48 +160,50 @@ export default function InvestingJournal(props) {
           </div>
         </section>
 
-        <section className="journal-table-section">
-          {shares.length === 0 &&
-          options.length === 0 &&
-          verticalSpreads.length === 0 ? (
-            <div>
-              <p>Add your first order...</p>
-            </div>
-          ) : (
-            <div>
+        {status !== "pending" && (
+          <section className="journal-table-section">
+            {shares.length === 0 &&
+            options.length === 0 &&
+            verticalSpreads.length === 0 ? (
               <div>
-                {shares.length > 0 && (
-                  <div>
-                    {selectedView === "View All" ||
-                    selectedView === "Shares" ? (
-                      <SharesOrdersTable orders={shares} />
-                    ) : null}
-                  </div>
-                )}
+                <p>Add your first order...</p>
               </div>
+            ) : (
               <div>
-                {options.length > 0 && (
-                  <div>
-                    {selectedView === "View All" ||
-                    selectedView === "Options" ? (
-                      <OptionsOrdersTable orders={options} />
-                    ) : null}
-                  </div>
-                )}
+                <div>
+                  {shares.length > 0 && (
+                    <div>
+                      {selectedView === "View All" ||
+                      selectedView === "Shares" ? (
+                        <SharesOrdersTable orders={shares} />
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {options.length > 0 && (
+                    <div>
+                      {selectedView === "View All" ||
+                      selectedView === "Options" ? (
+                        <OptionsOrdersTable orders={options} />
+                      ) : null}
+                    </div>
+                  )}
+                </div>
+                <div>
+                  {verticalSpreads.length > 0 && (
+                    <div>
+                      {selectedView === "View All" ||
+                      selectedView === "Vertical Spreads" ? (
+                        <VerticalSpreadsTable orders={verticalSpreads} />
+                      ) : null}
+                    </div>
+                  )}
+                </div>
               </div>
-              <div>
-                {verticalSpreads.length > 0 && (
-                  <div>
-                    {selectedView === "View All" ||
-                    selectedView === "Vertical Spreads" ? (
-                      <VerticalSpreadsTable orders={verticalSpreads} />
-                    ) : null}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </section>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );

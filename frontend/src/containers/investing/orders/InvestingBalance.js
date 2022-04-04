@@ -1,15 +1,22 @@
-import React from 'react'
+import React from "react";
+import { useSelector } from "react-redux";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
-export default function InvestingBalance(props){
-	const {accountBalance} = props.account
+export default function InvestingBalance(props) {
+  const { accountBalance } = props.account;
+  const status = useSelector((state) => state.investingAccounts.status);
 
-	return (
-		<div className="component-container">
+  return (
+    <div className="component-container">
       <div className="component-wrapper">
-        <div className="investing-balance-wrapper">
-					Balance: {accountBalance}
-				</div>
+        {status !== "pending" ? (
+          <div className="investing-balance-wrapper">{accountBalance}</div>
+        ) : (
+          <div>
+            <LoadingSpinner text={"Loading"} />
+          </div>
+        )}
       </div>
     </div>
-	)
+  );
 }

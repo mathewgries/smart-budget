@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { put, post, get } from "../../api/investing/orders/shares";
+import { remove } from "../../api/investing/orders/shared";
 import { fetchAllData } from "../users/usersSlice";
 
 const sharesAdapter = createEntityAdapter({
@@ -35,6 +36,14 @@ export const updateSharesOrder = createAsyncThunk(
   async (updatedOrder) => {
     await put(updatedOrder);
     return updatedOrder;
+  }
+);
+
+export const deleteSharesOrder = createAsyncThunk(
+  "sharesOrders/deleteSharesOrder",
+  async (data) => {
+    await remove(data);
+    return data;
   }
 );
 
@@ -92,6 +101,19 @@ export const sharesOrdersSlice = createSlice({
         sharesAdapter.upsertOne(state, order);
       })
       .addCase(updateSharesOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteSharesOrder.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteSharesOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.order;
+        sharesAdapter.removeOne(state, id);
+      })
+      .addCase(deleteSharesOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

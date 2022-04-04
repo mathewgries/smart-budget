@@ -52,7 +52,8 @@
   margin: 0 auto;
 }
 
-.transaction-card-btn-container {
+.transaction-card-btn-container,
+.orders-btn-group {
   display: flex;
   flex-direction: row nowrap;
   justify-content: flex-end;

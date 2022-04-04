@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { put, post, get } from "../../api/investing/orders/verticalSpreads";
+import { remove } from "../../api/investing/orders/shared";
 import { fetchAllData } from "../users/usersSlice";
 
 const vertSpreadsAdapter = createEntityAdapter({
@@ -35,6 +36,14 @@ export const updateVerticalSpreadOrder = createAsyncThunk(
   async (updatedOrder) => {
     await put(updatedOrder);
     return updatedOrder;
+  }
+);
+
+export const deleteVerticalSpreadOrder = createAsyncThunk(
+  "verticalSpreadsOrders/deleteVerticalSpreadOrder",
+  async (data) => {
+    await remove(data);
+    return data;
   }
 );
 
@@ -92,6 +101,19 @@ export const verticalSpreadsOrdersSlice = createSlice({
         vertSpreadsAdapter.upsertOne(state, order);
       })
       .addCase(updateVerticalSpreadOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteVerticalSpreadOrder.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteVerticalSpreadOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.order;
+        vertSpreadsAdapter.removeOne(state, id);
+      })
+      .addCase(deleteVerticalSpreadOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

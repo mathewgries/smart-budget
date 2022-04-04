@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { post, put, get } from "../../api/investing/orders/options";
+import { remove } from "../../api/investing/orders/shared";
 import { fetchAllData } from "../users/usersSlice";
 
 const optionsAdapter = createEntityAdapter({
@@ -35,6 +36,14 @@ export const updateOptionsOrder = createAsyncThunk(
   async (updatedOrder) => {
     await put(updatedOrder);
     return updatedOrder;
+  }
+);
+
+export const deleteOptionsOrder = createAsyncThunk(
+  "optionsOrders/deleteOptionsOrder",
+  async (data) => {
+    await remove(data);
+    return data;
   }
 );
 
@@ -76,6 +85,7 @@ export const optionsOrdersSlice = createSlice({
       .addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { order } = action.payload;
+        console.log(action.payload);
         optionsAdapter.addOne(state, order);
       })
       .addCase(saveNewOptionsOrder.rejected, (state, action) => {
@@ -92,6 +102,19 @@ export const optionsOrdersSlice = createSlice({
         optionsAdapter.upsertOne(state, order);
       })
       .addCase(updateOptionsOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteOptionsOrder.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteOptionsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.order;
+        optionsAdapter.removeOne(state, id);
+      })
+      .addCase(deleteOptionsOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

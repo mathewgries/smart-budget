@@ -69,17 +69,24 @@ export function addOrderHandler(profitLoss, accountBalance) {
   ).toFixed(2);
 }
 
-export function updateOrderHandler(orignalPL, newPL, accountBalance){
-	const origPLCon = dollarsToCents(orignalPL)
-	const newPLCon = dollarsToCents(newPL)
-	const acctBalCon = dollarsToCents(accountBalance)
+export function updateOrderHandler(orignalPL, newPL, accountBalance) {
+  const origPLCon = dollarsToCents(orignalPL);
+  const newPLCon = dollarsToCents(newPL);
+  const acctBalCon = dollarsToCents(accountBalance);
 
-	if(origPLCon === newPLCon){
-		return accountBalance
-	}else{
-		const revertBlanace = acctBalCon - origPLCon
-		return ((revertBlanace + newPLCon)/100).toFixed(2)
-	}
+  if (origPLCon === newPLCon) {
+    return accountBalance;
+  } else {
+    const revertBlanace = acctBalCon - origPLCon;
+    return ((revertBlanace + newPLCon) / 100).toFixed(2);
+  }
+}
+
+export function deleteOrderHandler(profitLoss, accountBalance) {
+  return (
+    (dollarsToCents(accountBalance) - dollarsToCents(profitLoss)) /
+    100
+  ).toFixed(2);
 }
 
 function calculateProfitLoss(orderSize, openPrice, closePrice, tradeSide) {
@@ -117,11 +124,10 @@ export function optionsProfitLossHandler(
   ).toFixed(2);
 }
 
+export function getPLPercent(openPrice, closePrice, tradeSide) {
+  const openConv = dollarsToCents(openPrice);
+  const cloesConv = dollarsToCents(closePrice);
 
-export function getPLPercent(openPrice, closePrice, tradeSide,){
-	const openConv = dollarsToCents(openPrice)
-	const cloesConv = dollarsToCents(closePrice)
-
-	const num = ((cloesConv - openConv)/openConv)*100
-	return (tradeSide === "LONG" ? num : num * -1).toFixed(2)
+  const num = ((cloesConv - openConv) / openConv) * 100;
+  return (tradeSide === "LONG" ? num : num * -1).toFixed(2);
 }

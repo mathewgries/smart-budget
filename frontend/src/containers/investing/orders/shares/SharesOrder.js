@@ -1,30 +1,114 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectSharesOrderById } from "../../../../redux/investing/sharesOrdersSlice";
-import { getPLPercent } from "../../../../helpers/currencyHandler";
+import React, { useState, useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectSharesOrderById,
+  deleteSharesOrder,
+} from "../../../../redux/investing/sharesOrdersSlice";
+import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
+import {
+  getPLPercent,
+  deleteOrderHandler,
+} from "../../../../helpers/currencyHandler";
 import { dateToString } from "../../../../helpers/dateFormat";
+import { onError } from "../../../../lib/errorLib";
 import { Link } from "react-router-dom";
+import ConfirmationPopup from "../../../popups/ConfirmationPopup";
+
+const ConfirmMessage = () => {
+  return (
+    <div>
+      <p>You are about to delete an order!</p>
+      <p>This effects account balance as well!</p>
+      <p>Please confirm!</p>
+    </div>
+  );
+};
 
 export default function SharesOrder(props) {
   const { id } = useParams();
+  const history = useHistory();
+  const dispatch = useDispatch();
   const order = useSelector((state) => selectSharesOrderById(state, id));
+  const account = useSelector((state) =>
+    selectInvestingAccountByGSI(state, order.GSI1_PK)
+  );
+  const status = useSelector((state) => state.sharesOrders.status);
+  const [showConfrim, setShowConfirm] = useState(false);
+
+  useEffect(() => {
+    if (status === "pending") {
+      history.push(`/investing/journal/${account.id}`);
+    }
+  }, [status]);
+
+  function handleCancel() {
+    setShowConfirm(!showConfrim);
+  }
+
+  async function handleConfirm() {
+    setShowConfirm(!showConfrim);
+    onDelete();
+  }
+
+  async function onDelete() {
+    try {
+      const newAccountBalance = deleteOrderHandler(
+        order.profitLoss,
+        account.accountBalance
+      );
+      await handleOrderDelete(newAccountBalance);
+    } catch (e) {
+      onError(e);
+    }
+  }
+
+  async function handleOrderDelete(newAccountBalance) {
+    await dispatch(
+      deleteSharesOrder({
+        order: { id: order.id, type: order.type },
+        account: { id: account.id, accountBalance: newAccountBalance },
+      })
+    ).unwrap();
+  }
 
   return (
     <div className="page-container">
       <div className="page-wrapper">
+        <section>
+          {showConfrim && (
+            <section className="confirmation-popup-section">
+              <ConfirmationPopup
+                onCancel={handleCancel}
+                onConfirm={handleConfirm}
+              >
+                <ConfirmMessage />
+              </ConfirmationPopup>
+            </section>
+          )}
+        </section>
         <div className="order-page-wrapper">
           <section className="order-page-header">
             <header>
               <h5>Share Order</h5>
             </header>
-            <div className="form-group">
-              <Link
-                to={`/investing/orders/shares/edit/${id}`}
-                className="btn btn-primary"
-              >
-                Edit
-              </Link>
+            <div className="orders-btn-group">
+              <div className="form-group">
+                <Link
+                  to={`/investing/orders/shares/edit/${id}`}
+                  className="btn btn-primary"
+                >
+                  Edit
+                </Link>
+              </div>
+              <div className="form-group">
+                <button
+                  className="btn btn-danger"
+                  onClick={() => setShowConfirm(!showConfrim)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </section>
 

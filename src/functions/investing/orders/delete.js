@@ -1,4 +1,4 @@
-import handler from "../../../util/handler";
+import handler from "../../../util/handler"
 import dynamoDb from "../../../util/dynamodb";
 
 export const main = handler(async (event) => {
@@ -13,7 +13,7 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
-            SK: `ORDER#OPTIONS#${order.id}`,
+            SK: `${order.type}${order.id}`,
           },
         },
       },

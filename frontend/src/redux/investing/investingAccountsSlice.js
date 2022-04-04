@@ -10,11 +10,20 @@ import {
   updateInvestingTransaction,
   deleteInvestingTransaction,
 } from "./investingTransactionsSlice";
-import { saveNewOptionsOrder, updateOptionsOrder } from "./optionsOrdersSlice";
-import { saveNewSharesOrder, updateSharesOrder } from "./sharesOrdersSlice";
+import {
+  saveNewOptionsOrder,
+  updateOptionsOrder,
+  deleteOptionsOrder,
+} from "./optionsOrdersSlice";
+import {
+  saveNewSharesOrder,
+  updateSharesOrder,
+  deleteSharesOrder,
+} from "./sharesOrdersSlice";
 import {
   saveNewVerticalSpreadsOrder,
   updateVerticalSpreadOrder,
+  deleteVerticalSpreadOrder,
 } from "./verticalSpreadsOrdersSlice";
 
 const investingAccountsAdapter = createEntityAdapter({
@@ -84,9 +93,9 @@ export const investingAccountsSlice = createSlice({
         state.status = "pending";
       })
       .addCase(addNewInvestingAccount.fulfilled, (state, action) => {
-				state.status = "succeeded"
-				investingAccountsAdapter.addOne(state, action.payload)
-			})
+        state.status = "succeeded";
+        investingAccountsAdapter.addOne(state, action.payload);
+      })
       .addCase(addNewInvestingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
@@ -133,7 +142,7 @@ export const investingAccountsSlice = createSlice({
       })
       .addCase(deleteInvestingTransaction.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const { account } = action.payload
+        const { account } = action.payload;
         investingAccountsAdapter.upsertOne(state, account);
       })
       .addCase(deleteInvestingTransaction.rejected, (state, action) => {
@@ -167,6 +176,19 @@ export const investingAccountsSlice = createSlice({
         state.error = action.error.message;
       });
     builder
+      .addCase(deleteOptionsOrder.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteOptionsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(deleteOptionsOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
       .addCase(saveNewSharesOrder.pending, (state, action) => {
         state.status = "pending";
       })
@@ -193,6 +215,19 @@ export const investingAccountsSlice = createSlice({
         state.error = action.error.message;
       });
     builder
+      .addCase(deleteSharesOrder.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteSharesOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(deleteSharesOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
       .addCase(saveNewVerticalSpreadsOrder.pending, (state, action) => {
         state.status = "pending";
       })
@@ -215,6 +250,19 @@ export const investingAccountsSlice = createSlice({
         investingAccountsAdapter.upsertOne(state, account);
       })
       .addCase(updateVerticalSpreadOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteVerticalSpreadOrder.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteVerticalSpreadOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.updateOne(state, account);
+      })
+      .addCase(deleteVerticalSpreadOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
