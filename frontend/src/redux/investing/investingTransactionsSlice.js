@@ -66,7 +66,7 @@ export const investingTransactionsSlice = createSlice({
       });
     builder
       .addCase(fetchInvestingTransactions.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(
         fetchInvestingTransactions.fulfilled,
@@ -78,7 +78,7 @@ export const investingTransactionsSlice = createSlice({
       });
     builder
       .addCase(saveNewInvestingTransaction.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(saveNewInvestingTransaction.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -90,7 +90,7 @@ export const investingTransactionsSlice = createSlice({
       });
     builder
       .addCase(updateInvestingTransaction.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(updateInvestingTransaction.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -105,7 +105,7 @@ export const investingTransactionsSlice = createSlice({
       });
     builder
       .addCase(deleteInvestingTransaction.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(deleteInvestingTransaction.fulfilled, (state, action) => {
         state.status = "succeeded";

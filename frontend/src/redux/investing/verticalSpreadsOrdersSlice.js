@@ -59,7 +59,7 @@ export const verticalSpreadsOrdersSlice = createSlice({
       });
     builder
       .addCase(fetchVerticalSpreadsOrders.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchVerticalSpreadsOrders.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -71,7 +71,7 @@ export const verticalSpreadsOrdersSlice = createSlice({
       });
     builder
       .addCase(saveNewVerticalSpreadsOrder.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -84,7 +84,7 @@ export const verticalSpreadsOrdersSlice = createSlice({
       });
     builder
       .addCase(updateVerticalSpreadOrder.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(updateVerticalSpreadOrder.fulfilled, (state, action) => {
         state.status = "succeeded";

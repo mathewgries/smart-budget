@@ -59,7 +59,7 @@ export const optionsOrdersSlice = createSlice({
       });
     builder
       .addCase(fetchOptionsOrders.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchOptionsOrders.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -71,7 +71,7 @@ export const optionsOrdersSlice = createSlice({
       });
     builder
       .addCase(saveNewOptionsOrder.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -84,7 +84,7 @@ export const optionsOrdersSlice = createSlice({
       });
     builder
       .addCase(updateOptionsOrder.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(updateOptionsOrder.fulfilled, (state, action) => {
         state.status = "succeeded";

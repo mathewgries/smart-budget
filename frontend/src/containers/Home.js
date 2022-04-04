@@ -14,7 +14,7 @@ import { onError } from "../lib/errorLib";
 export default function Home() {
   const dispatch = useDispatch();
   const prevLocation = useSelector((state) => state.history.lastRoute);
-  const appStatus = useSelector((state) => state.users.status);
+  const status = useSelector((state) => state.users.status);
   const { isAuthenticated } = useAppContext();
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Home() {
         dispatch(lastRouteUpdated("/"));
 				const userInfo = await getUserInfo();
         await dispatch(addNewUser(userInfo)).unwrap();
-      } else if (appStatus === "idle") {
+      } else if (status === "idle") {
         try {
           await dispatch(fetchAllData()).unwrap();
         } catch (e) {
@@ -37,7 +37,7 @@ export default function Home() {
     }
 
     onLoad();
-  }, [isAuthenticated, appStatus, dispatch]);
+  }, [isAuthenticated, status, dispatch]);
 
   function renderLander() {
     return (
@@ -57,7 +57,7 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                {appStatus === "loading" ? (
+                {status === "pending" ? (
                   <h5>Spending Accounts</h5>
                 ) : (
                   <Link to="/spending">
@@ -66,9 +66,9 @@ export default function Home() {
                 )}
               </header>
               <div className="form-group">
-                {appStatus === "loading" ? (
+                {status === "pending" ? (
                   <button disabled={true} className="btn btn-secondary">
-                    <LoadingSpinner />
+                    <LoadingSpinner text={"loading"}/>
                   </button>
                 ) : (
                   <Link to="/spending/accounts/new" className="btn btn-primary">
@@ -84,7 +84,7 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                {appStatus === "loading" ? (
+                {status === "pending" ? (
                   <h5>Investing Accounts</h5>
                 ) : (
                   <Link to="/investing">
@@ -93,9 +93,9 @@ export default function Home() {
                 )}
               </header>
               <div className="form-group">
-                {appStatus === "loading" ? (
+                {status === "pending" ? (
                   <button disabled={true} className="btn btn-secondary">
-                    <LoadingSpinner />
+                    <LoadingSpinner  text={"loading"}/>
                   </button>
                 ) : (
                   <Link

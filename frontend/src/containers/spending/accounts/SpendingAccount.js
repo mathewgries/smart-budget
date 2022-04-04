@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectSpendingAccountById } from "../../../redux/spending/spendingAccountsSlice";
@@ -9,6 +9,7 @@ import SpendingTransactionsList from "../transactions/SpendingTransactionsList";
 export default function SpendingAccount() {
   const { id } = useParams();
   const account = useSelector((state) => selectSpendingAccountById(state, id));
+  const status = useSelector((state) => state.spendingAccounts.status);
 
   return (
     <div className="page-container">
@@ -51,7 +52,11 @@ export default function SpendingAccount() {
                 <h6>Transactions</h6>
               </header>
             </div>
-            <SpendingTransactionsList account={account} />
+            {status !== "pending" && (
+              <div>
+                <SpendingTransactionsList account={account} />
+              </div>
+            )}
           </section>
         </div>
       </div>

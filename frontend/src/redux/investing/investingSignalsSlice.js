@@ -45,7 +45,7 @@ export const investingSignalsSlice = createSlice({
       });
     builder
       .addCase(fetchSignals.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchSignals.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -57,7 +57,7 @@ export const investingSignalsSlice = createSlice({
       });
     builder
       .addCase(updateSignals.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(updateSignals.fulfilled, (state, action) => {
         state.status = "success";

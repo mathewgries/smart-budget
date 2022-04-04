@@ -63,7 +63,7 @@ export const spendingAccountsSlice = createSlice({
       });
     builder
       .addCase(fetchSpendingAccounts.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchSpendingAccounts.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -75,16 +75,19 @@ export const spendingAccountsSlice = createSlice({
       });
     builder
       .addCase(addNewSpendingAccount.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
-      .addCase(addNewSpendingAccount.fulfilled, spendingAccountsAdapter.addOne)
+      .addCase(addNewSpendingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        spendingAccountsAdapter.addOne(state, action.payload);
+      })
       .addCase(addNewSpendingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
     builder
       .addCase(updateSpendingAccount.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(
         updateSpendingAccount.fulfilled,
@@ -121,7 +124,7 @@ export const spendingAccountsSlice = createSlice({
       });
     builder
       .addCase(deleteSpendingTransaction.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(deleteSpendingTransaction.fulfilled, (state, action) => {
         state.status = "succeeded";

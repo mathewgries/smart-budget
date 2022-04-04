@@ -22,7 +22,7 @@ export default function SpendingTransactionNew(props) {
   const account = useSelector((state) => selectSpendingAccountById(state, id));
   const activeCategory = useSelector(selectActiveCategory);
   const activeSubCategory = useSelector(selectActiveSubCategory);
-  const [isSaving, setIsSaving] = useState(false);
+  const status = useSelector((state) => state.spendingTransactions.status)
   const [fields, setFields] = useState({
     transactionAmount: "0.00",
     transactionDate: inputDateFormat(new Date()),
@@ -47,7 +47,6 @@ export default function SpendingTransactionNew(props) {
     e.preventDefault();
 
     try {
-      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
       history.push(`/spending/accounts/${id}`);
@@ -96,9 +95,9 @@ export default function SpendingTransactionNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isSaving}
+                  disabled={!validateForm() || status === "pending"}
                 >
-                  {isSaving ? <LoadingSpinner text={"Saving"}/> : "Save"}
+                  {status === "pending" ? <LoadingSpinner text={"Saving"}/> : "Save"}
                 </button>
               </div>
             </section>

@@ -14,7 +14,7 @@ export default function SpendingAccountEdit(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectSpendingAccountById(state, id));
-  const [isSaving, setIsSaving] = useState(false);
+	const status = useSelector((state) => state.spendingAccounts.status)
   const [fields, setFields] = useState({
     accountName: account.accountName,
     accountBalance: account.accountBalance,
@@ -38,7 +38,6 @@ export default function SpendingAccountEdit(props) {
     const { accountName, accountBalance } = fields;
 
     try {
-      setIsSaving(true);
       await dispatch(
         updateSpendingAccount({ id, accountName, accountBalance })
       ).unwrap();
@@ -61,9 +60,9 @@ export default function SpendingAccountEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isSaving}
+                  disabled={!validateForm() || status === "pending"}
                 >
-                  {isSaving ? <LoadingSpinner text={"Updating"}/> : "Update"}
+                  {status === "pending" ? <LoadingSpinner text={"Updating"}/> : "Update"}
                 </button>
               </div>
             </section>

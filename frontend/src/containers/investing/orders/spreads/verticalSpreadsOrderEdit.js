@@ -26,7 +26,7 @@ export default function VerticalSpreadsOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-  const [isSaving, setIsSaving] = useState(false);
+  const status = useSelector((state) => state.verticalSpreadsOrders.status)
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
 
@@ -126,7 +126,6 @@ export default function VerticalSpreadsOrderEdit(props) {
     const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
-      setIsSaving(true);
       const newPL = optionsProfitLossHandler(
         orderSize,
         openPrice,
@@ -194,9 +193,9 @@ export default function VerticalSpreadsOrderEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={validateForm() || isSaving}
+                  disabled={validateForm() || status === "pending"}
                 >
-                  {isSaving ? <LoadingSpinner text={"Updating"} /> : "Update"}
+                  {status === "pending" ? <LoadingSpinner text={"Updating"} /> : "Update"}
                 </button>
               </div>
             </section>

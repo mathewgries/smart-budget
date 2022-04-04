@@ -23,7 +23,7 @@ export default function InvestingTransactionEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, transaction.GSI1_PK)
   );
-  const [isSaving, setIsSaving] = useState(false);
+  const status = useSelector((state) => state.investingTransactions.status);
   const [fields, setFields] = useState({
     transactionAmount: transaction.transactionAmount,
     transactionDate: inputDateFormat(transaction.transactionDate),
@@ -49,7 +49,6 @@ export default function InvestingTransactionEdit(props) {
     e.preventDefault();
 
     try {
-      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleUpdateTransaction(newAccountBalance);
       history.push(`/investing/transactions/${id}`);
@@ -96,9 +95,13 @@ export default function InvestingTransactionEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isSaving}
+                  disabled={!validateForm() || status === "pending"}
                 >
-                  {isSaving ? <LoadingSpinner text={"Updating"}/> : "Update"}
+                  {status === "pending" ? (
+                    <LoadingSpinner text={"Updating"} />
+                  ) : (
+                    "Update"
+                  )}
                 </button>
               </div>
             </section>

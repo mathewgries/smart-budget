@@ -102,7 +102,7 @@ export const categoriesSlice = createSlice({
       });
     builder
       .addCase(fetchCategories.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -119,9 +119,11 @@ export const categoriesSlice = createSlice({
       });
     builder
       .addCase(saveCategories.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
-      .addCase(saveCategories.fulfilled, (state, action) => {})
+      .addCase(saveCategories.fulfilled, (state, action) => {
+				state.status = "succeeded"
+			})
       .addCase(saveCategories.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;

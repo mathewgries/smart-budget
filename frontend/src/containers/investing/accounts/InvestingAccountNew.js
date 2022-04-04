@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewInvestingAccount } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
@@ -9,7 +9,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 export default function InvestingAccountNew() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [isSaving, setIsSaving] = useState(false);
+  const status = useSelector((state) => state.investingAccounts.status);
   const [fields, setFields] = useState({
     accountName: "",
     accountBalance: "0.00",
@@ -32,7 +32,6 @@ export default function InvestingAccountNew() {
     event.preventDefault();
 
     try {
-      setIsSaving(true);
       await dispatch(addNewInvestingAccount(fields)).unwrap();
       history.push("/investing");
     } catch (e) {
@@ -53,9 +52,13 @@ export default function InvestingAccountNew() {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isSaving}
+                  disabled={!validateForm() || status === "pending"}
                 >
-                  {isSaving ? <LoadingSpinner text={"Saving"} /> : "Save"}
+                  {status === "pending" ? (
+                    <LoadingSpinner text={"Saving"} />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
               </div>
             </section>
@@ -69,7 +72,7 @@ export default function InvestingAccountNew() {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleOnChange}
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
               <div>

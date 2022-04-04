@@ -15,7 +15,7 @@ export default function InvestingTransactionNew(props) {
   const dispatch = useDispatch();
   const typeList = ["Withdrawal", "Deposit"];
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const [isSaving, setIsSaving] = useState(false);
+  const status = useSelector((state) => state.investingTransactions.status);
   const [fields, setFields] = useState({
     transactionAmount: "0.00",
     transactionDate: inputDateFormat(new Date()),
@@ -40,7 +40,6 @@ export default function InvestingTransactionNew(props) {
     e.preventDefault();
 
     try {
-      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
       history.push(`/investing/accounts/${id}`);
@@ -87,9 +86,13 @@ export default function InvestingTransactionNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isSaving}
+                  disabled={!validateForm() || status === "pending"}
                 >
-                  {isSaving ? <LoadingSpinner text={"Saving"}/> : "Save"}
+                  {status === "pending" ? (
+                    <LoadingSpinner text={"Saving"} />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
               </div>
             </section>

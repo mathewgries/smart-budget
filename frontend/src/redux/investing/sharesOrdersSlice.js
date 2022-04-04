@@ -59,7 +59,7 @@ export const sharesOrdersSlice = createSlice({
       });
     builder
       .addCase(fetchSharesOrders.pending, (state, action) => {
-        state.status = "loading";
+        state.status = "pending";
       })
       .addCase(fetchSharesOrders.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -71,7 +71,7 @@ export const sharesOrdersSlice = createSlice({
       });
     builder
       .addCase(saveNewSharesOrder.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(saveNewSharesOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
@@ -84,7 +84,7 @@ export const sharesOrdersSlice = createSlice({
       });
     builder
       .addCase(updateSharesOrder.pending, (state, action) => {
-        state.status = "saving";
+        state.status = "pending";
       })
       .addCase(updateSharesOrder.fulfilled, (state, action) => {
         state.status = "succeeded";

@@ -32,7 +32,7 @@ export default function SpendingTransactionEdit(props) {
   );
   const activeCategory = useSelector(selectActiveCategory);
   const activeSubCategory = useSelector(selectActiveSubCategory);
-  const [isSaving, setIsSaving] = useState(false);
+  const status = useSelector((state) => state.spendingTransactions.status)
   const [fields, setFields] = useState({
     transactionAmount: transaction.transactionAmount,
     transactionDate: inputDateFormat(transaction.transactionDate),
@@ -61,7 +61,6 @@ export default function SpendingTransactionEdit(props) {
     e.preventDefault();
 
     try {
-      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleUpdateTransaction(newAccountBalance);
       history.push(`/spending/transactions/${id}`);
@@ -110,9 +109,9 @@ export default function SpendingTransactionEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isSaving}
+                  disabled={!validateForm() || status === "pending"}
                 >
-                  {isSaving ? <LoadingSpinner text={"Updating"}/> : "Update"}
+                  {status === "pending" ? <LoadingSpinner text={"Updating"}/> : "Update"}
                 </button>
               </div>
             </section>

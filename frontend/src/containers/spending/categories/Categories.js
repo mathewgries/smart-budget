@@ -26,6 +26,7 @@ export default function Categories() {
   const subCategories = useSelector(selectSubCategories);
   const activeCategory = useSelector(selectActiveCategory);
   const activeSubCategory = useSelector(selectActiveSubCategory);
+	const status = useSelector((state) => state.categories.status)
   const [disableSave, setDisableSave] = useState(true);
   const [savingCategoryMap, setSavingCategoryMap] = useState(false);
   const [fields, setFields] = useState({

@@ -47,7 +47,7 @@ export default function StrategySignals(props) {
 								data-lpignore="true"
               />
               <button className="btn btn-primary">
-                {status === "saving" ? <LoadingSpinner /> : "Add"}
+                {status === "pending" ? <LoadingSpinner /> : "Add"}
               </button>
             </div>
 
