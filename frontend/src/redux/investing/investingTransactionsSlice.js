@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get, post, put, remove } from "../../api/investing/transaction";
+import { get, post, put, remove } from "../../api/investing/transactions";
 import { fetchAllData } from "../users/usersSlice";
 
 const investingTransactionAdapter = createEntityAdapter({

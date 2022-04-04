@@ -9,6 +9,7 @@ import InvestingTransactionsList from "../transactions/InvestingTransactionsList
 export default function InvestingAccount() {
   const { id } = useParams();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
+  const status = useSelector((state) => state.investingAccounts.status);
 
   return (
     <div className="page-container">
@@ -59,7 +60,11 @@ export default function InvestingAccount() {
                 <h6>Transactions</h6>
               </header>
             </div>
-            <InvestingTransactionsList accountGSI={account.GSI1_PK} />
+            {status !== "pending" && (
+              <div>
+                <InvestingTransactionsList accountGSI={account.GSI1_PK} />
+              </div>
+            )}
           </section>
         </div>
       </div>

@@ -18,5 +18,7 @@ export async function put(data) {
 
 export async function remove(data) {
   const { id } = data.transaction;
-  return await API.del("smartbudget", `/investing/transactions/${id}`);
+  return await API.del("smartbudget", `/investing/transactions/${id}`, {
+    body: data,
+  });
 }

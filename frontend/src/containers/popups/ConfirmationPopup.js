@@ -1,22 +1,19 @@
-import React from 'react'
+import React from "react";
 
-export default function ConfirmationPopup(props){
+export default function ConfirmationPopup(props) {
+  const { onCancel, onConfirm } = props;
   function handleCancel() {
-    props.cancel();
+    onCancel();
   }
 
   function handleConfirm() {
-    props.onConfirm();
+    onConfirm();
   }
 
   return (
     <div className="confirmation-popup-wrapper">
       <div className="confirmation-popup">
-        <div className="confirm-popup-info-wrapper">
-          <p>You are about to delete a transaction!</p>
-          <p>This effects account balance as well!</p>
-          <p>Please confirm</p>
-        </div>
+        <div className="confirm-popup-info-wrapper">{props.children}</div>
         <div className="confirm-popup-btn-wrapper">
           <button className="btn btn-secondary" onClick={handleCancel}>
             Cancel
@@ -28,4 +25,4 @@ export default function ConfirmationPopup(props){
       </div>
     </div>
   );
-};
+}
