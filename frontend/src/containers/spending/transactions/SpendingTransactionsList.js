@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 import SpendingTransactionCard from "./SpendingTransactionCard";
 
 export default function SpendingTransactionsList(props) {
+  const { account } = props;
   const transactions = useSelector((state) =>
-    selectSpendingTransactionsByGSI(state, props.accountId)
+    selectSpendingTransactionsByGSI(state, account.GSI1_PK)
   );
 
   return (

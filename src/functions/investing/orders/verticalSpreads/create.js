@@ -4,8 +4,8 @@ import dynamoDb from "../../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
+  const { order, account } = data;
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const accountId = data.accountId;
   const orderId = uuid.v1();
   const type = "ORDER#VERTSPREADS#";
 
@@ -17,34 +17,34 @@ export const main = handler(async (event) => {
           Item: {
             PK: `USER#${userId}`,
             SK: `${type}${orderId}`,
-            GSI1_PK: `ACCT#INVESTING#${accountId}`,
+            GSI1_PK: `ACCT#INVESTING#${account.id}`,
             id: orderId,
             type: type,
-            ticker: data.ticker,
-            openDate: data.openDate,
-            closeDate: data.closeDate,
-            orderSize: data.orderSize,
-            openPrice: data.openPrice,
-            closePrice: data.closePrice,
-            openUnderlyingPrice: data.openUnderlyingPrice || null,
-            closeUnderlyingPrice: data.closeUnderlyingPrice || null,
-            strikeUpperLegPrice: data.strikeUpperLegPrice,
-            strikeLowerLegPrice: data.strikeLowerLegPrice,
-            contractType: data.contractType,
-            tradeSide: data.tradeSide,
-            spreadExpirationDate: data.spreadExpirationDate,
-            openDelta: data.openDelta || null,
-            closeDelta: data.closeDelta || null,
-            openGamma: data.openGamma || null,
-            closeGamma: data.closeGamma || null,
-            openVega: data.openVega || null,
-            closeVega: data.closeVega || null,
-            openTheta: data.openTheta || null,
-            closeTheta: data.closeTheta || null,
-            openImpliedVolatility: data.openImpliedVolatility || null,
-            closeImpliedVolatility: data.closeImpliedVolatility || null,
-            profitLoss: data.profitLoss,
-            signalList: data.signalList,
+            ticker: order.ticker,
+            openDate: order.openDate,
+            closeDate: order.closeDate,
+            orderSize: order.orderSize,
+            openPrice: order.openPrice,
+            closePrice: order.closePrice,
+            openUnderlyingPrice: order.openUnderlyingPrice || null,
+            closeUnderlyingPrice: order.closeUnderlyingPrice || null,
+            strikeUpperLegPrice: order.strikeUpperLegPrice,
+            strikeLowerLegPrice: order.strikeLowerLegPrice,
+            contractType: order.contractType,
+            tradeSide: order.tradeSide,
+            spreadExpirationDate: order.spreadExpirationDate,
+            openDelta: order.openDelta || null,
+            closeDelta: order.closeDelta || null,
+            openGamma: order.openGamma || null,
+            closeGamma: order.closeGamma || null,
+            openVega: order.openVega || null,
+            closeVega: order.closeVega || null,
+            openTheta: order.openTheta || null,
+            closeTheta: order.closeTheta || null,
+            openImpliedVolatility: order.openImpliedVolatility || null,
+            closeImpliedVolatility: order.closeImpliedVolatility || null,
+            profitLoss: order.profitLoss,
+            signalList: order.signalList,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },
@@ -55,12 +55,12 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
-            SK: `ACCT#INVESTING#${accountId}`,
+            SK: `ACCT#INVESTING#${account.id}`,
           },
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": data.accountBalance,
+            ":accountBalance": account.accountBalance,
             ":modifyDate": Date.now(),
           },
         },
@@ -72,6 +72,6 @@ export const main = handler(async (event) => {
 
   return {
     order: params.TransactItems[0].Put.Item,
-    account: params.TransactItems[1].Update.ExpressionAttributeValues,
+    account,
   };
 });

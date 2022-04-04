@@ -5,6 +5,11 @@ import {
 } from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/spending/accounts";
 import { fetchAllData } from "../users/usersSlice";
+import {
+  saveNewSpendingTransaction,
+  updateSpendingTransaction,
+  deleteSpendingTransaction,
+} from "./spendingTransactionsSlice";
 
 const spendingAccountsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
@@ -40,9 +45,7 @@ export const updateSpendingAccount = createAsyncThunk(
 export const spendingAccountsSlice = createSlice({
   name: "spendingAccounts",
   initialState,
-  reducers: {
-    updateSpendingAccountBalance: spendingAccountsAdapter.upsertOne,
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchAllData.pending, (state, action) => {
@@ -50,8 +53,10 @@ export const spendingAccountsSlice = createSlice({
       })
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
-				const accounts = action.payload.filter((items) => items.type === "ACCT#SPENDING#")
-				spendingAccountsAdapter.setAll(state, accounts)
+        const accounts = action.payload.filter(
+          (items) => items.type === "ACCT#SPENDING#"
+        );
+        spendingAccountsAdapter.setAll(state, accounts);
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -72,7 +77,11 @@ export const spendingAccountsSlice = createSlice({
       .addCase(addNewSpendingAccount.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(addNewSpendingAccount.fulfilled, spendingAccountsAdapter.addOne);
+      .addCase(addNewSpendingAccount.fulfilled, spendingAccountsAdapter.addOne)
+      .addCase(addNewSpendingAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
     builder
       .addCase(updateSpendingAccount.pending, (state, action) => {
         state.status = "saving";
@@ -80,7 +89,49 @@ export const spendingAccountsSlice = createSlice({
       .addCase(
         updateSpendingAccount.fulfilled,
         spendingAccountsAdapter.upsertOne
-      );
+      )
+      .addCase(updateSpendingAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(saveNewSpendingTransaction.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(saveNewSpendingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        spendingAccountsAdapter.upsertOne(state, action.payload.account);
+      })
+      .addCase(saveNewSpendingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateSpendingTransaction.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(updateSpendingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        spendingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(updateSpendingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteSpendingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(deleteSpendingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        spendingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(deleteSpendingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 

@@ -1,11 +1,10 @@
-import handler from "../../../../util/handler"
-import dynamoDb from "../../../../util/dynamodb"
+import handler from "../../../../util/handler";
+import dynamoDb from "../../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
+  const { order, account } = data;
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const accountId = data.accountId;
-  const orderId = event.pathParameters.id;
   const type = "ORDER#SHARES#";
 
   const params = {
@@ -14,7 +13,7 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `${type}${orderId}`,
+            SK: `${type}${order.id}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression: `SET 
@@ -29,15 +28,15 @@ export const main = handler(async (event) => {
 						signalList = :signalList,
           	modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
-            ":ticker": data.ticker,
-            ":openDate": data.openDate,
-            ":closeDate": data.closeDate,
-            ":orderSize": data.orderSize,
-            ":openPrice": data.openPrice,
-            ":closePrice": data.closePrice,
-            ":tradeSide": data.tradeSide,
-            ":profitLoss": data.profitLoss,
-            ":signalList": data.signalList,
+            ":ticker": order.ticker,
+            ":openDate": order.openDate,
+            ":closeDate": order.closeDate,
+            ":orderSize": order.orderSize,
+            ":openPrice": order.openPrice,
+            ":closePrice": order.closePrice,
+            ":tradeSide": order.tradeSide,
+            ":profitLoss": order.profitLoss,
+            ":signalList": order.signalList,
             ":modifyDate": Date.now(),
           },
         },
@@ -46,13 +45,13 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `ACCT#INVESTING#${accountId}`,
+            SK: `ACCT#INVESTING#${account.id}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": data.accountBalance,
+            ":accountBalance": account.accountBalance,
             ":modifyDate": Date.now(),
           },
         },

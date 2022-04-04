@@ -117,7 +117,15 @@ export const categoriesSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
-    builder.addCase(saveCategories.fulfilled, (state, action) => {});
+    builder
+      .addCase(saveCategories.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(saveCategories.fulfilled, (state, action) => {})
+      .addCase(saveCategories.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 

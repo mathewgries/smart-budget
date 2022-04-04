@@ -5,7 +5,9 @@ import dynamoDb from "../../../util/dynamodb";
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const accountId = data.accountId;
+  const { transaction, account } = data;
+
+  // const accountId = data.accountId;
   const transactionId = uuid.v1();
   const type = "TRANS#SPENDING#";
 
@@ -17,15 +19,15 @@ export const main = handler(async (event) => {
           Item: {
             PK: `USER#${userId}`,
             SK: `${type}${transactionId}`,
-            GSI1_PK: `ACCT#SPENDING#${accountId}`,
+            GSI1_PK: `ACCT#SPENDING#${account.id}`,
             id: transactionId,
             type: type,
-            transactionAmount: data.transactionAmount,
-            transactionDate: data.transactionDate,
-            transactionType: data.transactionType,
-            category: data.category,
-            subCategory: data.subCategory,
-            transactionNote: data.transactionNote,
+            transactionAmount: transaction.transactionAmount,
+            transactionDate: transaction.transactionDate,
+            transactionType: transaction.transactionType,
+            category: transaction.category,
+            subCategory: transaction.subCategory,
+            transactionNote: transaction.transactionNote,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },
@@ -36,12 +38,12 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
-            SK: `ACCT#SPENDING#${accountId}`,
+            SK: `ACCT#SPENDING#${account.id}`,
           },
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": data.accountBalance,
+            ":accountBalance": account.accountBalance,
             ":modifyDate": Date.now(),
           },
         },
@@ -53,6 +55,6 @@ export const main = handler(async (event) => {
 
   return {
     transaction: params.TransactItems[0].Put.Item,
-    account: params.TransactItems[1].Update.ExpressionAttributeValues,
+    account,
   };
 });

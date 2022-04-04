@@ -7,7 +7,7 @@ import { post, put, get } from "../../api/investing/orders/options";
 import { fetchAllData } from "../users/usersSlice";
 
 const optionsAdapter = createEntityAdapter({
-  sortComparer: (a, b) => b.openDate.localeCompare(a.openDate),
+  sortComparer: (a, b) => b.openDate.toString().localeCompare(a.openDate),
 });
 
 const initialState = optionsAdapter.getInitialState({
@@ -26,8 +26,7 @@ export const fetchOptionsOrders = createAsyncThunk(
 export const saveNewOptionsOrder = createAsyncThunk(
   "optionsOrders/saveNewOptionsOrder",
   async (newOptionsOrder) => {
-    const result = await post(newOptionsOrder);
-    return result.order;
+    return await post(newOptionsOrder);
   }
 );
 
@@ -35,8 +34,6 @@ export const updateOptionsOrder = createAsyncThunk(
   "optionsOrders/updateOptionsOrder",
   async (updatedOrder) => {
     await put(updatedOrder);
-    delete updatedOrder.accountId;
-    delete updatedOrder.accountBalance;
     return updatedOrder;
   }
 );
@@ -76,7 +73,11 @@ export const optionsOrdersSlice = createSlice({
       .addCase(saveNewOptionsOrder.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(saveNewOptionsOrder.fulfilled, optionsAdapter.addOne)
+      .addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { order } = action.payload;
+        optionsAdapter.addOne(state, order);
+      })
       .addCase(saveNewOptionsOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
@@ -85,7 +86,11 @@ export const optionsOrdersSlice = createSlice({
       .addCase(updateOptionsOrder.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(updateOptionsOrder.fulfilled, optionsAdapter.upsertOne)
+      .addCase(updateOptionsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { order } = action.payload;
+        optionsAdapter.upsertOne(state, order);
+      })
       .addCase(updateOptionsOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;

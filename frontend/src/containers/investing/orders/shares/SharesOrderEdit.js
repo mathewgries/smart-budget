@@ -5,10 +5,7 @@ import {
   selectSharesOrderById,
   updateSharesOrder,
 } from "../../../../redux/investing/sharesOrdersSlice";
-import {
-  selectInvestingAccountByGSI,
-  updateInvestingAccountBalance,
-} from "../../../../redux/investing/investingAccountsSlice";
+import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
@@ -52,14 +49,17 @@ export default function SharesOrderEdit(props) {
     setSelectedSignals(order.signalList);
   }, [order]);
 
-  const saveDisabled =
-    fields.ticker === "" ||
-    fields.openDate === "" ||
-    fields.closeDate === "" ||
-    fields.orderSize === "" ||
-    fields.openPrice === "" ||
-    fields.closePrice === "" ||
-    fields.tradeSide === "";
+	function validateForm() {
+    return (
+			fields.ticker === "" ||
+			fields.openDate === "" ||
+			fields.closeDate === "" ||
+			fields.orderSize === "" ||
+			fields.openPrice === "" ||
+			fields.closePrice === "" ||
+			fields.tradeSide === ""
+    );
+  }
 
   function handleOnChange(e) {
     const { name, value } = e.target;
@@ -99,12 +99,6 @@ export default function SharesOrderEdit(props) {
         account.accountBalance
       );
       await handleUpdateOrder(newAccountBalance, newPL);
-      dispatch(
-        updateInvestingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/investing/journal/${account.id}`);
     } catch (e) {
       onError(e);
@@ -115,18 +109,22 @@ export default function SharesOrderEdit(props) {
   const handleUpdateOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
       updateSharesOrder({
-        id: order.id,
-        accountId: account.id,
-        accountBalance: newAccountBalance,
-        ticker: fields.ticker,
-        openDate: Date.parse(fields.openDate),
-        closeDate: Date.parse(fields.closeDate),
-        orderSize: fields.orderSize,
-        openPrice: fields.openPrice,
-        closePrice: fields.closePrice,
-        tradeSide: fields.tradeSide,
-        profitLoss: profitLoss,
-        signalList: selectedSignals,
+        order: {
+          id: order.id,
+          ticker: fields.ticker,
+          openDate: Date.parse(fields.openDate),
+          closeDate: Date.parse(fields.closeDate),
+          orderSize: fields.orderSize,
+          openPrice: fields.openPrice,
+          closePrice: fields.closePrice,
+          tradeSide: fields.tradeSide,
+          profitLoss: profitLoss,
+          signalList: selectedSignals,
+        },
+        account: {
+          id: account.id,
+          accountBalance: newAccountBalance,
+        },
       })
     ).unwrap();
   };
@@ -144,9 +142,9 @@ export default function SharesOrderEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || isSaving}
+                  disabled={validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Update"}
+                  {isSaving ? <LoadingSpinner text={"Updating"}/> : "Update"}
                 </button>
               </div>
             </section>
@@ -231,7 +229,6 @@ export default function SharesOrderEdit(props) {
                         inputChangeHandler={handleCurrencyInput}
                       />
                     </div>
-
                   </div>
                 </div>
 

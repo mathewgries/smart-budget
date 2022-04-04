@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectOptionsOrderById } from "../../../../redux/investing/optionsOrdersSlice";
 import { getPLPercent } from "../../../../helpers/currencyHandler";
+import { dateToString } from "../../../../helpers/dateFormat";
 import { Link } from "react-router-dom";
 
 export default function OptionsOrder(props) {
@@ -44,7 +45,7 @@ export default function OptionsOrder(props) {
                   <td>{order.strikePrice}</td>
                   <td>{order.contractType}</td>
                   <td>{order.tradeSide}</td>
-                  <td>{order.contractExpirationDate}</td>
+                  <td>{dateToString(order.contractExpirationDate)}</td>
                 </tr>
               </tbody>
             </table>
@@ -91,12 +92,12 @@ export default function OptionsOrder(props) {
               <tbody>
                 <tr>
                   <th scope="rowß">Open</th>
-                  <td>{order.openDate}</td>
+                  <td>{dateToString(order.openDate)}</td>
                   <td>{order.openUnderlyingPrice}</td>
                 </tr>
                 <tr>
                   <th scope="row">Close</th>
-                  <td>{order.closeDate}</td>
+                  <td>{dateToString(order.closeDate)}</td>
                   <td>{order.closeUnderlyingPrice}</td>
                 </tr>
               </tbody>

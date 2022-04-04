@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewSharesOrder } from "../../../../redux/investing/sharesOrdersSlice";
-import {
-  selectInvestingAccountById,
-  updateInvestingAccountBalance,
-} from "../../../../redux/investing/investingAccountsSlice";
+import { selectInvestingAccountById } from "../../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
@@ -33,14 +30,17 @@ export default function SharesOrderNew(props) {
     tradeSide: "",
   });
 
-  const saveDisabled =
-    fields.ticker === "" ||
-    fields.openDate === "" ||
-    fields.closeDate === "" ||
-    fields.orderSize === "" ||
-    fields.openPrice === "" ||
-    fields.closePrice === "" ||
-    fields.tradeSide === "";
+  function validateForm() {
+    return (
+      fields.ticker === "" ||
+      fields.openDate === "" ||
+      fields.closeDate === "" ||
+      fields.orderSize === "" ||
+      fields.openPrice === "" ||
+      fields.closePrice === "" ||
+      fields.tradeSide === ""
+    );
+  }
 
   function handleOnChange(e) {
     const { name, value } = e.target;
@@ -50,7 +50,7 @@ export default function SharesOrderNew(props) {
     }));
   }
 
-	const handleCurrencyInput = ({ name, value }) => {
+  const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
 
@@ -79,12 +79,6 @@ export default function SharesOrderNew(props) {
         account.accountBalance
       );
       await handleSaveNewOrder(newAccountBalance, profitLoss);
-      dispatch(
-        updateInvestingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/investing/journal/${id}`);
     } catch (e) {
       onError(e);
@@ -94,17 +88,21 @@ export default function SharesOrderNew(props) {
   const handleSaveNewOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
       saveNewSharesOrder({
-        accountId: account.id,
-        accountBalance: newAccountBalance,
-        ticker: fields.ticker,
-        openDate: Date.parse(fields.openDate),
-        closeDate: Date.parse(fields.closeDate),
-        orderSize: fields.orderSize,
-        openPrice: fields.openPrice,
-        closePrice: fields.closePrice,
-        tradeSide: fields.tradeSide,
-        profitLoss: profitLoss,
-        signalList: selectedSignals,
+        order: {
+          ticker: fields.ticker,
+          openDate: Date.parse(fields.openDate),
+          closeDate: Date.parse(fields.closeDate),
+          orderSize: fields.orderSize,
+          openPrice: fields.openPrice,
+          closePrice: fields.closePrice,
+          tradeSide: fields.tradeSide,
+          profitLoss: profitLoss,
+          signalList: selectedSignals,
+        },
+        account: {
+          id: account.id,
+          accountBalance: newAccountBalance,
+        },
       })
     ).unwrap();
   };
@@ -122,9 +120,9 @@ export default function SharesOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || isSaving}
+                  disabled={validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner text={"Saving"} /> : "Save"}
                 </button>
               </div>
             </section>
@@ -192,7 +190,7 @@ export default function SharesOrderNew(props) {
                     <label>Share Price</label>
                   </div>
                   <div className="order-form-greek-group">
-									<div>
+                    <div>
                       <CurrencyInput
                         inputName={"openPrice"}
                         inputLabel={"Open"}

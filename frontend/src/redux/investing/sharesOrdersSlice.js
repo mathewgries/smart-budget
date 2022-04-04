@@ -7,7 +7,7 @@ import { put, post, get } from "../../api/investing/orders/shares";
 import { fetchAllData } from "../users/usersSlice";
 
 const sharesAdapter = createEntityAdapter({
-  sortComparer: (a, b) => b.openDate.localeCompare(a.openDate),
+  sortComparer: (a, b) => b.openDate.toString().localeCompare(a.openDate),
 });
 
 const initialState = sharesAdapter.getInitialState({
@@ -26,8 +26,7 @@ export const fetchSharesOrders = createAsyncThunk(
 export const saveNewSharesOrder = createAsyncThunk(
   "sharesOrders/saveNewSharesOrder",
   async (newSharesOrder) => {
-    const result = await post(newSharesOrder);
-    return result.order;
+    return await post(newSharesOrder);
   }
 );
 
@@ -35,8 +34,6 @@ export const updateSharesOrder = createAsyncThunk(
   "sharesOrders/updateSharesOrder",
   async (updatedOrder) => {
     await put(updatedOrder);
-    delete updatedOrder.accountId;
-    delete updatedOrder.accountBalance;
     return updatedOrder;
   }
 );
@@ -55,7 +52,7 @@ export const sharesOrdersSlice = createSlice({
         const shares = action.payload.filter(
           (item) => item.type === "ORDER#SHARES#"
         );
-        sharesAdapter.setAll(state, shares)
+        sharesAdapter.setAll(state, shares);
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -76,20 +73,28 @@ export const sharesOrdersSlice = createSlice({
       .addCase(saveNewSharesOrder.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(saveNewSharesOrder.fulfilled, sharesAdapter.upsertOne)
+      .addCase(saveNewSharesOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { order } = action.payload;
+        sharesAdapter.addOne(state, order);
+      })
       .addCase(saveNewSharesOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
-			builder
-			.addCase(updateSharesOrder.pending, (state, action) => {
-				state.status = "saving"
-			})
-			.addCase(updateSharesOrder.fulfilled, sharesAdapter.upsertOne)
-			.addCase(updateSharesOrder.rejected, (state, action) => {
-				state.status = "failed"
-				state.error = action.error.message;
-			})
+    builder
+      .addCase(updateSharesOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(updateSharesOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { order } = action.payload;
+        sharesAdapter.upsertOne(state, order);
+      })
+      .addCase(updateSharesOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 

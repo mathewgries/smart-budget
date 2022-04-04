@@ -44,8 +44,8 @@ export default function CurrencyInput(props) {
 
   function validateDelete() {
     return (
-      keyEvent.toLowerCase() === "backspace" ||
-      keyEvent.toLowerCase() === "delete"
+      (keyEvent.toLowerCase() === "backspace" ||
+      keyEvent.toLowerCase() === "delete") && inputValue !== "0.00"
     );
   }
 

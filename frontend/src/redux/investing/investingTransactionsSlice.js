@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get, post, put } from "../../api/investing/transaction";
+import { get, post, put, remove } from "../../api/investing/transaction";
 import { fetchAllData } from "../users/usersSlice";
 
 const investingTransactionAdapter = createEntityAdapter({
@@ -25,8 +25,7 @@ export const fetchInvestingTransactions = createAsyncThunk(
 export const saveNewInvestingTransaction = createAsyncThunk(
   "investingTransactions/saveNewInvestingTransaction",
   async (newTransaction) => {
-    const result = await post(newTransaction);
-    return result.transaction;
+    return await post(newTransaction);
   }
 );
 
@@ -38,12 +37,20 @@ export const updateInvestingTransaction = createAsyncThunk(
   }
 );
 
+export const deleteInvestingTransaction = createAsyncThunk(
+  "investingTransactions/deleteInvestingTransaction",
+  async (data) => {
+    await remove(data);
+    return data;
+  }
+);
+
 export const investingTransactionsSlice = createSlice({
   name: "investingTransactions",
   initialState,
   reducers: {},
   extraReducers(builder) {
-		builder
+    builder
       .addCase(fetchAllData.pending, (state, action) => {
         state.status = "pending";
       })
@@ -52,7 +59,7 @@ export const investingTransactionsSlice = createSlice({
         const trans = action.payload.filter(
           (item) => item.type === "TRANS#INVESTING#"
         );
-        investingTransactionAdapter.setAll(state, trans)
+        investingTransactionAdapter.setAll(state, trans);
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -73,10 +80,10 @@ export const investingTransactionsSlice = createSlice({
       .addCase(saveNewInvestingTransaction.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(
-        saveNewInvestingTransaction.fulfilled,
-        investingTransactionAdapter.addOne
-      )
+      .addCase(saveNewInvestingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        investingTransactionAdapter.addOne(state, action.payload.transaction);
+      })
       .addCase(saveNewInvestingTransaction.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
@@ -85,11 +92,27 @@ export const investingTransactionsSlice = createSlice({
       .addCase(updateInvestingTransaction.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(
-        updateInvestingTransaction.fulfilled,
-        investingTransactionAdapter.upsertOne
-      )
+      .addCase(updateInvestingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        investingTransactionAdapter.upsertOne(
+          state,
+          action.payload.transaction
+        );
+      })
       .addCase(updateInvestingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteInvestingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(deleteInvestingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.transaction;
+        investingTransactionAdapter.removeOne(state, id);
+      })
+      .addCase(deleteInvestingTransaction.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

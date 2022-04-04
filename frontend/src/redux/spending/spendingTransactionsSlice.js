@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get, post, put } from "../../api/spending/transactions";
+import { get, post, put, remove } from "../../api/spending/transactions";
 import { fetchAllData } from "../users/usersSlice";
 
 const spendingTransactionsAdapter = createEntityAdapter({
@@ -26,7 +26,7 @@ export const saveNewSpendingTransaction = createAsyncThunk(
   "spendingTransactions/saveNewSpendingTransaction",
   async (newTransaction) => {
     const result = await post(newTransaction);
-    return result.transaction;
+    return result;
   }
 );
 
@@ -38,10 +38,22 @@ export const updateSpendingTransaction = createAsyncThunk(
   }
 );
 
+export const deleteSpendingTransaction = createAsyncThunk(
+  "spendingTransactions/deleteSpendingTransaction",
+  async (data) => {
+    await remove(data);
+    return data;
+  }
+);
+
 export const spendingTransactionsSlice = createSlice({
   name: "spendingTransactions",
   initialState,
-  reducers: {},
+  reducers: {
+    spendingTransactionStatusUpdated(state, action) {
+      state.status = action.payload;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchAllData.pending, (state, action) => {
@@ -52,7 +64,7 @@ export const spendingTransactionsSlice = createSlice({
         const trans = action.payload.filter(
           (item) => item.type === "TRANS#SPENDING#"
         );
-        spendingTransactionsAdapter.setAll(state, trans)
+        spendingTransactionsAdapter.setAll(state, trans);
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -73,20 +85,45 @@ export const spendingTransactionsSlice = createSlice({
       .addCase(saveNewSpendingTransaction.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(
-        saveNewSpendingTransaction.fulfilled,
-        spendingTransactionsAdapter.addOne
-      );
+      .addCase(saveNewSpendingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        spendingTransactionsAdapter.addOne(state, action.payload.transaction);
+      })
+      .addCase(saveNewSpendingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
     builder
       .addCase(updateSpendingTransaction.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(
-        updateSpendingTransaction.fulfilled,
-        spendingTransactionsAdapter.upsertOne
-      );
+      .addCase(updateSpendingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { transaction } = action.payload;
+        spendingTransactionsAdapter.upsertOne(state, transaction);
+      })
+      .addCase(updateSpendingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteSpendingTransaction.pending, (state, action) => {
+        state.status = "deleting";
+      })
+      .addCase(deleteSpendingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.transaction;
+        spendingTransactionsAdapter.removeOne(state, id);
+      })
+      .addCase(deleteSpendingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
+
+export const { spendingTransactionStatusUpdated } =
+  spendingTransactionsSlice.actions;
 
 export default spendingTransactionsSlice.reducer;
 

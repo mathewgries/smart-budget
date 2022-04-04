@@ -33,5 +33,12 @@ export function dateToString(date) {
   let month = (convDate.getUTCMonth() + 1).toString();
   let day = convDate.getUTCDate().toString();
 
+	if(day.length === 1){
+		day = "0" + day
+	}
+	if(month.length === 1){
+		month = "0" + month
+	}
+
   return `${month}/${day}/${year}`;
 }

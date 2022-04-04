@@ -11,10 +11,7 @@ import {
   updateActiveCategory,
   updateActiveSubCategory,
 } from "../../../redux/spending/categoriesSlice";
-import {
-  selectSpendingAccountByGSI,
-  updateSpendingAccountBalance,
-} from "../../../redux/spending/spendingAccountsSlice";
+import { selectSpendingAccountByGSI } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { updateTransactionHelper } from "../../../helpers/currencyHandler";
@@ -57,7 +54,7 @@ export default function SpendingTransactionEdit(props) {
   };
 
   function validateForm() {
-    return fields.transactionAmount > 0.0;
+    return fields.transactionAmount !== "0.00";
   }
 
   const handleSubmit = async (e) => {
@@ -67,12 +64,6 @@ export default function SpendingTransactionEdit(props) {
       setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleUpdateTransaction(newAccountBalance);
-      dispatch(
-        updateSpendingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/spending/transactions/${id}`);
     } catch (e) {
       onError(e);
@@ -90,14 +81,18 @@ export default function SpendingTransactionEdit(props) {
   const handleUpdateTransaction = async (newAccountBalance) => {
     await dispatch(
       updateSpendingTransaction({
-        id: transaction.id,
-        accountId: account.id,
-        ...fields,
-				transactionDate: Date.parse(fields.transactionDate),
-        transactionType: fields.transactionType.charAt(0),
-        category: activeCategory,
-        subCategory: activeSubCategory,
-        accountBalance: newAccountBalance,
+        transaction: {
+          id: transaction.id,
+          ...fields,
+          transactionDate: Date.parse(fields.transactionDate),
+          transactionType: fields.transactionType.charAt(0),
+          category: activeCategory,
+          subCategory: activeSubCategory,
+        },
+        account: {
+          id: account.id,
+          accountBalance: newAccountBalance,
+        },
       })
     ).unwrap();
   };
@@ -117,7 +112,7 @@ export default function SpendingTransactionEdit(props) {
                   className="btn btn-primary form-control"
                   disabled={!validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Update"}
+                  {isSaving ? <LoadingSpinner text={"Updating"}/> : "Update"}
                 </button>
               </div>
             </section>
@@ -151,6 +146,7 @@ export default function SpendingTransactionEdit(props) {
               <div>
                 <Categories />
               </div>
+
               <div className="form-group">
                 <label>Transaction Date</label>
                 <input
@@ -159,7 +155,7 @@ export default function SpendingTransactionEdit(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
 
@@ -172,7 +168,7 @@ export default function SpendingTransactionEdit(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
             </section>

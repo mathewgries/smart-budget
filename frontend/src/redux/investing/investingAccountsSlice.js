@@ -5,6 +5,17 @@ import {
 } from "@reduxjs/toolkit";
 import { get, post, put } from "../../api/investing/accounts";
 import { fetchAllData } from "../users/usersSlice";
+import {
+  saveNewInvestingTransaction,
+  updateInvestingTransaction,
+  deleteInvestingTransaction,
+} from "./investingTransactionsSlice";
+import { saveNewOptionsOrder, updateOptionsOrder } from "./optionsOrdersSlice";
+import { saveNewSharesOrder, updateSharesOrder } from "./sharesOrdersSlice";
+import {
+  saveNewVerticalSpreadsOrder,
+  updateVerticalSpreadOrder,
+} from "./verticalSpreadsOrdersSlice";
 
 const investingAccountsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
@@ -40,9 +51,7 @@ export const updateInvestingAccount = createAsyncThunk(
 export const investingAccountsSlice = createSlice({
   name: "investingAccounts",
   initialState,
-  reducers: {
-    updateInvestingAccountBalance: investingAccountsAdapter.upsertOne,
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchAllData.pending, (state, action) => {
@@ -53,7 +62,7 @@ export const investingAccountsSlice = createSlice({
         const accounts = action.payload.filter(
           (items) => items.type === "ACCT#INVESTING#"
         );
-        investingAccountsAdapter.setAll(state, accounts)
+        investingAccountsAdapter.setAll(state, accounts);
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -91,6 +100,121 @@ export const investingAccountsSlice = createSlice({
         investingAccountsAdapter.upsertOne
       )
       .addCase(updateInvestingAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(saveNewInvestingTransaction.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(saveNewInvestingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        investingAccountsAdapter.upsertOne(state, action.payload.account);
+      })
+      .addCase(saveNewInvestingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateInvestingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(updateInvestingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        investingAccountsAdapter.upsertOne(state, action.payload.account);
+      })
+      .addCase(updateInvestingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteInvestingTransaction.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(deleteInvestingTransaction.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(deleteInvestingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(saveNewOptionsOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(saveNewOptionsOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateOptionsOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(updateOptionsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(updateOptionsOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(saveNewSharesOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(saveNewSharesOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(saveNewSharesOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateSharesOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(updateSharesOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(updateSharesOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(saveNewVerticalSpreadsOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(saveNewVerticalSpreadsOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateVerticalSpreadOrder.pending, (state, action) => {
+        state.status = "saving";
+      })
+      .addCase(updateVerticalSpreadOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { account } = action.payload;
+        investingAccountsAdapter.upsertOne(state, account);
+      })
+      .addCase(updateVerticalSpreadOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

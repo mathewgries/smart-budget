@@ -6,10 +6,7 @@ import {
   selectActiveCategory,
   selectActiveSubCategory,
 } from "../../../redux/spending/categoriesSlice";
-import {
-  updateSpendingAccountBalance,
-  selectSpendingAccountById,
-} from "../../../redux/spending/spendingAccountsSlice";
+import { selectSpendingAccountById } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
@@ -27,7 +24,7 @@ export default function SpendingTransactionNew(props) {
   const activeSubCategory = useSelector(selectActiveSubCategory);
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
-    transactionAmount: "0.01",
+    transactionAmount: "0.00",
     transactionDate: inputDateFormat(new Date()),
     transactionType: "Withdrawal",
     transactionNote: "",
@@ -53,12 +50,6 @@ export default function SpendingTransactionNew(props) {
       setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
-      dispatch(
-        updateSpendingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/spending/accounts/${id}`);
     } catch (e) {
       onError(e);
@@ -76,14 +67,18 @@ export default function SpendingTransactionNew(props) {
   const handleSaveNewTransaction = async (newAccountBalance) => {
     await dispatch(
       saveNewSpendingTransaction({
-        accountId: account.id,
-        accountBalance: newAccountBalance,
-        transactionAmount: fields.transactionAmount,
-        transactionDate: Date.parse(fields.transactionDate),
-        transactionType: fields.transactionType.charAt(0),
-        category: activeCategory,
-        subCategory: activeSubCategory,
-        transactionNote: fields.transactionNote,
+        transaction: {
+          transactionAmount: fields.transactionAmount,
+          transactionDate: Date.parse(fields.transactionDate),
+          transactionType: fields.transactionType.charAt(0),
+          category: activeCategory,
+          subCategory: activeSubCategory,
+          transactionNote: fields.transactionNote,
+        },
+        account: {
+          id: account.id,
+          accountBalance: newAccountBalance,
+        },
       })
     ).unwrap();
   };
@@ -103,7 +98,7 @@ export default function SpendingTransactionNew(props) {
                   className="btn btn-primary form-control"
                   disabled={!validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner text={"Saving"}/> : "Save"}
                 </button>
               </div>
             </section>
@@ -144,7 +139,7 @@ export default function SpendingTransactionNew(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
 
@@ -157,7 +152,7 @@ export default function SpendingTransactionNew(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
             </section>

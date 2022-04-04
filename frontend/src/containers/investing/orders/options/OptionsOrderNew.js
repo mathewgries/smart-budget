@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewOptionsOrder } from "../../../../redux/investing/optionsOrdersSlice";
-import {
-  selectInvestingAccountById,
-  updateInvestingAccountBalance,
-} from "../../../../redux/investing/investingAccountsSlice";
+import { selectInvestingAccountById } from "../../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
@@ -50,14 +47,17 @@ export default function OptionsOrderNew(props) {
     closeImpliedVolatility: "0.00",
   });
 
-  const saveDisabled =
-    fields.ticker === "" ||
-    fields.orderSize === "" ||
-    fields.openPrice === "" ||
-    fields.closePrice === "" ||
-    fields.strikePrice === "" ||
-    fields.contractType === "" ||
-    fields.tradeSide === "";
+  function validateForm() {
+    return (
+      fields.ticker === "" ||
+      fields.orderSize === "" ||
+      fields.openPrice === "" ||
+      fields.closePrice === "" ||
+      fields.strikePrice === "" ||
+      fields.contractType === "" ||
+      fields.tradeSide === ""
+    );
+  }
 
   function handleOnChange(e) {
     const { name, value } = e.target;
@@ -96,12 +96,6 @@ export default function OptionsOrderNew(props) {
         account.accountBalance
       );
       await handleSaveNewOrder(newAccountBalance, profitLoss);
-      dispatch(
-        updateInvestingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/investing/journal/${id}`);
     } catch (e) {
       onError(e);
@@ -112,32 +106,33 @@ export default function OptionsOrderNew(props) {
   const handleSaveNewOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
       saveNewOptionsOrder({
-        accountId: account.id,
-        accountBalance: newAccountBalance,
-        ticker: fields.ticker,
-        openDate: Date.parse(fields.openDate),
-        closeDate: Date.parse(fields.closeDate),
-        orderSize: fields.orderSize,
-        openPrice: fields.openPrice,
-        closePrice: fields.closePrice,
-        openUnderlyingPrice: fields.openUnderlyingPrice,
-        closeUnderlyingPrice: fields.closeUnderlyingPrice,
-        strikePrice: fields.strikePrice,
-        contractType: fields.contractType,
-        tradeSide: fields.tradeSide,
-        contractExpirationDate: Date.parse(fields.contractExpirationDate),
-        openDelta: fields.openDelta,
-        closeDelta: fields.closeDelta,
-        openGamma: fields.openGamma,
-        closeGamma: fields.closeGamma,
-        openVega: fields.openVega,
-        closeVega: fields.closeVega,
-        openTheta: fields.openTheta,
-        closeTheta: fields.closeTheta,
-        openImpliedVolatility: fields.openImpliedVolatility,
-        closeImpliedVolatility: fields.closeImpliedVolatility,
-        profitLoss: profitLoss,
-        signalList: selectedSignals,
+        order: {
+          ticker: fields.ticker,
+          openDate: Date.parse(fields.openDate),
+          closeDate: Date.parse(fields.closeDate),
+          orderSize: fields.orderSize,
+          openPrice: fields.openPrice,
+          closePrice: fields.closePrice,
+          openUnderlyingPrice: fields.openUnderlyingPrice,
+          closeUnderlyingPrice: fields.closeUnderlyingPrice,
+          strikePrice: fields.strikePrice,
+          contractType: fields.contractType,
+          tradeSide: fields.tradeSide,
+          contractExpirationDate: Date.parse(fields.contractExpirationDate),
+          openDelta: fields.openDelta,
+          closeDelta: fields.closeDelta,
+          openGamma: fields.openGamma,
+          closeGamma: fields.closeGamma,
+          openVega: fields.openVega,
+          closeVega: fields.closeVega,
+          openTheta: fields.openTheta,
+          closeTheta: fields.closeTheta,
+          openImpliedVolatility: fields.openImpliedVolatility,
+          closeImpliedVolatility: fields.closeImpliedVolatility,
+          profitLoss: profitLoss,
+          signalList: selectedSignals,
+        },
+        account: { id: account.id, accountBalance: newAccountBalance },
       })
     ).unwrap();
   };
@@ -155,9 +150,9 @@ export default function OptionsOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || isSaving}
+                  disabled={validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner text={"Saving"} /> : "Save"}
                 </button>
               </div>
             </section>
@@ -390,7 +385,9 @@ export default function OptionsOrderNew(props) {
                             <div>
                               <CurrencyInput
                                 inputName={"openDelta"}
-                                inputLabel={`Open ${fields.contractType === "PUT" ? "(-)" : "(+)"}`}
+                                inputLabel={`Open ${
+                                  fields.contractType === "PUT" ? "(-)" : "(+)"
+                                }`}
                                 inputValue={fields.openDelta}
                                 inputChangeHandler={handleCurrencyInput}
                               />
@@ -399,7 +396,9 @@ export default function OptionsOrderNew(props) {
                             <div>
                               <CurrencyInput
                                 inputName={"closeDelta"}
-                                inputLabel={`Close  ${fields.contractType === "PUT" ? "(-)" : "(+)"}`}
+                                inputLabel={`Close  ${
+                                  fields.contractType === "PUT" ? "(-)" : "(+)"
+                                }`}
                                 inputValue={fields.closeDelta}
                                 inputChangeHandler={handleCurrencyInput}
                               />

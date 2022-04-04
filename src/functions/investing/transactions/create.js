@@ -5,7 +5,7 @@ import dynamoDb from "../../../util/dynamodb";
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const accountId = data.accountId;
+  const { transaction, account } = data;
   const transactionId = uuid.v1();
   const type = "TRANS#INVESTING#";
 
@@ -17,13 +17,13 @@ export const main = handler(async (event) => {
           Item: {
             PK: `USER#${userId}`,
             SK: `${type}${transactionId}`,
-            GSI1_PK: `ACCT#INVESTING#${accountId}`,
+            GSI1_PK: `ACCT#INVESTING#${account.id}`,
             id: transactionId,
             type: type,
-            transactionAmount: data.transactionAmount,
-            transactionDate: data.transactionDate,
-            transactionType: data.transactionType,
-            transactionNote: data.transactionNote,
+            transactionAmount: transaction.transactionAmount,
+            transactionDate: transaction.transactionDate,
+            transactionType: transaction.transactionType,
+            transactionNote: transaction.transactionNote,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },
@@ -34,12 +34,12 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
-            SK: `ACCT#INVESTING#${accountId}`,
+            SK: `ACCT#INVESTING#${account.id}`,
           },
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": data.accountBalance,
+            ":accountBalance": account.accountBalance,
             ":modifyDate": Date.now(),
           },
         },
@@ -51,6 +51,6 @@ export const main = handler(async (event) => {
 
   return {
     transaction: params.TransactItems[0].Put.Item,
-    account: params.TransactItems[1].Update.ExpressionAttributeValues,
+    account,
   };
 });

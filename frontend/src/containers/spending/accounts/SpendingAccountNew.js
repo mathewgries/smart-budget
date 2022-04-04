@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
@@ -9,7 +9,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 export default function SpendingAccountNew() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const [isSaving, setIsSaving] = useState(false);
+  const status = useSelector((state) => state.spendingAccounts.status);
   const [fields, setFields] = useState({
     accountName: "",
     accountBalance: "0.00",
@@ -32,7 +32,6 @@ export default function SpendingAccountNew() {
     event.preventDefault();
 
     try {
-      setIsSaving(true);
       await dispatch(addNewSpendingAccount(fields)).unwrap();
       history.push("/");
     } catch (e) {
@@ -53,9 +52,9 @@ export default function SpendingAccountNew() {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isSaving}
+                  disabled={!validateForm() || status === "saving"}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {status ? <LoadingSpinner text={"Saving"} /> : "Save"}
                 </button>
               </div>
             </section>
@@ -69,14 +68,14 @@ export default function SpendingAccountNew() {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleOnChange}
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
               <div>
                 <CurrencyInput
                   inputName={"accountBalance"}
                   inputLabel={"Starting Balance"}
-									inputValue={fields.accountBalance}
+                  inputValue={fields.accountBalance}
                   inputChangeHandler={handleCurrencyInput}
                 />
               </div>

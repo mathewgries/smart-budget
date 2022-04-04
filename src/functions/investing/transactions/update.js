@@ -4,8 +4,7 @@ import dynamoDb from "../../../util/dynamodb";
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const accountId = data.accountId;
-  const transactionId = event.pathParameters.id;
+  const { transaction, account } = data;
 
   const params = {
     TransactItems: [
@@ -13,7 +12,7 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `TRANS#INVESTING#${transactionId}`,
+            SK: `TRANS#INVESTING#${transaction.id}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression: `SET 
@@ -23,10 +22,10 @@ export const main = handler(async (event) => {
 					transactionNote = :transactionNote,
           modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
-            ":transactionAmount": data.transactionAmount,
-            ":transactionDate": data.transactionDate,
-            ":transactionType": data.transactionType,
-            ":transactionNote": data.transactionNote,
+            ":transactionAmount": transaction.transactionAmount,
+            ":transactionDate": transaction.transactionDate,
+            ":transactionType": transaction.transactionType,
+            ":transactionNote": transaction.transactionNote,
             ":modifyDate": Date.now(),
           },
         },
@@ -35,13 +34,13 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `ACCT#INVESTING#${accountId}`,
+            SK: `ACCT#INVESTING#${account.id}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": data.accountBalance,
+            ":accountBalance": account.accountBalance,
             ":modifyDate": Date.now(),
           },
         },

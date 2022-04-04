@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectSharesOrderById } from "../../../../redux/investing/sharesOrdersSlice";
 import { getPLPercent } from "../../../../helpers/currencyHandler";
+import { dateToString } from "../../../../helpers/dateFormat";
 import { Link } from "react-router-dom";
 
 export default function SharesOrder(props) {
@@ -39,8 +40,8 @@ export default function SharesOrder(props) {
               <tbody>
                 <tr>
                   <td>{order.ticker}</td>
-                  <td>{order.openDate}</td>
-                  <td>{order.closeDate}</td>
+                  <td>{dateToString(order.openDate)}</td>
+                  <td>{dateToString(order.closeDate)}</td>
                 </tr>
               </tbody>
             </table>

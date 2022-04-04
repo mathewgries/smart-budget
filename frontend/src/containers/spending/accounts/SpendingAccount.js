@@ -51,7 +51,7 @@ export default function SpendingAccount() {
                 <h6>Transactions</h6>
               </header>
             </div>
-            <SpendingTransactionsList accountId={account.GSI1_PK} />
+            <SpendingTransactionsList account={account} />
           </section>
         </div>
       </div>

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectVerticalSpreadsOrderById } from "../../../../redux/investing/verticalSpreadsOrdersSlice";
 import { getPLPercent } from "../../../../helpers/currencyHandler";
+import { dateToString } from "../../../../helpers/dateFormat";
 import { Link } from "react-router-dom";
 
 export default function VerticalSpreadsOrder(props) {
@@ -46,7 +47,7 @@ export default function VerticalSpreadsOrder(props) {
                   <td>{`${order.strikeUpperLegPrice}/${order.strikeLowerLegPrice}`}</td>
                   <td>{order.contractType}</td>
                   <td>{order.tradeSide}</td>
-                  <td>{order.spreadExpirationDate}</td>
+                  <td>{dateToString(order.spreadExpirationDate)}</td>
                 </tr>
               </tbody>
             </table>
@@ -93,12 +94,12 @@ export default function VerticalSpreadsOrder(props) {
               <tbody>
                 <tr>
                   <th scope="rowß">Open</th>
-                  <td>{order.openDate}</td>
+                  <td>{dateToString(order.openDate)}</td>
                   <td>{order.openUnderlyingPrice}</td>
                 </tr>
                 <tr>
                   <th scope="row">Close</th>
-                  <td>{order.closeDate}</td>
+                  <td>{dateToString(order.closeDate)}</td>
                   <td>{order.closeUnderlyingPrice}</td>
                 </tr>
               </tbody>

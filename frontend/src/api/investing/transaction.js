@@ -1,17 +1,22 @@
 import { API } from "aws-amplify";
 
-export async function get(){
-		return await API.get("smartbudget", "/investing/transactions")
+export async function get() {
+  return await API.get("smartbudget", "/investing/transactions");
 }
 
-export async function post(data){
-	return await API.post("smartbudget", "/investing/transactions", {
-		body: data
-	})
+export async function post(data) {
+  return await API.post("smartbudget", "/investing/transactions", {
+    body: data,
+  });
 }
 
-export async function put(data){
-	return await API.put("smartbudget", `/investing/transactions/${data.id}`, {
-		body: data
-	})
+export async function put(data) {
+  return await API.put("smartbudget", `/investing/transactions/${data.id}`, {
+    body: data,
+  });
+}
+
+export async function remove(data) {
+  const { id } = data.transaction;
+  return await API.del("smartbudget", `/investing/transactions/${id}`);
 }

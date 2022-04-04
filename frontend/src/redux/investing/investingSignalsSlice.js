@@ -61,6 +61,10 @@ export const investingSignalsSlice = createSlice({
       })
       .addCase(updateSignals.fulfilled, (state, action) => {
         state.status = "success";
+      })
+      .addCase(updateSignals.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

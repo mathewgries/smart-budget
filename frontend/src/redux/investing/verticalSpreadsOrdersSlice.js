@@ -7,7 +7,7 @@ import { put, post, get } from "../../api/investing/orders/verticalSpreads";
 import { fetchAllData } from "../users/usersSlice";
 
 const vertSpreadsAdapter = createEntityAdapter({
-  sortComparer: (a, b) => b.openDate.localeCompare(a.openDate),
+  sortComparer: (a, b) => b.openDate.toString().localeCompare(a.openDate),
 });
 
 const initialState = vertSpreadsAdapter.getInitialState({
@@ -34,8 +34,6 @@ export const updateVerticalSpreadOrder = createAsyncThunk(
   "verticalSpreadsOrders/updateVerticalSpreadOrder",
   async (updatedOrder) => {
     await put(updatedOrder);
-    delete updatedOrder.accountId;
-    delete updatedOrder.accountBalance;
     return updatedOrder;
   }
 );
@@ -77,7 +75,8 @@ export const verticalSpreadsOrdersSlice = createSlice({
       })
       .addCase(saveNewVerticalSpreadsOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
-        vertSpreadsAdapter.addOne(state, action.payload.order);
+        const { order } = action.payload;
+        vertSpreadsAdapter.addOne(state, order);
       })
       .addCase(saveNewVerticalSpreadsOrder.rejected, (state, action) => {
         state.status = "failed";
@@ -87,10 +86,11 @@ export const verticalSpreadsOrdersSlice = createSlice({
       .addCase(updateVerticalSpreadOrder.pending, (state, action) => {
         state.status = "saving";
       })
-      .addCase(
-        updateVerticalSpreadOrder.fulfilled,
-        vertSpreadsAdapter.upsertOne
-      )
+      .addCase(updateVerticalSpreadOrder.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { order } = action.payload;
+        vertSpreadsAdapter.upsertOne(state, order);
+      })
       .addCase(updateVerticalSpreadOrder.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;

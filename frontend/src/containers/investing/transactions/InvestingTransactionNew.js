@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewInvestingTransaction } from "../../../redux/investing/investingTransactionsSlice";
-import {
-  selectInvestingAccountById,
-  updateInvestingAccountBalance,
-} from "../../../redux/investing/investingAccountsSlice";
+import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
@@ -20,7 +17,7 @@ export default function InvestingTransactionNew(props) {
   const account = useSelector((state) => selectInvestingAccountById(state, id));
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
-    transactionAmount: 0.01,
+    transactionAmount: "0.00",
     transactionDate: inputDateFormat(new Date()),
     transactionType: "Withdrawal",
     transactionNote: "",
@@ -36,7 +33,7 @@ export default function InvestingTransactionNew(props) {
   };
 
   function validateForm() {
-    return fields.transactionAmount > 0.0;
+    return fields.transactionAmount !== "0.00";
   }
 
   const handleSubmit = async (e) => {
@@ -46,12 +43,6 @@ export default function InvestingTransactionNew(props) {
       setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
-      dispatch(
-        updateInvestingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/investing/accounts/${id}`);
     } catch (e) {
       onError(e);
@@ -69,12 +60,16 @@ export default function InvestingTransactionNew(props) {
   const handleSaveNewTransaction = async (newAccountBalance) => {
     await dispatch(
       saveNewInvestingTransaction({
-        accountId: account.id,
-        accountBalance: newAccountBalance,
-        transactionAmount: fields.transactionAmount,
-        transactionDate: Date.parse(fields.transactionDate),
-        transactionType: fields.transactionType.charAt(0),
-        transactionNote: fields.transactionNote,
+        transaction: {
+          transactionAmount: fields.transactionAmount,
+          transactionDate: Date.parse(fields.transactionDate),
+          transactionType: fields.transactionType.charAt(0),
+          transactionNote: fields.transactionNote,
+        },
+        account: {
+          id: account.id,
+          accountBalance: newAccountBalance,
+        },
       })
     ).unwrap();
   };
@@ -94,7 +89,7 @@ export default function InvestingTransactionNew(props) {
                   className="btn btn-primary form-control"
                   disabled={!validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner text={"Saving"}/> : "Save"}
                 </button>
               </div>
             </section>
@@ -133,7 +128,7 @@ export default function InvestingTransactionNew(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
 
@@ -146,7 +141,7 @@ export default function InvestingTransactionNew(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
             </section>

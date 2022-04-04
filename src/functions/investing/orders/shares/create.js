@@ -4,8 +4,8 @@ import dynamoDb from "../../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
+  const { order, account } = data;
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const accountId = data.accountId;
   const orderId = uuid.v1();
   const type = "ORDER#SHARES#";
 
@@ -17,18 +17,18 @@ export const main = handler(async (event) => {
           Item: {
             PK: `USER#${userId}`,
             SK: `${type}${orderId}`,
-            GSI1_PK: `ACCT#INVESTING#${accountId}`,
+            GSI1_PK: `ACCT#INVESTING#${account.id}`,
             id: orderId,
             type: type,
-            ticker: data.ticker,
-            openDate: data.openDate,
-            closeDate: data.closeDate,
-            orderSize: data.orderSize,
-            openPrice: data.openPrice,
-            closePrice: data.closePrice,
-            tradeSide: data.tradeSide,
-            profitLoss: data.profitLoss,
-						signalList: data.signalList,
+            ticker: order.ticker,
+            openDate: order.openDate,
+            closeDate: order.closeDate,
+            orderSize: order.orderSize,
+            openPrice: order.openPrice,
+            closePrice: order.closePrice,
+            tradeSide: order.tradeSide,
+            profitLoss: order.profitLoss,
+            signalList: order.signalList,
             createDate: Date.now(),
             modifyDate: Date.now(),
           },
@@ -39,12 +39,12 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
-            SK: `ACCT#INVESTING#${accountId}`,
+            SK: `ACCT#INVESTING#${account.id}`,
           },
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": data.accountBalance,
+            ":accountBalance": account.accountBalance,
             ":modifyDate": Date.now(),
           },
         },
@@ -56,6 +56,6 @@ export const main = handler(async (event) => {
 
   return {
     order: params.TransactItems[0].Put.Item,
-    account: params.TransactItems[1].Update.ExpressionAttributeValues,
+    account,
   };
 });

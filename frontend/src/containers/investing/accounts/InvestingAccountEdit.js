@@ -71,7 +71,7 @@ export default function InvestingAccountsEdit(props) {
                   className="btn btn-primary form-control"
                   disabled={!validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Update"}
+                  {isSaving ? <LoadingSpinner text={"Updating"}/> : "Update"}
                 </button>
               </div>
             </section>

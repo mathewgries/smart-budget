@@ -3,9 +3,8 @@ import dynamoDb from "../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
+  const { transaction, account } = data;
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const accountId = data.accountId;
-  const transactionId = event.pathParameters.id;
 
   const params = {
     TransactItems: [
@@ -14,7 +13,7 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
-            SK: `TRANS#SPENDING#${transactionId}`,
+            SK: `TRANS#SPENDING#${transaction.id}`,
           },
         },
       },
@@ -23,12 +22,12 @@ export const main = handler(async (event) => {
           TableName: process.env.TABLE_NAME,
           Key: {
             PK: `USER#${userId}`,
-            SK: `ACCT#SPENDING#${accountId}`,
+            SK: `ACCT#SPENDING#${account.id}`,
           },
           UpdateExpression:
             "SET accountBalance = :accountBalance, modifyDate = :modifyDate",
           ExpressionAttributeValues: {
-            ":accountBalance": data.accountBalance,
+            ":accountBalance": account.accountBalance,
             ":modifyDate": Date.now(),
           },
         },

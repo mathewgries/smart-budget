@@ -5,10 +5,7 @@ import {
   selectInvestingTransactionById,
   updateInvestingTransaction,
 } from "../../../redux/investing/investingTransactionsSlice";
-import {
-  selectInvestingAccountByGSI,
-  updateInvestingAccountBalance,
-} from "../../../redux/investing/investingAccountsSlice";
+import { selectInvestingAccountByGSI } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { updateTransactionHelper } from "../../../helpers/currencyHandler";
@@ -55,12 +52,6 @@ export default function InvestingTransactionEdit(props) {
       setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleUpdateTransaction(newAccountBalance);
-      dispatch(
-        updateInvestingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/investing/transactions/${id}`);
     } catch (e) {
       onError(e);
@@ -78,12 +69,16 @@ export default function InvestingTransactionEdit(props) {
   const handleUpdateTransaction = async (newAccountBalance) => {
     await dispatch(
       updateInvestingTransaction({
-        id: transaction.id,
-        accountId: account.id,
-        ...fields,
-				transactionDate: Date.parse(fields.transactionDate),
-        transactionType: fields.transactionType.charAt(0),
-        accountBalance: newAccountBalance,
+        transaction: {
+          id: transaction.id,
+          ...fields,
+          transactionDate: Date.parse(fields.transactionDate),
+          transactionType: fields.transactionType.charAt(0),
+        },
+        account: {
+          id: account.id,
+          accountBalance: newAccountBalance,
+        },
       })
     ).unwrap();
   };
@@ -103,7 +98,7 @@ export default function InvestingTransactionEdit(props) {
                   className="btn btn-primary form-control"
                   disabled={!validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Update"}
+                  {isSaving ? <LoadingSpinner text={"Updating"}/> : "Update"}
                 </button>
               </div>
             </section>
@@ -142,7 +137,7 @@ export default function InvestingTransactionEdit(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
 
@@ -155,7 +150,7 @@ export default function InvestingTransactionEdit(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
             </section>

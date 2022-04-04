@@ -6,8 +6,8 @@
 }
 
 .lander-wrapper {
-	padding: 80px 0;
-	text-align: center;
+  padding: 80px 0;
+  text-align: center;
 }
 
 .order-accordian-section,
@@ -132,24 +132,62 @@ caption {
   gap: 5px;
 }
 
-.order-signal-list-item{
+.order-signal-list-item {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
 }
 
-.order-page-wrapper table{
-	text-align: center;
+.order-page-wrapper table {
+  text-align: center;
 }
 
 .order-page-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.currency-input-control {
+  text-align: right;
+}
+.confirmation-popup-section {
+  display: hidden;
+  position: fixed;
+  z-index: 1;
+  margin: 0 auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.confirmation-popup-wrapper {
+  position: relative;
+  z-index: 2;
+  top: 20%;
+  width: 50%;
+  height: 40%;
+  margin: 0 auto;
+}
+
+.confirmation-popup {
+  background-color: whitesmoke;
+  padding: 50px;
+  border-radius: 15px;
+  -webkit-box-shadow: 0 15px 15px -6px #777;
+  -moz-box-shadow: 0 15px 15px -6px #777;
+  box-shadow: 0 15px 15px -6px #777;
+}
+
+.confirm-popup-info-wrapper{
+	text-align: center;
+}
+
+.confirm-popup-btn-wrapper{
 	display: flex;
 	flex-flow: row nowrap;
 	justify-content: space-between;
-}
-
-.currency-input-control{
-	text-align: right;
 }
 
 @media (max-width: 400px) {

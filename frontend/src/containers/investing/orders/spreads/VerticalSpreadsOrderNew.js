@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewVerticalSpreadsOrder } from "../../../../redux/investing/verticalSpreadsOrdersSlice";
-import {
-  selectInvestingAccountById,
-  updateInvestingAccountBalance,
-} from "../../../../redux/investing/investingAccountsSlice";
+import { selectInvestingAccountById } from "../../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
@@ -51,18 +48,21 @@ export default function VerticalSpreadsOrderNew(props) {
     closeImpliedVolatility: "0.00",
   });
 
-  const saveDisabled =
-    fields.ticker === "" ||
-    fields.openDate === "" ||
-    fields.closeDate === "" ||
-    fields.orderSize === "" ||
-    fields.openPrice === "" ||
-    fields.closePrice === "" ||
-    fields.strikeUpperLegPrice === "" ||
-    fields.strikeLowerLegPrice === "" ||
-    fields.contractType === "" ||
-    fields.tradeSide === "" ||
-    fields.spreadExpirationDate === "";
+  function validateForm() {
+    return (
+      fields.ticker === "" ||
+      fields.openDate === "" ||
+      fields.closeDate === "" ||
+      fields.orderSize === "" ||
+      fields.openPrice === "" ||
+      fields.closePrice === "" ||
+      fields.strikeUpperLegPrice === "" ||
+      fields.strikeLowerLegPrice === "" ||
+      fields.contractType === "" ||
+      fields.tradeSide === "" ||
+      fields.spreadExpirationDate === ""
+    );
+  }
 
   function handleOnChange(e) {
     const { name, value } = e.target;
@@ -101,12 +101,6 @@ export default function VerticalSpreadsOrderNew(props) {
         account.accountBalance
       );
       await handleSaveNewOrder(newAccountBalance, profitLoss);
-      dispatch(
-        updateInvestingAccountBalance({
-          id: account.id,
-          accountBalance: newAccountBalance,
-        })
-      );
       history.push(`/investing/journal/${id}`);
     } catch (e) {
       onError(e);
@@ -116,33 +110,34 @@ export default function VerticalSpreadsOrderNew(props) {
   const handleSaveNewOrder = async (newAccountBalance, profitLoss) => {
     await dispatch(
       saveNewVerticalSpreadsOrder({
-        accountId: account.id,
-        accountBalance: newAccountBalance,
-        ticker: fields.ticker,
-        openDate: Date.parse(fields.openDate),
-        closeDate: Date.parse(fields.closeDate),
-        orderSize: fields.orderSize,
-        openPrice: fields.openPrice,
-        closePrice: fields.closePrice,
-        openUnderlyingPrice: fields.openUnderlyingPrice,
-        closeUnderlyingPrice: fields.closeUnderlyingPrice,
-        strikeUpperLegPrice: fields.strikeUpperLegPrice,
-        strikeLowerLegPrice: fields.strikeLowerLegPrice,
-        contractType: fields.contractType,
-        tradeSide: fields.tradeSide,
-        spreadExpirationDate: Date.parse(fields.spreadExpirationDate),
-        openDelta: fields.openDelta,
-        closeDelta: fields.closeDelta,
-        openGamma: fields.openGamma,
-        closeGamma: fields.closeGamma,
-        openVega: fields.openVega,
-        closeVega: fields.closeVega,
-        openTheta: fields.openTheta,
-        closeTheta: fields.closeTheta,
-        openImpliedVolatility: fields.openImpliedVolatility,
-        closeImpliedVolatility: fields.closeImpliedVolatility,
-        profitLoss: profitLoss,
-        signalList: selectedSignals,
+        order: {
+          ticker: fields.ticker,
+          openDate: Date.parse(fields.openDate),
+          closeDate: Date.parse(fields.closeDate),
+          orderSize: fields.orderSize,
+          openPrice: fields.openPrice,
+          closePrice: fields.closePrice,
+          openUnderlyingPrice: fields.openUnderlyingPrice,
+          closeUnderlyingPrice: fields.closeUnderlyingPrice,
+          strikeUpperLegPrice: fields.strikeUpperLegPrice,
+          strikeLowerLegPrice: fields.strikeLowerLegPrice,
+          contractType: fields.contractType,
+          tradeSide: fields.tradeSide,
+          spreadExpirationDate: Date.parse(fields.spreadExpirationDate),
+          openDelta: fields.openDelta,
+          closeDelta: fields.closeDelta,
+          openGamma: fields.openGamma,
+          closeGamma: fields.closeGamma,
+          openVega: fields.openVega,
+          closeVega: fields.closeVega,
+          openTheta: fields.openTheta,
+          closeTheta: fields.closeTheta,
+          openImpliedVolatility: fields.openImpliedVolatility,
+          closeImpliedVolatility: fields.closeImpliedVolatility,
+          profitLoss: profitLoss,
+          signalList: selectedSignals,
+        },
+        account: { id: account.id, accountBalance: newAccountBalance },
       })
     ).unwrap();
   };
@@ -160,9 +155,9 @@ export default function VerticalSpreadsOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={saveDisabled || isSaving}
+                  disabled={validateForm() || isSaving}
                 >
-                  {isSaving ? <LoadingSpinner /> : "Save"}
+                  {isSaving ? <LoadingSpinner text={"Saving"} /> : "Save"}
                 </button>
               </div>
             </section>
@@ -413,7 +408,9 @@ export default function VerticalSpreadsOrderNew(props) {
                             <div>
                               <CurrencyInput
                                 inputName={"openDelta"}
-                                inputLabel={`Open ${fields.contractType === "PUT" ? "(-)" : "(+)"}`}
+                                inputLabel={`Open ${
+                                  fields.contractType === "PUT" ? "(-)" : "(+)"
+                                }`}
                                 inputValue={fields.openDelta}
                                 inputChangeHandler={handleCurrencyInput}
                               />
@@ -422,7 +419,9 @@ export default function VerticalSpreadsOrderNew(props) {
                             <div>
                               <CurrencyInput
                                 inputName={"closeDelta"}
-                                inputLabel={`Close ${fields.contractType === "PUT" ? "(-)" : "(+)"}`}
+                                inputLabel={`Close ${
+                                  fields.contractType === "PUT" ? "(-)" : "(+)"
+                                }`}
                                 inputValue={fields.closeDelta}
                                 inputChangeHandler={handleCurrencyInput}
                               />
