@@ -43,7 +43,7 @@ export default function VerticalSpreadsOrder(props) {
     if (status === "pending") {
       history.push(`/investing/journal/${account.id}`);
     }
-  }, [status]);
+  }, [status, history, account.id]);
 
   function handleCancel() {
     setShowConfirm(!showConfrim);

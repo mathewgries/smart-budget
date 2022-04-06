@@ -9,12 +9,13 @@ export const main = handler(async (event) => {
     TableName: process.env.TABLE_NAME,
     Key: {
       PK: `USER#${userId}`,
-      SK: "USER#CATEGORY",
+      SK: `${data.type}${data.id}`,
     },
     UpdateExpression:
-      "SET categoryMap = :categoryMap, modifyDate = :modifyDate",
+      "SET categoryName = :categoryName, subcategories = :subcategories, modifyDate = :modifyDate",
     ExpressionAttributeValues: {
-      ":categoryMap": data,
+      ":categoryName": data.categoryName,
+			":subcategories": data.subcategories,
       ":modifyDate": Date.now(),
     },
     ReturnValues: "ALL_NEW",

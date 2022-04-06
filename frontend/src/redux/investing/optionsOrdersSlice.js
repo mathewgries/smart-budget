@@ -3,9 +3,10 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { post, put, get } from "../../api/investing/orders/options";
+import { put, get } from "../../api/investing/orders/options";
 import { remove } from "../../api/investing/orders/shared";
 import { fetchAllData } from "../users/usersSlice";
+import { amplifyClient } from "../../api/amplifyClient";
 
 const optionsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.openDate.toString().localeCompare(a.openDate),
@@ -26,8 +27,12 @@ export const fetchOptionsOrders = createAsyncThunk(
 
 export const saveNewOptionsOrder = createAsyncThunk(
   "optionsOrders/saveNewOptionsOrder",
-  async (newOptionsOrder) => {
-    return await post(newOptionsOrder);
+  async (newOrder) => {
+    return await amplifyClient.post(
+      newOrder,
+      "smartbudget",
+      "/investing/orders/options"
+    );
   }
 );
 

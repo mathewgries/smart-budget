@@ -181,14 +181,38 @@ caption {
   box-shadow: 0 15px 15px -6px #777;
 }
 
-.confirm-popup-info-wrapper{
-	text-align: center;
+.confirm-popup-info-wrapper {
+  text-align: center;
 }
 
-.confirm-popup-btn-wrapper{
-	display: flex;
-	flex-flow: row nowrap;
-	justify-content: space-between;
+.confirm-popup-btn-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.categories-dropdown-section {
+  background-color: whitesmoke;
+}
+
+.categories-dropdown-section button {
+  width: 100%;
+  text-align: left;
+}
+
+.categories-dropdown-section .dropdown-menu {
+  width: 100%;
+}
+
+.categories-form {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 5px;
+}
+
+.categories-form-input {
+  flex-grow: 10;
 }
 
 @media (max-width: 400px) {

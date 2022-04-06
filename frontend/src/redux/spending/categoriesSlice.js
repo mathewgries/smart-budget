@@ -1,16 +1,20 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { get, put } from "../../api/spending/categories";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
+import { get } from "../../api/spending/categories";
 import { addNewUser, fetchAllData } from "../users/usersSlice";
+import { amplifyClient } from "../../api/amplifyClient";
 
-const initialState = {
-  items: {},
-  categories: [],
-  subCategories: [],
-  activeCategory: "",
-  activeSubCategory: "",
+const categoriesAdapter = createEntityAdapter();
+
+const initialState = categoriesAdapter.getInitialState({
+  activeCategory: {},
+  activeSubcategory: "",
   status: "idle",
   error: null,
-};
+});
 
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
@@ -19,10 +23,26 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
-export const saveCategories = createAsyncThunk(
-  "categories/saveCategories",
-  async (categoryMap) => {
-    return await put(categoryMap);
+export const saveNewCategory = createAsyncThunk(
+  "categories/saveNewCategory",
+  async (data) => {
+    return await amplifyClient.post(
+      data,
+      "smartbudget",
+      "/spending/categories"
+    );
+  }
+);
+
+export const updateCategory = createAsyncThunk(
+  "categories/updateCategory",
+  async (data) => {
+    await amplifyClient.put(
+      data,
+      "smartbudget",
+      `/spending/categories/${data.id}`
+    );
+    return data;
   }
 );
 
@@ -30,33 +50,14 @@ export const categoriesSlice = createSlice({
   name: "categories",
   initialState,
   reducers: {
-    updateActiveCategory(state, action) {
+    activeCategoryUpdated(state, action) {
       state.activeCategory = action.payload;
-      state.subCategories = state.items[state.activeCategory];
-      state.activeSubCategory = state.subCategories[0];
+      const subcategories = action.payload.subcategories;
+      state.activeSubcategory =
+        subcategories.length > 0 ? subcategories[0] : "No subcategories";
     },
-    updateActiveSubCategory(state, action) {
-      state.activeSubCategory = action.payload;
-    },
-    addNewCategory(state, action) {
-      const category = action.payload;
-      state.items = {
-        ...state.items,
-        [category]: [],
-      };
-      state.categories.push(category);
-      state.activeCategory = category;
-      state.subCategories = state.items[state.activeCategory];
-      state.activeSubCategory = state.subCategories[0];
-    },
-    addNewSubCategory(state, action) {
-      const subCategory = action.payload;
-      state.subCategories.push(subCategory);
-      state.activeSubCategory = subCategory;
-      state.items = {
-        ...state.items,
-        [state.activeCategory]: [...state.subCategories],
-      };
+    activeSubcategoryUpdated(state, action) {
+      state.activeSubcategory = action.payload;
     },
   },
   extraReducers(builder) {
@@ -66,16 +67,12 @@ export const categoriesSlice = createSlice({
       })
       .addCase(addNewUser.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const data = action.payload.find(
-          (item) => item.Put.Item.type === "CATEGORY"
-        );
-        const categories = data.Put.Item;
-        const { categoryMap } = categories;
-        state.items = categoryMap;
-        state.categories = Object.keys(categoryMap);
-        state.activeCategory = state.categories[0];
-        state.subCategories = state.items[state.activeCategory];
-        state.activeSubCategory = state.subCategories[0];
+        const categories = action.payload
+          .filter((val) => val.Put.Item.type === "CATEGORY#")
+          .map((val) => val.Put.Item);
+        categoriesAdapter.upsertMany(state, categories);
+        state.activeCategory = categories[0];
+        state.activeSubcategory = categories[0].subcategories[0];
       })
       .addCase(addNewUser.rejected, (state, action) => {
         state.status = "failed";
@@ -88,14 +85,11 @@ export const categoriesSlice = createSlice({
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
         const categories = action.payload.filter(
-          (item) => item.type === "CATEGORY"
+          (item) => item.type === "CATEGORY#"
         );
-        const { categoryMap } = categories[0];
-        state.items = categoryMap;
-        state.categories = Object.keys(categoryMap);
-        state.activeCategory = state.categories[0];
-        state.subCategories = state.items[state.activeCategory];
-        state.activeSubCategory = state.subCategories[0];
+        categoriesAdapter.upsertMany(state, categories);
+        state.activeCategory = categories[0];
+        state.activeSubcategory = categories[0].subcategories[0];
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -106,45 +100,66 @@ export const categoriesSlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const { categoryMap } = action.payload;
-        state.items = categoryMap;
-        state.categories = Object.keys(categoryMap);
-        state.activeCategory = state.categories[0];
-        state.subCategories = state.items[state.activeCategory];
-        state.activeSubCategory = state.subCategories[0];
+        categoriesAdapter.upsertMany(state, action.payload);
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
     builder
-      .addCase(saveCategories.pending, (state, action) => {
+      .addCase(saveNewCategory.pending, (state, action) => {
         state.status = "pending";
       })
-      .addCase(saveCategories.fulfilled, (state, action) => {
-				state.status = "succeeded"
-			})
-      .addCase(saveCategories.rejected, (state, action) => {
+      .addCase(saveNewCategory.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const category = action.payload;
+        const subcategories = category.subcategories;
+        categoriesAdapter.upsertOne(state, category);
+
+        state.activeCategory = action.payload;
+        state.activeSubcategory =
+          subcategories.length > 0 ? subcategories[0] : "No subcategories";
+      })
+      .addCase(saveNewCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(updateCategory.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(updateCategory.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const category = action.payload;
+        const subcategories = category.subcategories;
+        categoriesAdapter.upsertOne(state, category);
+        state.activeCategory = category;
+        state.activeSubcategory = subcategories[subcategories.length - 1];
+      })
+      .addCase(updateCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
   },
 });
 
-export const {
-  updateActiveCategory,
-  updateActiveSubCategory,
-  addNewCategory,
-  addNewSubCategory,
-} = categoriesSlice.actions;
+export const { activeCategoryUpdated, activeSubcategoryUpdated } =
+  categoriesSlice.actions;
 
 export default categoriesSlice.reducer;
 
-export const selectCategoryMap = (state) => state.categories.items;
+export const selectCategoryNames = (state) =>
+  Object.values(state.categories.entities).map((cat) => cat.categoryName);
 
-export const selectAllCategories = (state) => state.categories.categories;
+export const selectSubcategories = (state, category) =>
+  Object.values(state.categories.entities).map((cat) => cat.categoryName);
+
 export const selectActiveCategory = (state) => state.categories.activeCategory;
 
-export const selectSubCategories = (state) => state.categories.subCategories;
-export const selectActiveSubCategory = (state) =>
-  state.categories.activeSubCategory;
+export const selectActiveSubcategory = (state) =>
+  state.categories.activeSubcategory;
+
+export const {
+  selectAll: selectAllCategories,
+  selectById: selectCategoryById,
+} = categoriesAdapter.getSelectors((state) => state.categories);

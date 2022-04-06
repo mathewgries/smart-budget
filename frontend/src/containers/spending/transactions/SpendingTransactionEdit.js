@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -6,16 +6,18 @@ import {
   updateSpendingTransaction,
 } from "../../../redux/spending/spendingTransactionsSlice";
 import {
+  selectAllCategories,
+  activeCategoryUpdated,
+  activeSubcategoryUpdated,
   selectActiveCategory,
-  selectActiveSubCategory,
-  updateActiveCategory,
-  updateActiveSubCategory,
+  selectActiveSubcategory,
 } from "../../../redux/spending/categoriesSlice";
 import { selectSpendingAccountByGSI } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { updateTransactionHelper } from "../../../helpers/currencyHandler";
-import Categories from "../categories/Categories";
+import CategoriesSelector from "../categories/CategoriesSelector";
+import CategoriesForm from "../categories/CategoriesForm";
 import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
@@ -30,9 +32,15 @@ export default function SpendingTransactionEdit(props) {
   const account = useSelector((state) =>
     selectSpendingAccountByGSI(state, transaction.GSI1_PK)
   );
-  const activeCategory = useSelector(selectActiveCategory);
-  const activeSubCategory = useSelector(selectActiveSubCategory);
-  const status = useSelector((state) => state.spendingTransactions.status)
+  const categories = useSelector(selectAllCategories);
+  const activeCategory = useSelector((state) => selectActiveCategory(state));
+  const activeSubcategory = useSelector((state) =>
+    selectActiveSubcategory(state)
+  );
+  const [subcategories, setSubcategories] = useState([]);
+	const transactionStatus = useSelector((state) => state.spendingTransactions.status);
+	const categoryStatus = useSelector((state) => state.categories.status);
+	const [status, setStatus] = useState("")
   const [fields, setFields] = useState({
     transactionAmount: transaction.transactionAmount,
     transactionDate: inputDateFormat(transaction.transactionDate),
@@ -41,8 +49,22 @@ export default function SpendingTransactionEdit(props) {
     transactionNote: transaction.transactionNote,
   });
 
-  dispatch(updateActiveCategory(transaction.category));
-  dispatch(updateActiveSubCategory(transaction.subCategory));
+  useEffect(() => {
+    const activeCategory = categories.find(
+      (category) => category.categoryName === transaction.categoryName
+    );
+    dispatch(activeCategoryUpdated(activeCategory));
+  }, [transaction.categoryName, dispatch]);
+
+	useEffect(() => {
+		let status
+		if(transactionStatus === "pending" || categoryStatus === "pending"){
+			status = "pending"
+		}else {
+			status = ""
+		}
+		setStatus(status)
+	}, [transactionStatus, categoryStatus])
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -52,6 +74,15 @@ export default function SpendingTransactionEdit(props) {
   const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
+
+  function handleCategoryToggle(category) {
+    dispatch(activeCategoryUpdated(category));
+    setSubcategories(category.subcategories);
+  }
+
+  function handleSubcategoryToggle(subcategory) {
+    dispatch(activeSubcategoryUpdated(subcategory));
+  }
 
   function validateForm() {
     return fields.transactionAmount !== "0.00";
@@ -85,8 +116,8 @@ export default function SpendingTransactionEdit(props) {
           ...fields,
           transactionDate: Date.parse(fields.transactionDate),
           transactionType: fields.transactionType.charAt(0),
-          category: activeCategory,
-          subCategory: activeSubCategory,
+          categoryName: activeCategory.categoryName,
+          subcategory: activeSubcategory,
         },
         account: {
           id: account.id,
@@ -111,7 +142,11 @@ export default function SpendingTransactionEdit(props) {
                   className="btn btn-primary form-control"
                   disabled={!validateForm() || status === "pending"}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Updating"}/> : "Update"}
+                  {status === "pending" ? (
+                    <LoadingSpinner text={"Updating"} />
+                  ) : (
+                    "Update"
+                  )}
                 </button>
               </div>
             </section>
@@ -142,9 +177,9 @@ export default function SpendingTransactionEdit(props) {
                 </select>
               </div>
 
-              <div>
+              {/* <div>
                 <Categories />
-              </div>
+              </div> */}
 
               <div className="form-group">
                 <label>Transaction Date</label>
@@ -156,6 +191,22 @@ export default function SpendingTransactionEdit(props) {
                   onChange={handleChange}
                   data-lpignore="true"
                 />
+              </div>
+
+              <div>
+                <div>
+                  <CategoriesSelector
+                    categories={categories}
+                    subcategories={subcategories}
+                    activeCategory={activeCategory}
+                    activeSubcategory={activeSubcategory}
+                    toggleCategory={handleCategoryToggle}
+                    toggleSubcategory={handleSubcategoryToggle}
+                  />
+                </div>
+                <div>
+                  <CategoriesForm />
+                </div>
               </div>
 
               <div className="form-group">

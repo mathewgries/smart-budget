@@ -27,7 +27,7 @@ export default function SpendingTransaction(props) {
     if (status === "pending") {
       history.push(`/spending/accounts/${account.id}`);
     }
-  }, [status]);
+  }, [status, history, account.id]);
 
   async function onDelete() {
     try {

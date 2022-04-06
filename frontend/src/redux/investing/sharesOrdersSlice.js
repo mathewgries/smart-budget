@@ -3,9 +3,10 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { put, post, get } from "../../api/investing/orders/shares";
+import { put, get } from "../../api/investing/orders/shares";
 import { remove } from "../../api/investing/orders/shared";
 import { fetchAllData } from "../users/usersSlice";
+import { amplifyClient } from "../../api/amplifyClient";
 
 const sharesAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.openDate.toString().localeCompare(a.openDate),
@@ -26,8 +27,12 @@ export const fetchSharesOrders = createAsyncThunk(
 
 export const saveNewSharesOrder = createAsyncThunk(
   "sharesOrders/saveNewSharesOrder",
-  async (newSharesOrder) => {
-    return await post(newSharesOrder);
+  async (newOrder) => {
+    return await amplifyClient.post(
+      newOrder,
+      "smartbudget",
+      "/investing/orders/shares"
+    );
   }
 );
 

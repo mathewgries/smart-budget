@@ -3,7 +3,8 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get, post, put, remove } from "../../api/spending/transactions";
+import { get, remove } from "../../api/spending/transactions";
+import { amplifyClient } from "../../api/amplifyClient";
 import { fetchAllData } from "../users/usersSlice";
 
 const spendingTransactionsAdapter = createEntityAdapter({
@@ -25,24 +26,36 @@ export const fetchSpendingTransactions = createAsyncThunk(
 export const saveNewSpendingTransaction = createAsyncThunk(
   "spendingTransactions/saveNewSpendingTransaction",
   async (newTransaction) => {
-    const result = await post(newTransaction);
+    const result = await amplifyClient.post(
+      newTransaction,
+      "smartbudget",
+      "/spending/transactions"
+    );
     return result;
   }
 );
 
 export const updateSpendingTransaction = createAsyncThunk(
   "spendingTransactions/updateSpendingTransaction",
-  async (updatedTransaction) => {
-    await put(updatedTransaction);
-    return updatedTransaction;
+  async ({ transaction, account }) => {
+    await amplifyClient.put(
+      { transaction, account },
+      "smartbudget",
+      `/spending/transactions/${transaction.id}`
+    );
+    return { transaction, account };
   }
 );
 
 export const deleteSpendingTransaction = createAsyncThunk(
   "spendingTransactions/deleteSpendingTransaction",
-  async (data) => {
-    await remove(data);
-    return data;
+  async ({ transaction, account }) => {
+    await amplifyClient.remove(
+      { transaction, account },
+      "smartbudget",
+      `/spending/transactions/${transaction.id}`
+    );
+    return  { transaction, account };
   }
 );
 
@@ -112,7 +125,7 @@ export const spendingTransactionsSlice = createSlice({
       })
       .addCase(deleteSpendingTransaction.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const { id, } = action.payload.transaction;
+        const { id } = action.payload.transaction;
         spendingTransactionsAdapter.removeOne(state, id);
       })
       .addCase(deleteSpendingTransaction.rejected, (state, action) => {

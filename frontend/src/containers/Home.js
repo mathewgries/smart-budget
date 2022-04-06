@@ -3,7 +3,7 @@ import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllData, addNewUser } from "../redux/users/usersSlice";
 import { lastRouteUpdated } from "../redux/history/historySlice";
-import { getUserInfo } from "../api/users"
+import { getUserInfo } from "../api/users";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
@@ -25,9 +25,9 @@ export default function Home() {
 
       if (prevLocation === "/signup") {
         dispatch(lastRouteUpdated("/"));
-				const userInfo = await getUserInfo();
+        const userInfo = await getUserInfo();
         await dispatch(addNewUser(userInfo)).unwrap();
-      } else if (status === "idle") {
+      } else {
         try {
           await dispatch(fetchAllData()).unwrap();
         } catch (e) {
@@ -37,7 +37,7 @@ export default function Home() {
     }
 
     onLoad();
-  }, [isAuthenticated, status, dispatch]);
+  }, [isAuthenticated, dispatch]);
 
   function renderLander() {
     return (
@@ -68,7 +68,7 @@ export default function Home() {
               <div className="form-group">
                 {status === "pending" ? (
                   <button disabled={true} className="btn btn-secondary">
-                    <LoadingSpinner text={"loading"}/>
+                    <LoadingSpinner text={"loading"} />
                   </button>
                 ) : (
                   <Link to="/spending/accounts/new" className="btn btn-primary">
@@ -95,7 +95,7 @@ export default function Home() {
               <div className="form-group">
                 {status === "pending" ? (
                   <button disabled={true} className="btn btn-secondary">
-                    <LoadingSpinner  text={"loading"}/>
+                    <LoadingSpinner text={"loading"} />
                   </button>
                 ) : (
                   <Link

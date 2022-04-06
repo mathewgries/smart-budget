@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { setupNewUser, getAllData } from "../../api/users";
+import { amplifyClient } from "../../api/amplifyClient";
 
 const initialState = {
   user: {},
@@ -7,15 +7,23 @@ const initialState = {
   error: null,
 };
 
-export const fetchAllData = createAsyncThunk("users/fetchAllData", async () => {
-  const results = await getAllData();
-  return results;
+export const fetchAllData = createAsyncThunk(
+	"users/fetchAllData", 
+	async () => {
+  	return await amplifyClient.loadAll(
+			"smartbudget", 
+			"/users"
+		);
 });
 
 export const addNewUser = createAsyncThunk(
   "users/addNewUser",
-  async (userInfo) => {
-    return await setupNewUser(userInfo);
+  async (data) => {
+		return await amplifyClient.newUser(
+			data,
+			"smartbudget",
+			"/users"
+		)
   }
 );
 
