@@ -38,7 +38,7 @@ const initialState = investingAccountsAdapter.getInitialState({
 export const fetchInvestingAccounts = createAsyncThunk(
   "investingAccounts/fetchInvestingAccounts",
   async () => {
-    return amplify.get("smartbudget", "/investing/accounts");
+    return amplifyClient.get("smartbudget", "/investing/accounts");
   }
 );
 

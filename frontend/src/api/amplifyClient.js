@@ -1,4 +1,4 @@
-import { API } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
 
 export const amplifyClient = {
   auth: {
@@ -17,7 +17,7 @@ export const amplifyClient = {
 		currentSession: async () => {
 			return await Auth.currentSession();
 		},
-		currentUserInfo: () => {
+		currentUserInfo: async () => {
 			return await Auth.currentUserInfo();
 		},
   },
@@ -44,11 +44,3 @@ export const amplifyClient = {
     });
   },
 };
-
-
-export async function getUserInfo() {
-  return await Auth.currentUserInfo();
-}
-
-
-

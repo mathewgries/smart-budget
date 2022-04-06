@@ -38,9 +38,11 @@ export default function SpendingTransactionEdit(props) {
     selectActiveSubcategory(state)
   );
   const [subcategories, setSubcategories] = useState([]);
-	const transactionStatus = useSelector((state) => state.spendingTransactions.status);
-	const categoryStatus = useSelector((state) => state.categories.status);
-	const [status, setStatus] = useState("")
+  const transactionStatus = useSelector(
+    (state) => state.spendingTransactions.status
+  );
+  const categoryStatus = useSelector((state) => state.categories.status);
+  const [status, setStatus] = useState("");
   const [fields, setFields] = useState({
     transactionAmount: transaction.transactionAmount,
     transactionDate: inputDateFormat(transaction.transactionDate),
@@ -54,17 +56,17 @@ export default function SpendingTransactionEdit(props) {
       (category) => category.categoryName === transaction.categoryName
     );
     dispatch(activeCategoryUpdated(activeCategory));
-  }, [transaction.categoryName, dispatch]);
+  }, [transaction.categoryName, categories, dispatch]);
 
-	useEffect(() => {
-		let status
-		if(transactionStatus === "pending" || categoryStatus === "pending"){
-			status = "pending"
-		}else {
-			status = ""
-		}
-		setStatus(status)
-	}, [transactionStatus, categoryStatus])
+  useEffect(() => {
+    let status;
+    if (transactionStatus === "pending" || categoryStatus === "pending") {
+      status = "pending";
+    } else {
+      status = "";
+    }
+    setStatus(status);
+  }, [transactionStatus, categoryStatus]);
 
   function handleChange(e) {
     const { name, value } = e.target;

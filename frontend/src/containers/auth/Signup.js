@@ -61,7 +61,7 @@ export default function Signup() {
       setIsLoading(true);
 
       await amplifyClient.auth.confirmSignUp({
-        email: fields.email,
+        username: fields.email,
         confirmationCode: fields.confirmationCode,
       });
       await amplifyClient.auth.signIn({

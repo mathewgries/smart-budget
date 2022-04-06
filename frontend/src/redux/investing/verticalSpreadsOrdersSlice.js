@@ -3,7 +3,6 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get } from "../../api/investing/orders/verticalSpreads";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -19,7 +18,7 @@ const initialState = vertSpreadsAdapter.getInitialState({
 export const fetchVerticalSpreadsOrders = createAsyncThunk(
   "verticalSpreadsOrders/fetchVerticalSpreadsOrders",
 	async () => {
-    return amplify.get("smartbudget", "/investing/orders/spreads/vertical");
+    return amplifyClient.get("smartbudget", "/investing/orders/spreads/vertical");
   }
 );
 

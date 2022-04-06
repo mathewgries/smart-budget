@@ -3,7 +3,6 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get } from "../../api/spending/categories";
 import { addNewUser, fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -19,7 +18,7 @@ const initialState = categoriesAdapter.getInitialState({
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async () => {
-    return amplify.get("smartbudget", "/spending/categories");
+    return amplifyClient.get("smartbudget", "/spending/categories");
   }
 );
 

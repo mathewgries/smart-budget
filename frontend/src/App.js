@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { amplifyClient } from "../../api/amplifyClient";
+import { amplifyClient } from "./api/amplifyClient"
 import { AppContext } from "./lib/contextLib";
 import { useHistory } from "react-router-dom";
 import { onError } from "./lib/errorLib";
