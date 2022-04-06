@@ -23,8 +23,8 @@ const initialState = spendingAccountsAdapter.getInitialState({
 
 export const fetchSpendingAccounts = createAsyncThunk(
   "spendingAccounts/fetchSpendingAccounts",
-  async () => {
-    return await get();
+	async () => {
+    return amplify.get("smartbudget", "/spending/accounts");
   }
 );
 

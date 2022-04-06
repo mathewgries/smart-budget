@@ -7,25 +7,13 @@ const initialState = {
   error: null,
 };
 
-export const fetchAllData = createAsyncThunk(
-	"users/fetchAllData", 
-	async () => {
-  	return await amplifyClient.loadAll(
-			"smartbudget", 
-			"/users"
-		);
+export const fetchAllData = createAsyncThunk("users/fetchAllData", async () => {
+  return await amplifyClient.loadAll("smartbudget", "/users");
 });
 
-export const addNewUser = createAsyncThunk(
-  "users/addNewUser",
-  async (data) => {
-		return await amplifyClient.newUser(
-			data,
-			"smartbudget",
-			"/users"
-		)
-  }
-);
+export const addNewUser = createAsyncThunk("users/addNewUser", async (data) => {
+  return await amplifyClient.newUser(data, "smartbudget", "/users");
+});
 
 export const usersSlice = createSlice({
   name: "users",

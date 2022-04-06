@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Auth } from "aws-amplify";
+import { amplifyClient } from "../../api/amplifyClient";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { onError } from "../../lib/errorLib";
@@ -41,11 +41,11 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      const newUser = await Auth.signUp({
+      const newUser = await amplifyClient.auth.signUp({
         username: fields.email,
         password: fields.password,
       });
-			dispatch(lastRouteUpdated("/signup"))
+      dispatch(lastRouteUpdated("/signup"));
       setNewUser(newUser);
     } catch (e) {
       onError(e);
@@ -60,8 +60,14 @@ export default function Signup() {
     try {
       setIsLoading(true);
 
-      await Auth.confirmSignUp(fields.email, fields.confirmationCode);
-      await Auth.signIn(fields.email, fields.password);
+      await amplifyClient.auth.confirmSignUp({
+        email: fields.email,
+        confirmationCode: fields.confirmationCode,
+      });
+      await amplifyClient.auth.signIn({
+        username: fields.email,
+        password: fields.password,
+      });
       userHasAuthenticated(true);
       history.push("/");
     } catch (e) {

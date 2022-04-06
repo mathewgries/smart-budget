@@ -34,7 +34,7 @@ import SharesOrderEdit from "./containers/investing/orders/shares/SharesOrderEdi
 
 import VerticalSpreadsOrder from "./containers/investing/orders/spreads/VerticalSpreadsOrder";
 import VerticalSpreadsOrderNew from "./containers/investing/orders/spreads/VerticalSpreadsOrderNew";
-import VerticalSpreadsOrderEdit from "./containers/investing/orders/spreads/verticalSpreadsOrderEdit";
+import VerticalSpreadsOrderEdit from "./containers/investing/orders/spreads/VerticalSpreadsOrderEdit";
 
 import StrategyTracker from "./containers/investing/strategyTracker/StrategyTracker";
 import StrategySignals from "./containers/investing/strategyTracker/StrategySignals";

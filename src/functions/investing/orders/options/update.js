@@ -13,7 +13,7 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `ORDER#OPTIONS#${order.id}`,
+            SK: `${order.type}${order.id}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression: `SET 

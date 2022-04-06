@@ -3,8 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { put, get } from "../../api/investing/orders/verticalSpreads";
-import { remove } from "../../api/investing/orders/shared";
+import { get } from "../../api/investing/orders/verticalSpreads";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -19,9 +18,8 @@ const initialState = vertSpreadsAdapter.getInitialState({
 
 export const fetchVerticalSpreadsOrders = createAsyncThunk(
   "verticalSpreadsOrders/fetchVerticalSpreadsOrders",
-  async () => {
-    const results = await get();
-    return results;
+	async () => {
+    return amplify.get("smartbudget", "/investing/orders/spreads/vertical");
   }
 );
 
@@ -38,17 +36,25 @@ export const saveNewVerticalSpreadsOrder = createAsyncThunk(
 
 export const updateVerticalSpreadOrder = createAsyncThunk(
   "verticalSpreadsOrders/updateVerticalSpreadOrder",
-  async (updatedOrder) => {
-    await put(updatedOrder);
-    return updatedOrder;
+	async ({ order, account }) => {
+    await amplifyClient.put(
+      { order, account },
+      "smartbudget",
+      `/investing/orders/spreads/vertical/${order.id}`
+    );
+    return { order, account };
   }
 );
 
 export const deleteVerticalSpreadOrder = createAsyncThunk(
   "verticalSpreadsOrders/deleteVerticalSpreadOrder",
-  async (data) => {
-    await remove(data);
-    return data;
+  async ({order, account}) => {
+    await amplifyClient.remove(
+			{order, account},
+			"smartbudget",
+			`/investing/orders/${order.id}`
+		)
+    return {order, account}
   }
 );
 

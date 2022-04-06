@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { amplifyClient } from "../../api/amplifyClient";
 import { get, put } from "../../api/investing/signals";
 import { fetchAllData } from "../users/usersSlice";
 
@@ -11,14 +12,18 @@ const initialState = {
 export const fetchSignals = createAsyncThunk(
   "investingSignals/fetchSignals",
   async () => {
-    return await get();
+    return amplify.get("smartbudget", "/investing/signals");
   }
 );
 
 export const updateSignals = createAsyncThunk(
   "investingSignals/updateSignals",
   async (signalList) => {
-    await put(signalList);
+    await amplifyClient.put(
+			signalList,
+			"smartbudget",
+			"/investing/signals"
+		)
   }
 );
 

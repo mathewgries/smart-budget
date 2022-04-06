@@ -24,34 +24,11 @@ export default function OptionsOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-	const status = useSelector((state) => state.optionsOrders.status)
+  const status = useSelector((state) => state.optionsOrders.status);
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
 
-  const [fields, setFields] = useState({
-    ticker: "",
-    openDate: "",
-    closeDate: "",
-    orderSize: "",
-    openPrice: "",
-    closePrice: "",
-    openUnderlyingPrice: "",
-    closeUnderlyingPrice: "",
-    strikePrice: "",
-    contractType: "",
-    tradeSide: "",
-    contractExpirationDate: "",
-    openDelta: "",
-    closeDelta: "",
-    openGamma: "",
-    closeGamma: "",
-    openVega: "",
-    closeVega: "",
-    openTheta: "",
-    closeTheta: "",
-    openImpliedVolatility: "",
-    closeImpliedVolatility: "",
-  });
+  const [fields, setFields] = useState();
 
   useEffect(() => {
     setFields({
@@ -140,29 +117,11 @@ export default function OptionsOrderEdit(props) {
     await dispatch(
       updateOptionsOrder({
         order: {
-          id: order.id,
-          ticker: fields.ticker,
+          ...order,
+          ...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
-          orderSize: fields.orderSize,
-          openPrice: fields.openPrice,
-          closePrice: fields.closePrice,
-          openUnderlyingPrice: fields.openUnderlyingPrice,
-          closeUnderlyingPrice: fields.closeUnderlyingPrice,
-          strikePrice: fields.strikePrice,
-          contractType: fields.contractType,
-          tradeSide: fields.tradeSide,
           contractExpirationDate: Date.parse(fields.contractExpirationDate),
-          openDelta: fields.openDelta,
-          closeDelta: fields.closeDelta,
-          openGamma: fields.openGamma,
-          closeGamma: fields.closeGamma,
-          openVega: fields.openVega,
-          closeVega: fields.closeVega,
-          openTheta: fields.openTheta,
-          closeTheta: fields.closeTheta,
-          openImpliedVolatility: fields.openImpliedVolatility,
-          closeImpliedVolatility: fields.closeImpliedVolatility,
           profitLoss: profitLoss,
           signalList: selectedSignals,
         },
@@ -186,7 +145,11 @@ export default function OptionsOrderEdit(props) {
                   className="btn btn-primary"
                   disabled={validateForm() || status === "pending"}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Updating"} /> : "Update"}
+                  {status === "pending" ? (
+                    <LoadingSpinner text={"Updating"} />
+                  ) : (
+                    "Update"
+                  )}
                 </button>
               </div>
             </section>

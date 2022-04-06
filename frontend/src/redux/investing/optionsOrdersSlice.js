@@ -3,8 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { put, get } from "../../api/investing/orders/options";
-import { remove } from "../../api/investing/orders/shared";
+import { get } from "../../api/investing/orders/options";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -20,8 +19,7 @@ const initialState = optionsAdapter.getInitialState({
 export const fetchOptionsOrders = createAsyncThunk(
   "optionsOrders/fetchOptionsOrders",
   async () => {
-    const results = await get();
-    return results;
+    return amplify.get("smartbudget", "/investing/orders/options");
   }
 );
 
@@ -38,17 +36,25 @@ export const saveNewOptionsOrder = createAsyncThunk(
 
 export const updateOptionsOrder = createAsyncThunk(
   "optionsOrders/updateOptionsOrder",
-  async (updatedOrder) => {
-    await put(updatedOrder);
-    return updatedOrder;
+  async ({ order, account }) => {
+    await amplifyClient.put(
+      { order, account },
+      "smartbudget",
+      `/investing/orders/options/${order.id}`
+    );
+    return { order, account };
   }
 );
 
 export const deleteOptionsOrder = createAsyncThunk(
   "optionsOrders/deleteOptionsOrder",
-  async (data) => {
-    await remove(data);
-    return data;
+  async ({ order, account }) => {
+    await amplifyClient.remove(
+      { order, account },
+      "smartbudget",
+      `/investing/orders/${order.id}`
+    );
+    return { order, account };
   }
 );
 

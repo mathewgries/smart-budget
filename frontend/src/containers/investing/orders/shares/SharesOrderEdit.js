@@ -26,15 +26,7 @@ export default function SharesOrderEdit(props) {
   );
   const status = useSelector((state) => state.sharesOrders.status)
   const [selectedSignals, setSelectedSignals] = useState([]);
-  const [fields, setFields] = useState({
-    ticker: "",
-    openDate: "",
-    closeDate: "",
-    orderSize: "",
-    openPrice: "",
-    closePrice: "",
-    tradeSide: "",
-  });
+  const [fields, setFields] = useState();
 
   useEffect(() => {
     setFields({
@@ -108,14 +100,10 @@ export default function SharesOrderEdit(props) {
     await dispatch(
       updateSharesOrder({
         order: {
-          id: order.id,
-          ticker: fields.ticker,
+          ...order,
+					...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
-          orderSize: fields.orderSize,
-          openPrice: fields.openPrice,
-          closePrice: fields.closePrice,
-          tradeSide: fields.tradeSide,
           profitLoss: profitLoss,
           signalList: selectedSignals,
         },

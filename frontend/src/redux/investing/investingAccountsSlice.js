@@ -3,7 +3,6 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get } from "../../api/investing/accounts";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 import {
@@ -39,7 +38,7 @@ const initialState = investingAccountsAdapter.getInitialState({
 export const fetchInvestingAccounts = createAsyncThunk(
   "investingAccounts/fetchInvestingAccounts",
   async () => {
-    return get();
+    return amplify.get("smartbudget", "/investing/accounts");
   }
 );
 
@@ -269,7 +268,7 @@ export const investingAccountsSlice = createSlice({
       .addCase(deleteVerticalSpreadOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { account } = action.payload;
-        investingAccountsAdapter.updateOne(state, account);
+        investingAccountsAdapter.upsertOne(state, account);
       })
       .addCase(deleteVerticalSpreadOrder.rejected, (state, action) => {
         state.status = "failed";

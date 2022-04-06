@@ -69,7 +69,7 @@ export default function InvestingTransactionEdit(props) {
     await dispatch(
       updateInvestingTransaction({
         transaction: {
-          id: transaction.id,
+          ...transaction,
           ...fields,
           transactionDate: Date.parse(fields.transactionDate),
           transactionType: fields.transactionType.charAt(0),

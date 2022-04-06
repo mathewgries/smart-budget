@@ -19,7 +19,7 @@ const initialState = categoriesAdapter.getInitialState({
 export const fetchCategories = createAsyncThunk(
   "categories/fetchCategories",
   async () => {
-    return await get();
+    return amplify.get("smartbudget", "/spending/categories");
   }
 );
 

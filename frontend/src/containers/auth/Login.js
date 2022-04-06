@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Auth } from "aws-amplify";
+import { amplifyClient } from "../../api/amplifyClient";
 import { useHistory } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import { useAppContext } from "../../lib/contextLib";
@@ -27,7 +27,10 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      await Auth.signIn(fields.email, fields.password);
+      await amplifyClient.auth.signIn({
+        username: fields.email,
+        password: fields.password,
+      });
       userHasAuthenticated(true);
       history.push("/", { from: "/login" });
     } catch (e) {

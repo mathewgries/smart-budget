@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Auth } from "aws-amplify";
+import { amplifyClient } from "../../api/amplifyClient";
 import { AppContext } from "./lib/contextLib";
 import { useHistory } from "react-router-dom";
 import { onError } from "./lib/errorLib";
@@ -19,7 +19,7 @@ function App() {
 
   async function onLoad() {
     try {
-      await Auth.currentSession();
+      await amplifyClient.auth.currentSession();
       userHasAuthenticated(true);
     } catch (e) {
       if (e !== "No current user") {
@@ -31,8 +31,7 @@ function App() {
   }
 
   async function handleLogout() {
-    await Auth.signOut();
-
+		await amplifyClient.auth.signOut()
     userHasAuthenticated(false);
     history.push("/login");
   }

@@ -3,7 +3,7 @@ import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllData, addNewUser } from "../redux/users/usersSlice";
 import { lastRouteUpdated } from "../redux/history/historySlice";
-import { getUserInfo } from "../api/users";
+import { amplifyClient } from "../api/amplifyClient";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
@@ -25,7 +25,7 @@ export default function Home() {
 
       if (prevLocation === "/signup") {
         dispatch(lastRouteUpdated("/"));
-        const userInfo = await getUserInfo();
+        const userInfo = await amplifyClient.auth.currentUserInfo();
         await dispatch(addNewUser(userInfo)).unwrap();
       } else {
         try {

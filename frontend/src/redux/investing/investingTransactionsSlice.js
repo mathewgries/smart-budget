@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
-import { get, put, remove } from "../../api/investing/transactions";
+import { get } from "../../api/investing/transactions";
 import { amplifyClient } from "../../api/amplifyClient";
 import { fetchAllData } from "../users/usersSlice";
 
@@ -19,7 +19,7 @@ const initialState = investingTransactionAdapter.getInitialState({
 export const fetchInvestingTransactions = createAsyncThunk(
   "investingTransactions/fetchInvestingTransactions",
   async () => {
-    return await get();
+    return amplify.get("smartbudget", "/investing/transactions");
   }
 );
 
@@ -36,9 +36,13 @@ export const saveNewInvestingTransaction = createAsyncThunk(
 
 export const updateInvestingTransaction = createAsyncThunk(
   "investingTransactions/updateInvestingTransaction",
-  async (updatedTransaction) => {
-    await put(updatedTransaction);
-    return updatedTransaction;
+  async ({ transaction, account }) => {
+    await amplifyClient.put(
+      { transaction, account },
+      "smartbudget",
+      `/investing/transactions/${transaction.id}`
+    );
+    return { transaction, account };
   }
 );
 

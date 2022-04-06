@@ -5,7 +5,6 @@ export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const { order, account } = data;
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-  const type = "ORDER#SHARES#";
 
   const params = {
     TransactItems: [
@@ -13,7 +12,7 @@ export const main = handler(async (event) => {
         Update: {
           Key: {
             PK: `USER#${userId}`,
-            SK: `${type}${order.id}`,
+            SK: `${order.type}${order.id}`,
           },
           TableName: process.env.TABLE_NAME,
           UpdateExpression: `SET 
