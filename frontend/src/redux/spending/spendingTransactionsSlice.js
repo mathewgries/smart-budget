@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { deleteSpendingAccount } from "./spendingAccountsSlice";
+import { deleteCategory } from "./categoriesSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 import { fetchAllData } from "../users/usersSlice";
 
@@ -148,6 +149,19 @@ export const spendingTransactionsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       });
+    builder
+      .addCase(deleteCategory.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { transactions } = action.payload;
+        spendingTransactionsAdapter.upsertMany(state, transactions);
+      })
+      .addCase(deleteCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -159,6 +173,11 @@ export default spendingTransactionsSlice.reducer;
 export const selectSpendingTransactionsByGSI = (state, gsi) =>
   Object.values(state.spendingTransactions.entities).filter(
     (transaction) => transaction.GSI1_PK === gsi
+  );
+
+export const selectSpendingTransactionsByCategoryId = (state, id) =>
+  Object.values(state.spendingTransactions.entities).filter(
+    (transaction) => transaction.categoryId === id
   );
 
 export const {

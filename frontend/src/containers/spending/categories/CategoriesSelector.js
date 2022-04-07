@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function CategoriesSelector(props) {
   const {
@@ -8,7 +10,9 @@ export default function CategoriesSelector(props) {
     activeSubcategory,
     toggleCategory,
     toggleSubcategory,
+    deleteCategory,
   } = props;
+  const status = useSelector((state) => state.categories.status);
 
   function handleCategoryToggle(category) {
     toggleCategory(category);
@@ -16,6 +20,10 @@ export default function CategoriesSelector(props) {
 
   function handleSubcategoryToggle(subcategory) {
     toggleSubcategory(subcategory);
+  }
+
+  function handleCategoryDelete(category) {
+    deleteCategory(category);
   }
 
   return (
@@ -35,17 +43,31 @@ export default function CategoriesSelector(props) {
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
+              disabled={status === "pending"}
             >
-              {activeCategory.categoryName}
+              {status === "pending" ? (
+                <LoadingSpinner />
+              ) : (
+                `${activeCategory.categoryName}`
+              )}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="dropdown-item"
-                  onClick={() => handleCategoryToggle(category)}
-                >
-                  {category.categoryName}
+                <div key={category.id} className="category-list-item">
+                  <div
+                    className="dropdown-item"
+                    onClick={() => handleCategoryToggle(category)}
+                  >
+                    <div>{category.categoryName}</div>
+                  </div>
+                  <div>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleCategoryDelete(category)}
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -68,8 +90,13 @@ export default function CategoriesSelector(props) {
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
+              disabled={status === "pending"}
             >
-              {activeSubcategory}
+              {status === "pending" ? (
+                <LoadingSpinner />
+              ) : (
+                `${activeSubcategory}`
+              )}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {subcategories.length > 0 &&
