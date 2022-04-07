@@ -33,7 +33,7 @@ export default function InvestingAccountNew() {
 
     try {
       await dispatch(addNewInvestingAccount(fields)).unwrap();
-      history.push("/investing");
+      history.push("/");
     } catch (e) {
       onError(e);
     }

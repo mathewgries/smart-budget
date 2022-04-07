@@ -18,11 +18,7 @@ export const fetchSignals = createAsyncThunk(
 export const updateSignals = createAsyncThunk(
   "investingSignals/updateSignals",
   async (signalList) => {
-    await amplifyClient.put(
-			signalList,
-			"smartbudget",
-			"/investing/signals"
-		)
+    await amplifyClient.put(signalList, "smartbudget", "/investing/signals");
   }
 );
 
@@ -64,7 +60,7 @@ export const investingSignalsSlice = createSlice({
         state.status = "pending";
       })
       .addCase(updateSignals.fulfilled, (state, action) => {
-        state.status = "success";
+        state.status = "succeeded";
       })
       .addCase(updateSignals.rejected, (state, action) => {
         state.status = "failed";

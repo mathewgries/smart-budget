@@ -27,7 +27,7 @@ export default function Home() {
         dispatch(lastRouteUpdated("/"));
         const userInfo = await amplifyClient.auth.currentUserInfo();
         await dispatch(addNewUser(userInfo)).unwrap();
-      } else {
+      } else if(status === "idle") {
         try {
           await dispatch(fetchAllData()).unwrap();
         } catch (e) {
@@ -37,7 +37,7 @@ export default function Home() {
     }
 
     onLoad();
-  }, [isAuthenticated, dispatch]);
+  }, [isAuthenticated, prevLocation, dispatch]);
 
   function renderLander() {
     return (

@@ -3,6 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
+import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -17,8 +18,11 @@ const initialState = vertSpreadsAdapter.getInitialState({
 
 export const fetchVerticalSpreadsOrders = createAsyncThunk(
   "verticalSpreadsOrders/fetchVerticalSpreadsOrders",
-	async () => {
-    return amplifyClient.get("smartbudget", "/investing/orders/spreads/vertical");
+  async () => {
+    return amplifyClient.get(
+      "smartbudget",
+      "/investing/orders/spreads/vertical"
+    );
   }
 );
 
@@ -35,7 +39,7 @@ export const saveNewVerticalSpreadsOrder = createAsyncThunk(
 
 export const updateVerticalSpreadOrder = createAsyncThunk(
   "verticalSpreadsOrders/updateVerticalSpreadOrder",
-	async ({ order, account }) => {
+  async ({ order, account }) => {
     await amplifyClient.put(
       { order, account },
       "smartbudget",
@@ -47,13 +51,13 @@ export const updateVerticalSpreadOrder = createAsyncThunk(
 
 export const deleteVerticalSpreadOrder = createAsyncThunk(
   "verticalSpreadsOrders/deleteVerticalSpreadOrder",
-  async ({order, account}) => {
+  async ({ order, account }) => {
     await amplifyClient.remove(
-			{order, account},
-			"smartbudget",
-			`/investing/orders/${order.id}`
-		)
-    return {order, account}
+      { order, account },
+      "smartbudget",
+      `/investing/orders/${order.id}`
+    );
+    return { order, account };
   }
 );
 
@@ -124,6 +128,24 @@ export const verticalSpreadsOrdersSlice = createSlice({
         vertSpreadsAdapter.removeOne(state, id);
       })
       .addCase(deleteVerticalSpreadOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteInvestingAccount.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteInvestingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { orders } = action.payload;
+        const spreads = orders.filter((order) => {
+          if (order.type === "ORDER#VERTSPREADS#") {
+            return order.id;
+          }
+        });
+        vertSpreadsAdapter.removeMany(state, spreads);
+      })
+      .addCase(deleteInvestingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

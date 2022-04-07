@@ -3,6 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
+import { deleteSpendingAccount } from "./spendingAccountsSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 import { fetchAllData } from "../users/usersSlice";
 
@@ -17,7 +18,7 @@ const initialState = spendingTransactionsAdapter.getInitialState({
 
 export const fetchSpendingTransactions = createAsyncThunk(
   "spendingTransactions/fetchSpendingTransactions",
-	async () => {
+  async () => {
     return amplifyClient.get("smartbudget", "/spending/transactions");
   }
 );
@@ -54,7 +55,7 @@ export const deleteSpendingTransaction = createAsyncThunk(
       "smartbudget",
       `/spending/transactions/${transaction.id}`
     );
-    return  { transaction, account };
+    return { transaction, account };
   }
 );
 
@@ -128,6 +129,22 @@ export const spendingTransactionsSlice = createSlice({
         spendingTransactionsAdapter.removeOne(state, id);
       })
       .addCase(deleteSpendingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteSpendingAccount.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteSpendingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { transactions } = action.payload;
+        spendingTransactionsAdapter.removeMany(
+          state,
+          transactions.map((transaction) => transaction.id)
+        );
+      })
+      .addCase(deleteSpendingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

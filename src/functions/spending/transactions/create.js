@@ -6,8 +6,6 @@ export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const { transaction, account } = data;
-
-  // const accountId = data.accountId;
   const transactionId = uuid.v1();
   const type = "TRANS#SPENDING#";
 
@@ -26,6 +24,7 @@ export const main = handler(async (event) => {
             transactionDate: transaction.transactionDate,
             transactionType: transaction.transactionType,
             categoryName: transaction.categoryName,
+						categoryId: transaction.categoryId,
             subcategory: transaction.subcategory,
             transactionNote: transaction.transactionNote,
             createDate: Date.now(),

@@ -22,7 +22,7 @@ const initialState = spendingAccountsAdapter.getInitialState({
 
 export const fetchSpendingAccounts = createAsyncThunk(
   "spendingAccounts/fetchSpendingAccounts",
-	async () => {
+  async () => {
     return amplifyClient.get("smartbudget", "/spending/accounts");
   }
 );
@@ -30,23 +30,31 @@ export const fetchSpendingAccounts = createAsyncThunk(
 export const addNewSpendingAccount = createAsyncThunk(
   "spendingAccounts/addNewSpendingAccount",
   async (data) => {
-    return await amplifyClient.post(
-      data,
-      "smartbudget",
-      "/spending/accounts"
-    );
+    return await amplifyClient.post(data, "smartbudget", "/spending/accounts");
   }
 );
 
 export const updateSpendingAccount = createAsyncThunk(
   "spendingAccounts/updateSpendingAccount",
   async (data) => {
-		await amplifyClient.put(
-			data,
-			"smartbudget",
+    await amplifyClient.put(
+      data,
+      "smartbudget",
       `/spending/accounts/${data.id}`
-		)
+    );
     return data;
+  }
+);
+
+export const deleteSpendingAccount = createAsyncThunk(
+  "spendingAccounts/deleteSpendingAccount",
+  async ({ account, transactions }) => {
+    await amplifyClient.remove(
+      { account, transactions },
+      "smartbudget",
+      `/spending/accounts/${account.id}`
+    );
+    return { account, transactions };
   }
 );
 
@@ -97,11 +105,24 @@ export const spendingAccountsSlice = createSlice({
       .addCase(updateSpendingAccount.pending, (state, action) => {
         state.status = "pending";
       })
-      .addCase(
-        updateSpendingAccount.fulfilled,
-        spendingAccountsAdapter.upsertOne
-      )
+      .addCase(updateSpendingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        spendingAccountsAdapter.upsertOne(state, action.payload);
+      })
       .addCase(updateSpendingAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteSpendingAccount.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteSpendingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+				const {id} = action.payload.account
+        spendingAccountsAdapter.removeOne(state, id);
+      })
+      .addCase(deleteSpendingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

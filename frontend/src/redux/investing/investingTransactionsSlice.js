@@ -3,6 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
+import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 import { fetchAllData } from "../users/usersSlice";
 
@@ -80,10 +81,10 @@ export const investingTransactionsSlice = createSlice({
       .addCase(fetchInvestingTransactions.pending, (state, action) => {
         state.status = "pending";
       })
-      .addCase(
-        fetchInvestingTransactions.fulfilled,
-        investingTransactionAdapter.upsertMany
-      )
+      .addCase(fetchInvestingTransactions.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        investingTransactionAdapter.upsertMany(state, action.payload);
+      })
       .addCase(fetchInvestingTransactions.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
@@ -125,6 +126,20 @@ export const investingTransactionsSlice = createSlice({
         investingTransactionAdapter.removeOne(state, id);
       })
       .addCase(deleteInvestingTransaction.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteInvestingAccount.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteInvestingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { transactions } = action.payload;
+        const items = transactions.map((transaction) => transaction.id);
+        investingTransactionAdapter.removeMany(state, items);
+      })
+      .addCase(deleteInvestingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

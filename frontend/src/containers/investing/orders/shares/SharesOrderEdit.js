@@ -24,9 +24,17 @@ export default function SharesOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-  const status = useSelector((state) => state.sharesOrders.status)
+  const status = useSelector((state) => state.sharesOrders.status);
   const [selectedSignals, setSelectedSignals] = useState([]);
-  const [fields, setFields] = useState();
+  const [fields, setFields] = useState({
+    ticker: "",
+    openDate: "",
+    closeDate: "",
+    orderSize: "",
+    openPrice: "",
+    closePrice: "",
+    tradeSide: "",
+  });
 
   useEffect(() => {
     setFields({
@@ -41,15 +49,15 @@ export default function SharesOrderEdit(props) {
     setSelectedSignals(order.signalList);
   }, [order]);
 
-	function validateForm() {
+  function validateForm() {
     return (
-			fields.ticker === "" ||
-			fields.openDate === "" ||
-			fields.closeDate === "" ||
-			fields.orderSize === "" ||
-			fields.openPrice === "" ||
-			fields.closePrice === "" ||
-			fields.tradeSide === ""
+      fields.ticker === "" ||
+      fields.openDate === "" ||
+      fields.closeDate === "" ||
+      fields.orderSize === "" ||
+      fields.openPrice === "" ||
+      fields.closePrice === "" ||
+      fields.tradeSide === ""
     );
   }
 
@@ -101,7 +109,7 @@ export default function SharesOrderEdit(props) {
       updateSharesOrder({
         order: {
           ...order,
-					...fields,
+          ...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
           profitLoss: profitLoss,
@@ -130,7 +138,11 @@ export default function SharesOrderEdit(props) {
                   className="btn btn-primary"
                   disabled={validateForm() || status === "pending"}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Updating"}/> : "Update"}
+                  {status === "pending" ? (
+                    <LoadingSpinner text={"Updating"} />
+                  ) : (
+                    "Update"
+                  )}
                 </button>
               </div>
             </section>

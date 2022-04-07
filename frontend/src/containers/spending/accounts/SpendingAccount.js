@@ -1,15 +1,41 @@
-import React from "react";
-import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectSpendingAccountById } from "../../../redux/spending/spendingAccountsSlice";
+import React, { useEffect } from "react";
+import { useParams, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  selectSpendingAccountById,
+  deleteSpendingAccount,
+} from "../../../redux/spending/spendingAccountsSlice";
+import { selectSpendingTransactionsByGSI } from "../../../redux/spending/spendingTransactionsSlice";
 import { Link } from "react-router-dom";
+import { onError } from "../../../lib/errorLib";
 import SpendingAccountCard from "./SpendingAccountCard";
 import SpendingTransactionsList from "../transactions/SpendingTransactionsList";
 
 export default function SpendingAccount() {
   const { id } = useParams();
-  const account = useSelector((state) => selectSpendingAccountById(state, id));
+  const history = useHistory();
+  const dispatch = useDispatch();
   const status = useSelector((state) => state.spendingAccounts.status);
+  const account = useSelector((state) => selectSpendingAccountById(state, id));
+  const transactions = useSelector((state) =>
+    selectSpendingTransactionsByGSI(state, account.GSI1_PK)
+  );
+
+  useEffect(() => {
+    if (status === "pending") {
+      history.push("/");
+    }
+  }, [status]);
+
+  async function handleDeleteAccount(e) {
+    e.preventDefault();
+
+    try {
+      await dispatch(deleteSpendingAccount({ account, transactions })).unwrap();
+    } catch (e) {
+      onError(e);
+    }
+  }
 
   return (
     <div className="page-container">
@@ -19,6 +45,7 @@ export default function SpendingAccount() {
             <h3>Spending Account</h3>
           </header>
         </section>
+
         <div className="account-wrapper">
           <section className="account-card-section">
             <header>
@@ -36,6 +63,16 @@ export default function SpendingAccount() {
                   Edit Account
                 </Link>
               </div>
+
+              <div className="account-btn-wrapper">
+                <button
+                  className="btn btn-danger form-control"
+                  onClick={handleDeleteAccount}
+                >
+                  Delete
+                </button>
+              </div>
+
               <div className="account-btn-wrapper">
                 <Link
                   to={`/spending/transactions/new/${id}`}
@@ -46,6 +83,7 @@ export default function SpendingAccount() {
               </div>
             </section>
           </section>
+
           <section className="transaction-list-section">
             <div>
               <header>
@@ -54,7 +92,7 @@ export default function SpendingAccount() {
             </div>
             {status !== "pending" && (
               <div>
-                <SpendingTransactionsList account={account} />
+                <SpendingTransactionsList transactions={transactions} />
               </div>
             )}
           </section>

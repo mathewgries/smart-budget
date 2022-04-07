@@ -65,6 +65,18 @@ export const updateInvestingAccount = createAsyncThunk(
   }
 );
 
+export const deleteInvestingAccount = createAsyncThunk(
+  "spendingAccounts/deleteInvestingAccount",
+  async ({ account, transactions, orders }) => {
+    await amplifyClient.remove(
+      { account, transactions, orders },
+      "smartbudget",
+      `/investing/accounts/${account.id}`
+    );
+    return { account, transactions, orders };
+  }
+);
+
 export const investingAccountsSlice = createSlice({
   name: "investingAccounts",
   initialState,
@@ -112,11 +124,24 @@ export const investingAccountsSlice = createSlice({
       .addCase(updateInvestingAccount.pending, (state, action) => {
         state.status = "pending";
       })
-      .addCase(
-        updateInvestingAccount.fulfilled,
-        investingAccountsAdapter.upsertOne
-      )
+      .addCase(updateInvestingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        investingAccountsAdapter.upsertOne(state, action.payload);
+      })
       .addCase(updateInvestingAccount.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteInvestingAccount.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteInvestingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.account;
+        investingAccountsAdapter.removeOne(state, id);
+      })
+      .addCase(deleteInvestingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

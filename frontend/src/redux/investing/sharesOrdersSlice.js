@@ -3,6 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
+import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -124,6 +125,24 @@ export const sharesOrdersSlice = createSlice({
         sharesAdapter.removeOne(state, id);
       })
       .addCase(deleteSharesOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteInvestingAccount.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteInvestingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { orders } = action.payload;
+        const shares = orders.filter((order) => {
+          if (order.type === "ORDER#SHARES#") {
+            return order.id;
+          }
+        });
+        sharesAdapter.removeMany(state, shares);
+      })
+      .addCase(deleteInvestingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

@@ -1,13 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { selectInvestingTransactionsByGSI } from "../../../redux/investing/investingTransactionsSlice";
 import InvestingTransactionCard from "./InvestingTransactionCard";
 
 export default function InvestingTransactionsList(props) {
-  const transactions = useSelector((state) =>
-    selectInvestingTransactionsByGSI(state, props.accountGSI)
-  );
+	const {transactions} = props
 
   return (
     <div className="transaction-list-container">

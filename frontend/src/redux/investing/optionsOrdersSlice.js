@@ -3,6 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
+import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -95,7 +96,6 @@ export const optionsOrdersSlice = createSlice({
       .addCase(saveNewOptionsOrder.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { order } = action.payload;
-        console.log(action.payload);
         optionsAdapter.addOne(state, order);
       })
       .addCase(saveNewOptionsOrder.rejected, (state, action) => {
@@ -125,6 +125,24 @@ export const optionsOrdersSlice = createSlice({
         optionsAdapter.removeOne(state, id);
       })
       .addCase(deleteOptionsOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteInvestingAccount.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteInvestingAccount.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { orders } = action.payload;
+        const options = orders.filter((order) => {
+          if (order.type === "ORDER#OPTIONS#") {
+            return order.id;
+          }
+        });
+        optionsAdapter.removeMany(state, options);
+      })
+      .addCase(deleteInvestingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

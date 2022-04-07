@@ -28,7 +28,30 @@ export default function OptionsOrderEdit(props) {
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
 
-  const [fields, setFields] = useState();
+  const [fields, setFields] = useState({
+    ticker: "",
+    openDate: "",
+    closeDate: "",
+    orderSize: "",
+    openPrice: "",
+    closePrice: "",
+    openUnderlyingPrice: "",
+    closeUnderlyingPrice: "",
+    strikePrice: "",
+    contractType: "",
+    tradeSide: "",
+    contractExpirationDate: "",
+    openDelta: "",
+    closeDelta: "",
+    openGamma: "",
+    closeGamma: "",
+    openVega: "",
+    closeVega: "",
+    openTheta: "",
+    closeTheta: "",
+    openImpliedVolatility: "",
+    closeImpliedVolatility: "",
+  });
 
   useEffect(() => {
     setFields({

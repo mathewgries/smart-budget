@@ -100,6 +100,7 @@ export default function SpendingTransactionNew(props) {
           transactionDate: Date.parse(fields.transactionDate),
           transactionType: fields.transactionType.charAt(0),
           categoryName: activeCategory.categoryName,
+					categoryId: activeCategory.id,
           subcategory: activeSubcategory,
           transactionNote: fields.transactionNote,
         },
