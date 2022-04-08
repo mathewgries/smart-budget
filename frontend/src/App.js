@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { amplifyClient } from "./api/amplifyClient"
+import { amplifyClient } from "./api/amplifyClient";
+import { useDispatch } from "react-redux";
 import { AppContext } from "./lib/contextLib";
 import { useHistory } from "react-router-dom";
+import { signOutUser } from "./redux/users/usersSlice";
 import { onError } from "./lib/errorLib";
 import { LinkContainer } from "react-router-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
@@ -10,6 +12,7 @@ import Routes from "./Routes";
 
 function App() {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [isAuthenticating, setIsAuthenticating] = useState(true);
   const [isAuthenticated, userHasAuthenticated] = useState(false);
 
@@ -26,12 +29,11 @@ function App() {
         onError(e);
       }
     }
-
     setIsAuthenticating(false);
   }
 
   async function handleLogout() {
-		await amplifyClient.auth.signOut()
+    await dispatch(signOutUser()).unwrap();
     userHasAuthenticated(false);
     history.push("/login");
   }
@@ -60,7 +62,7 @@ function App() {
                     <LinkContainer to="/spending/categories">
                       <Nav.Link>Categories</Nav.Link>
                     </LinkContainer>
-										<LinkContainer to="/investing/signals">
+                    <LinkContainer to="/investing/signals">
                       <Nav.Link>Signals</Nav.Link>
                     </LinkContainer>
                     <Nav.Link onClick={handleLogout}>Logout</Nav.Link>

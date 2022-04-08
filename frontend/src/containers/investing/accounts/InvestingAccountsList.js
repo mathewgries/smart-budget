@@ -1,21 +1,24 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectAllInvestingAccounts } from "../../../redux/investing/investingAccountsSlice";
 import InvestingAccountCard from "./InvestingAccountCard";
+import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
 
 export default function InvestingAccountsList(props) {
-	const accountList = useSelector(selectAllInvestingAccounts);
+  const { status, accounts } = props;
 
   return (
     <div className="account-list-container">
-      {accountList.map((account) => (
-        <div key={account.id} className="account-list-item-wrapper">
-          <Link to={`investing/accounts/${account.id}`}>
-            <InvestingAccountCard account={account} />
-          </Link>
-        </div>
-      ))}
+      {accounts.length > 0 && status !== "pending" ? (
+        accounts.map((account) => (
+          <div key={account.id} className="account-list-item-wrapper">
+            <Link to={`/investing/accounts/${account.id}`}>
+              <InvestingAccountCard account={account} />
+            </Link>
+          </div>
+        ))
+      ) : (
+        <AccountCardLoader status={status} text={"Add new account..."} />
+      )}
     </div>
   );
 }

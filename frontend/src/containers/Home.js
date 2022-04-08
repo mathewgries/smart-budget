@@ -1,20 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchAllData, addNewUser } from "../redux/users/usersSlice";
-import { lastRouteUpdated } from "../redux/history/historySlice";
-import { amplifyClient } from "../api/amplifyClient";
+import { fetchAllData } from "../redux/users/usersSlice";
+import { selectAllSpendingAcounts } from "../redux/spending/spendingAccountsSlice";
+import { selectAllInvestingAccounts } from "../redux/investing/investingAccountsSlice";
 import { Link } from "react-router-dom";
 import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
 import LoadingSpinner from "../components/LoadingSpinner";
-import "./style.css";
 import { onError } from "../lib/errorLib";
+import "./style.css";
 
 export default function Home() {
+  const history = useHistory();
   const dispatch = useDispatch();
   const prevLocation = useSelector((state) => state.history.lastRoute);
   const status = useSelector((state) => state.users.status);
+  const usersStatus = useSelector((state) => state.users.status);
+  const spendingAccountStatus = useSelector(
+    (state) => state.spendingAccounts.status
+  );
+  const investingAccountStatus = useSelector(
+    (state) => state.investingAccounts.status
+  );
+  const spendingAccounts = useSelector(selectAllSpendingAcounts);
+  const investingAccounts = useSelector(selectAllInvestingAccounts);
+  const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated } = useAppContext();
 
   useEffect(() => {
@@ -23,11 +35,13 @@ export default function Home() {
         return;
       }
 
-      if (prevLocation === "/signup") {
-        dispatch(lastRouteUpdated("/"));
-        const userInfo = await amplifyClient.auth.currentUserInfo();
-        await dispatch(addNewUser(userInfo)).unwrap();
-      } else if(status === "idle") {
+      if (validateStatus() && !isLoading) {
+        setIsLoading(true);
+      } else if (!validateStatus() && isLoading) {
+        setIsLoading(false);
+      }
+
+      if (usersStatus === "idle") {
         try {
           await dispatch(fetchAllData()).unwrap();
         } catch (e) {
@@ -37,7 +51,26 @@ export default function Home() {
     }
 
     onLoad();
-  }, [isAuthenticated, prevLocation, dispatch]);
+  }, [
+    isAuthenticated,
+    usersStatus,
+    spendingAccountStatus,
+    investingAccountStatus,
+    prevLocation,
+    dispatch,
+  ]);
+
+  function validateStatus() {
+    return (
+      usersStatus === "pending" ||
+      spendingAccountStatus === "pending" ||
+      investingAccountStatus === "pending"
+    );
+  }
+
+  function handleRedirect(path) {
+    history.push(path);
+  }
 
   function renderLander() {
     return (
@@ -57,58 +90,54 @@ export default function Home() {
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                {status === "pending" ? (
+                <Link to="/spending">
                   <h5>Spending Accounts</h5>
-                ) : (
-                  <Link to="/spending">
-                    <h5>Spending Accounts</h5>
-                  </Link>
-                )}
+                </Link>
               </header>
               <div className="form-group">
-                {status === "pending" ? (
-                  <button disabled={true} className="btn btn-secondary">
-                    <LoadingSpinner text={"loading"} />
-                  </button>
-                ) : (
-                  <Link to="/spending/accounts/new" className="btn btn-primary">
-                    Add
-                  </Link>
-                )}
+                <button
+                  disabled={isLoading}
+                  className={`btn ${
+                    isLoading ? "btn-secondary" : "btn-primary"
+                  }`}
+                  onClick={() => handleRedirect("/spending/accounts/new")}
+                >
+                  {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
+                </button>
               </div>
             </div>
             <div className="home-list-section">
-              <SpendingAccountsList />
+              <SpendingAccountsList
+                status={spendingAccountStatus}
+                accounts={spendingAccounts}
+              />
             </div>
           </div>
+
           <div className="page-list-wrapper">
             <div className="home-list-header-wrapper">
               <header className="home-list-header">
-                {status === "pending" ? (
+                <Link to="/investing">
                   <h5>Investing Accounts</h5>
-                ) : (
-                  <Link to="/investing">
-                    <h5>Investing Accounts</h5>
-                  </Link>
-                )}
+                </Link>
               </header>
               <div className="form-group">
-                {status === "pending" ? (
-                  <button disabled={true} className="btn btn-secondary">
-                    <LoadingSpinner text={"loading"} />
-                  </button>
-                ) : (
-                  <Link
-                    to="/investing/accounts/new"
-                    className="btn btn-primary"
-                  >
-                    Add
-                  </Link>
-                )}
+                <button
+                  disabled={isLoading}
+                  className={`btn ${
+                    isLoading ? "btn-secondary" : "btn-primary"
+                  }`}
+                  onClick={() => handleRedirect("/investing/accounts/new")}
+                >
+                  {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
+                </button>
               </div>
             </div>
             <div className="home-list-section">
-              <InvestingAccountsList />
+              <InvestingAccountsList
+                status={investingAccountStatus}
+                accounts={investingAccounts}
+              />
             </div>
           </div>
         </section>

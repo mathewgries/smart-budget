@@ -14,17 +14,17 @@ export const amplifyClient = {
     signOut: async () => {
       return await Auth.signOut();
     },
-		currentSession: async () => {
-			return await Auth.currentSession();
-		},
-		currentUserInfo: async () => {
-			return await Auth.currentUserInfo();
-		},
-  },
-  newUser: async (data, api, uri) => {
-    return await API.post(api, uri, {
-      body: { email: data.attributes.email },
-    });
+    currentSession: async () => {
+      return await Auth.currentSession();
+    },
+    currentUserInfo: async () => {
+      return await Auth.currentUserInfo();
+    },
+    newUser: async (data, api, uri) => {
+      return await API.post(api, uri, {
+        body: data,
+      });
+    },
   },
   loadAll: async (api, uri) => {
     return await API.get(api, uri);

@@ -54,7 +54,11 @@ export default function SpendingAccountNew() {
                   className="btn btn-primary form-control"
                   disabled={!validateForm() || status === "pending"}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Saving"} /> : "Save"}
+                  {status === "pending" ? (
+                    <LoadingSpinner text={"Saving"} />
+                  ) : (
+                    "Save"
+                  )}
                 </button>
               </div>
             </section>
