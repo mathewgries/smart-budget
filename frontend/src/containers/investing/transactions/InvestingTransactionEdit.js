@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -10,7 +10,6 @@ import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { updateTransactionHelper } from "../../../helpers/currencyHandler";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function InvestingTransactionEdit(props) {
   const { id } = useParams();
@@ -23,7 +22,7 @@ export default function InvestingTransactionEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, transaction.GSI1_PK)
   );
-  const status = useSelector((state) => state.investingTransactions.status);
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     transactionAmount: transaction.transactionAmount,
     transactionDate: inputDateFormat(transaction.transactionDate),
@@ -31,6 +30,16 @@ export default function InvestingTransactionEdit(props) {
       transaction.transactionType === "W" ? typeList[0] : typeList[1],
     transactionNote: transaction.transactionNote,
   });
+
+  useEffect(() => {
+    if (isSaving) {
+      history.push(`/investing/transactions/${id}`);
+    }
+  }, [isSaving, history, id]);
+
+  function validateForm() {
+    return fields.transactionAmount > 0.0;
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -41,17 +50,13 @@ export default function InvestingTransactionEdit(props) {
     setFields({ ...fields, [name]: value });
   };
 
-  function validateForm() {
-    return fields.transactionAmount > 0.0;
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleUpdateTransaction(newAccountBalance);
-      history.push(`/investing/transactions/${id}`);
     } catch (e) {
       onError(e);
     }
@@ -95,13 +100,9 @@ export default function InvestingTransactionEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || status === "pending"}
+                  disabled={!validateForm()}
                 >
-                  {status === "pending" ? (
-                    <LoadingSpinner text={"Updating"} />
-                  ) : (
-                    "Update"
-                  )}
+                  Update
                 </button>
               </div>
             </section>

@@ -45,6 +45,18 @@ export const updateCategory = createAsyncThunk(
   }
 );
 
+export const deleteCategory = createAsyncThunk(
+  "categories/deleteCategory",
+  async ({ category, transactions }) => {
+    await amplifyClient.remove(
+      { category, transactions },
+      "smartbudget",
+      `/spending/categories/${category.id}`
+    );
+    return { category, transactions };
+  }
+);
+
 export const categoriesSlice = createSlice({
   name: "categories",
   initialState,
@@ -136,6 +148,19 @@ export const categoriesSlice = createSlice({
         state.activeSubcategory = subcategories[subcategories.length - 1];
       })
       .addCase(updateCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteCategory.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteCategory.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.category;
+        categoriesAdapter.removeOne(state, id);
+      })
+      .addCase(deleteCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   saveNewCategory,
@@ -9,25 +9,13 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import { onError } from "../../../lib/errorLib";
 
 export default function CategoriesForm(props) {
+  const { isLoading } = props;
   const dispatch = useDispatch();
-	const transactionStatus = useSelector((state) => state.spendingTransactions.status);
-	const categoryStatus = useSelector((state) => state.categories.status);
-	const [status, setStatus] = useState("")
   const activeCategory = useSelector((state) => selectActiveCategory(state));
   const [fields, setFields] = useState({
     categoryName: "",
     subcategory: "",
   });
-
-	useEffect(() => {
-		let status
-		if(transactionStatus === "pending" || categoryStatus === "pending"){
-			status = "pending"
-		}else {
-			status = ""
-		}
-		setStatus(status)
-	}, [transactionStatus, categoryStatus])
 
   function handleOnChange(e) {
     const { name, value } = e.target;
@@ -82,19 +70,20 @@ export default function CategoriesForm(props) {
                 value={fields.categoryName}
                 onChange={handleOnChange}
                 placeholder="Add new category..."
+                disabled={isLoading}
               />
             </div>
             <div className="form-group">
               <button
                 className={`btn ${
-                  !validateCategoryForm() || status === "pending"
+                  !validateCategoryForm() || isLoading
                     ? "btn-secondary"
                     : "btn-primary"
                 }`}
-                disabled={!validateCategoryForm() || status === "pending"}
-								onClick={handleCategorySubmit}
+                disabled={!validateCategoryForm() || isLoading}
+                onClick={handleCategorySubmit}
               >
-                {status === "pending" ? <LoadingSpinner /> : "Add"}
+                {isLoading ? <LoadingSpinner /> : "Add"}
               </button>
             </div>
           </div>
@@ -111,19 +100,20 @@ export default function CategoriesForm(props) {
                 value={fields.subcategory}
                 onChange={handleOnChange}
                 placeholder="Add new subcategory..."
+                disabled={isLoading}
               />
             </div>
             <div className="form-group">
               <button
                 className={`btn ${
-                  !validateSubcategoryForm() || status === "pending"
+                  !validateSubcategoryForm() || isLoading
                     ? "btn-secondary"
                     : "btn-primary"
                 }`}
-                disabled={!validateSubcategoryForm() || status === "pending"}
-								onClick={handleSubategorySubmit}
+                disabled={!validateSubcategoryForm() || isLoading}
+                onClick={handleSubategorySubmit}
               >
-                {status === "pending" ? <LoadingSpinner /> : "Add"}
+                {isLoading ? <LoadingSpinner /> : "Add"}
               </button>
             </div>
           </div>

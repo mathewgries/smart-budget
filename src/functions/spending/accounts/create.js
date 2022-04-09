@@ -6,7 +6,7 @@ export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
 	const accountId = uuid.v1();
-	const type = "ACCT#SPENDING#"; 
+	const type = "ACCT#SPENDING#";
 
   const params = {
     TableName: process.env.TABLE_NAME,

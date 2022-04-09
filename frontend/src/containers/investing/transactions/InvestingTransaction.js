@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -8,8 +8,10 @@ import {
 import { selectInvestingAccountByGSI } from "../../../redux/investing/investingAccountsSlice";
 import { deleteTransactionHandler } from "../../../helpers/currencyHandler";
 import { onError } from "../../../lib/errorLib";
+import { Link } from "react-router-dom";
 import InvestingTransactionCard from "./InvestingTransactionCard";
 import InvestingTransactionButtons from "./InvestingTransactionButtons";
+import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
 
 export default function InvestingTransaction(props) {
   const { id } = useParams();
@@ -22,15 +24,26 @@ export default function InvestingTransaction(props) {
     selectInvestingAccountByGSI(state, transaction.GSI1_PK)
   );
   const status = useSelector((state) => state.investingTransactions.status);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
-    if (status === "pending") {
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
+
+  useEffect(() => {
+    if (isDelete) {
       history.push(`/investing/accounts/${account.id}`);
     }
-  }, [status, history, account.id]);
+  }, [isDelete, history, account.id]);
 
   async function onDelete() {
     try {
+      setIsDelete(true);
       const newAccountBalance = getNewAccountBalance();
       await handleTransactionDelete(newAccountBalance);
     } catch (e) {
@@ -60,7 +73,9 @@ export default function InvestingTransaction(props) {
       <div className="page-wrapper">
         <section>
           <header>
-            <h3>Investing Account</h3>
+            <Link to={`/investing/accounts/${account.id}`}>
+              <h3>Investing Account</h3>
+            </Link>
           </header>
         </section>
 
@@ -72,13 +87,18 @@ export default function InvestingTransaction(props) {
           </div>
 
           <div className="transaction-info-section">
-            <InvestingTransactionCard transaction={transaction} />
+            {isLoading ? (
+              <TransactionCardLoader status={status} />
+            ) : (
+              <InvestingTransactionCard transaction={transaction} />
+            )}
           </div>
 
           <div className="transaction-btn-wrapper">
             <InvestingTransactionButtons
               transactionId={transaction.id}
               onDelete={onDelete}
+              isLoading={isLoading}
             />
           </div>
 

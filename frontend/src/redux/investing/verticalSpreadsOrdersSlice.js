@@ -138,11 +138,9 @@ export const verticalSpreadsOrdersSlice = createSlice({
       .addCase(deleteInvestingAccount.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { orders } = action.payload;
-        const spreads = orders.filter((order) => {
-          if (order.type === "ORDER#VERTSPREADS#") {
-            return order.id;
-          }
-        });
+        const spreads = orders
+          .filter((order) => order.type === "ORDER#VERTSPREADS#")
+          .map((order) => order.id);
         vertSpreadsAdapter.removeMany(state, spreads);
       })
       .addCase(deleteInvestingAccount.rejected, (state, action) => {

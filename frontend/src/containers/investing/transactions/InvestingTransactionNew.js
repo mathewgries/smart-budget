@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewInvestingTransaction } from "../../../redux/investing/investingTransactionsSlice";
@@ -7,7 +7,6 @@ import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function InvestingTransactionNew(props) {
   const { id } = useParams();
@@ -15,13 +14,23 @@ export default function InvestingTransactionNew(props) {
   const dispatch = useDispatch();
   const typeList = ["Withdrawal", "Deposit"];
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const status = useSelector((state) => state.investingTransactions.status);
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     transactionAmount: "0.00",
     transactionDate: inputDateFormat(new Date()),
     transactionType: "Withdrawal",
     transactionNote: "",
   });
+
+  useEffect(() => {
+    if (isSaving) {
+      history.push(`/investing/accounts/${id}`);
+    }
+  }, [isSaving, history, id]);
+
+  function validateForm() {
+    return fields.transactionAmount !== "0.00";
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -32,17 +41,13 @@ export default function InvestingTransactionNew(props) {
     setFields({ ...fields, [name]: value });
   };
 
-  function validateForm() {
-    return fields.transactionAmount !== "0.00";
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
-      history.push(`/investing/accounts/${id}`);
     } catch (e) {
       onError(e);
     }
@@ -86,13 +91,9 @@ export default function InvestingTransactionNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || status === "pending"}
+                  disabled={!validateForm()}
                 >
-                  {status === "pending" ? (
-                    <LoadingSpinner text={"Saving"} />
-                  ) : (
-                    "Save"
-                  )}
+                  Save
                 </button>
               </div>
             </section>

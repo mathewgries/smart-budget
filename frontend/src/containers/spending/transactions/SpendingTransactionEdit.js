@@ -37,12 +37,12 @@ export default function SpendingTransactionEdit(props) {
   const activeSubcategory = useSelector((state) =>
     selectActiveSubcategory(state)
   );
-  const [subcategories, setSubcategories] = useState([]);
-  const transactionStatus = useSelector(
-    (state) => state.spendingTransactions.status
+  const [subcategories, setSubcategories] = useState(
+    activeCategory.subcategories
   );
   const categoryStatus = useSelector((state) => state.categories.status);
-  const [status, setStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     transactionAmount: transaction.transactionAmount,
     transactionDate: inputDateFormat(transaction.transactionDate),
@@ -53,20 +53,33 @@ export default function SpendingTransactionEdit(props) {
 
   useEffect(() => {
     const activeCategory = categories.find(
-      (category) => category.categoryName === transaction.categoryName
+      (category) => category.id === transaction.categoryId
     );
     dispatch(activeCategoryUpdated(activeCategory));
-  }, [transaction.categoryName, categories, dispatch]);
+    dispatch(activeSubcategoryUpdated(transaction.subcategory));
+  }, [transaction.categoryId, transaction.subcategory, categories, dispatch]);
 
   useEffect(() => {
-    let status;
-    if (transactionStatus === "pending" || categoryStatus === "pending") {
-      status = "pending";
-    } else {
-      status = "";
+    function validateStatus() {
+      return categoryStatus === "pending";
     }
-    setStatus(status);
-  }, [transactionStatus, categoryStatus]);
+
+    if (validateStatus() && !isLoading) {
+      setIsLoading(true);
+    } else if (!validateStatus() && isLoading) {
+      setIsLoading(false);
+    }
+  }, [categoryStatus, isLoading]);
+
+  useEffect(() => {
+    if (isSaving) {
+      history.push(`/spending/transactions/${id}`);
+    }
+  }, [isSaving, history, id]);
+
+  function validateForm() {
+    return fields.transactionAmount !== "0.00";
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -86,17 +99,13 @@ export default function SpendingTransactionEdit(props) {
     dispatch(activeSubcategoryUpdated(subcategory));
   }
 
-  function validateForm() {
-    return fields.transactionAmount !== "0.00";
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleUpdateTransaction(newAccountBalance);
-      history.push(`/spending/transactions/${id}`);
     } catch (e) {
       onError(e);
     }
@@ -119,7 +128,7 @@ export default function SpendingTransactionEdit(props) {
           transactionDate: Date.parse(fields.transactionDate),
           transactionType: fields.transactionType.charAt(0),
           categoryName: activeCategory.categoryName,
-					categoryId: activeCategory.id,
+          categoryId: activeCategory.id,
           subcategory: activeSubcategory,
         },
         account: {
@@ -143,13 +152,9 @@ export default function SpendingTransactionEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || status === "pending"}
+                  disabled={!validateForm() || isLoading}
                 >
-                  {status === "pending" ? (
-                    <LoadingSpinner text={"Updating"} />
-                  ) : (
-                    "Update"
-                  )}
+                  {isLoading ? <LoadingSpinner text={"Updating"} /> : "Update"}
                 </button>
               </div>
             </section>
@@ -161,6 +166,7 @@ export default function SpendingTransactionEdit(props) {
                   inputLabel={"Transaction Amount"}
                   inputValue={fields.transactionAmount}
                   inputChangeHandler={handleCurrencyInput}
+                  isDisabled={isLoading}
                 />
               </div>
 
@@ -171,6 +177,7 @@ export default function SpendingTransactionEdit(props) {
                   name="transactionType"
                   value={fields.transactionType}
                   onChange={handleChange}
+                  disabled={isLoading}
                 >
                   {typeList.map((element, index, arr) => (
                     <option key={index} value={element}>
@@ -180,10 +187,6 @@ export default function SpendingTransactionEdit(props) {
                 </select>
               </div>
 
-              {/* <div>
-                <Categories />
-              </div> */}
-
               <div className="form-group">
                 <label>Transaction Date</label>
                 <input
@@ -192,6 +195,7 @@ export default function SpendingTransactionEdit(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
+                  disabled={isLoading}
                   data-lpignore="true"
                 />
               </div>
@@ -205,10 +209,11 @@ export default function SpendingTransactionEdit(props) {
                     activeSubcategory={activeSubcategory}
                     toggleCategory={handleCategoryToggle}
                     toggleSubcategory={handleSubcategoryToggle}
+                    isLoading={isLoading}
                   />
                 </div>
                 <div>
-                  <CategoriesForm />
+                  <CategoriesForm isLoading={isLoading} />
                 </div>
               </div>
 
@@ -221,6 +226,7 @@ export default function SpendingTransactionEdit(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
+                  disabled={isLoading}
                   data-lpignore="true"
                 />
               </div>

@@ -1,8 +1,28 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectAllSpendingAcounts } from "../../../redux/spending/spendingAccountsSlice";
 import SpendingAccountsList from "./SpendingAccountsList";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function SpendingAccounts(props) {
+  const history = useHistory();
+  const status = useSelector((state) => state.spendingAccounts.status);
+  const accounts = useSelector(selectAllSpendingAcounts);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
+
+  function handleRedirect(path) {
+    history.push(path);
+  }
+
   return (
     <div className="page-container">
       <div className="page-wrapper">
@@ -11,14 +31,18 @@ export default function SpendingAccounts(props) {
             <header className="spending-accounts-list-header">
               <h5>Spending Accounts</h5>
             </header>
-            <div>
-              <Link to="/spending/accounts/new" className="btn btn-primary">
-                Add
-              </Link>
+            <div className="form-group">
+              <button
+                disabled={isLoading}
+                className={`btn ${isLoading ? "btn-secondary" : "btn-primary"}`}
+                onClick={() => handleRedirect("/spending/accounts/new")}
+              >
+                {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
+              </button>
             </div>
           </div>
           <div className="spending-accounts-list-section">
-            <SpendingAccountsList />
+            <SpendingAccountsList status={status} accounts={accounts} />
           </div>
         </div>
       </div>

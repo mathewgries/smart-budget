@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewVerticalSpreadsOrder } from "../../../../redux/investing/verticalSpreadsOrdersSlice";
@@ -11,17 +11,15 @@ import {
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function VerticalSpreadsOrderNew(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const status = useSelector((state) => state.verticalSpreadsOrders.status)
+  const [isSaving, setIsSaving] = useState(false);
   const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
-
   const [fields, setFields] = useState({
     ticker: "",
     openDate: inputDateFormat(new Date()),
@@ -47,6 +45,12 @@ export default function VerticalSpreadsOrderNew(props) {
     openImpliedVolatility: "0.00",
     closeImpliedVolatility: "0.00",
   });
+
+  useEffect(() => {
+    if (isSaving) {
+      history.push(`/investing/journal/${id}`);
+    }
+  }, [isSaving, history, id]);
 
   function validateForm() {
     return (
@@ -86,21 +90,20 @@ export default function VerticalSpreadsOrderNew(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
+      setIsSaving(true);
       const profitLoss = optionsProfitLossHandler(
-        orderSize,
-        openPrice,
-        closePrice,
-        tradeSide
+        fields.orderSize,
+        fields.openPrice,
+        fields.closePrice,
+        fields.tradeSide
       );
       const newAccountBalance = addOrderHandler(
         profitLoss,
         account.accountBalance
       );
       await handleSaveNewOrder(newAccountBalance, profitLoss);
-      history.push(`/investing/journal/${id}`);
     } catch (e) {
       onError(e);
     }
@@ -154,9 +157,9 @@ export default function VerticalSpreadsOrderNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={validateForm() || status === "pending"}
+                  disabled={validateForm()}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Saving"} /> : "Save"}
+                  Save
                 </button>
               </div>
             </section>

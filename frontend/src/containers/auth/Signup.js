@@ -1,9 +1,15 @@
-import React, { useState } from "react";
-import { amplifyClient } from "../../api/amplifyClient";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { onError } from "../../lib/errorLib";
-import { lastRouteUpdated } from "../../redux/history/historySlice";
+import {
+  signUpUser,
+  confirmSignUp,
+  selectUser,
+  signInUser,
+  getCurrentUser,
+  addNewUser,
+} from "../../redux/users/usersSlice";
 import { useAppContext } from "../../lib/contextLib";
 import { useFormFields } from "../../lib/hooksLib";
 import Form from "react-bootstrap/Form";
@@ -19,9 +25,18 @@ export default function Signup() {
     confirmationCode: "",
   });
   const history = useHistory();
-  const [newUser, setNewUser] = useState(null);
+  const user = useSelector((state) => selectUser(state));
+  const status = useSelector((state) => state.users.status);
   const { userHasAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (status === "pending") {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [status]);
 
   function validateForm() {
     return (
@@ -37,42 +52,44 @@ export default function Signup() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-
-    setIsLoading(true);
-
     try {
-      const newUser = await amplifyClient.auth.signUp({
-        username: fields.email,
-        password: fields.password,
-      });
-      dispatch(lastRouteUpdated("/signup"));
-      setNewUser(newUser);
+      await dispatch(
+        signUpUser({
+          username: fields.email,
+          password: fields.password,
+        })
+      ).unwrap();
     } catch (e) {
       onError(e);
-      setIsLoading(false);
     }
-    setIsLoading(false);
   }
 
   async function handleConfirmationSubmit(event) {
     event.preventDefault();
 
     try {
-      setIsLoading(true);
+      await dispatch(
+        confirmSignUp({
+          username: fields.email,
+          confirmationCode: fields.confirmationCode,
+        })
+      ).unwrap();
 
-      await amplifyClient.auth.confirmSignUp({
-        username: fields.email,
-        confirmationCode: fields.confirmationCode,
-      });
-      await amplifyClient.auth.signIn({
-        username: fields.email,
-        password: fields.password,
-      });
+      await dispatch(
+        signInUser({
+          username: fields.email,
+          password: fields.password,
+        })
+      ).unwrap();
+
+      await dispatch(getCurrentUser()).unwrap();
+
+      await dispatch(addNewUser({ email: user.email })).unwrap();
+
       userHasAuthenticated(true);
       history.push("/");
     } catch (e) {
       onError(e);
-      setIsLoading(false);
     }
   }
 
@@ -147,7 +164,7 @@ export default function Signup() {
 
   return (
     <div className="Signup">
-      {newUser === null ? renderForm() : renderConfirmationForm()}
+      {user === null ? renderForm() : renderConfirmationForm()}
     </div>
   );
 }

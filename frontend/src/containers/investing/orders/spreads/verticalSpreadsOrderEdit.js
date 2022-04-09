@@ -14,7 +14,6 @@ import {
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function VerticalSpreadsOrderEdit(props) {
   const { id } = useParams();
@@ -26,64 +25,41 @@ export default function VerticalSpreadsOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-  const status = useSelector((state) => state.verticalSpreadsOrders.status)
-  const [selectedSignals, setSelectedSignals] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [selectedSignals, setSelectedSignals] = useState(order.signalList);
   const [openGreeks, setOpenGreeks] = useState(false);
 
   const [fields, setFields] = useState({
-    ticker: "",
-    openDate: "",
-    closeDate: "",
-    orderSize: "",
-    openPrice: "",
-    closePrice: "",
-    openUnderlyingPrice: "",
-    closeUnderlyingPrice: "",
-    strikeUpperLegPrice: "",
-    strikeLowerLegPrice: "",
-    contractType: "",
-    tradeSide: "",
-    spreadExpirationDate: "",
-    openDelta: "",
-    closeDelta: "",
-    openGamma: "",
-    closeGamma: "",
-    openVega: "",
-    closeVega: "",
-    openTheta: "",
-    closeTheta: "",
-    openImpliedVolatility: "",
-    closeImpliedVolatility: "",
+    ticker: order.ticker,
+    openDate: inputDateFormat(order.openDate),
+    closeDate: inputDateFormat(order.closeDate),
+    orderSize: order.orderSize,
+    openPrice: order.openPrice,
+    closePrice: order.closePrice,
+    openUnderlyingPrice: order.openUnderlyingPrice,
+    closeUnderlyingPrice: order.closeUnderlyingPrice,
+    strikeUpperLegPrice: order.strikeUpperLegPrice,
+    strikeLowerLegPrice: order.strikeLowerLegPrice,
+    contractType: order.contractType,
+    tradeSide: order.tradeSide,
+    spreadExpirationDate: inputDateFormat(order.spreadExpirationDate),
+    openDelta: order.openDelta || "0.00",
+    closeDelta: order.closeDelta || "0.00",
+    openGamma: order.openGamma || "0.00",
+    closeGamma: order.closeGamma || "0.00",
+    openVega: order.openVega || "0.00",
+    closeVega: order.closeVega || "0.00",
+    openTheta: order.openTheta || "0.00",
+    closeTheta: order.closeTheta || "0.00",
+    openImpliedVolatility: order.openImpliedVolatility || "0.00",
+    closeImpliedVolatility: order.closeImpliedVolatility || "0.00",
   });
 
   useEffect(() => {
-    setFields({
-      ticker: order.ticker,
-      openDate: inputDateFormat(order.openDate),
-      closeDate: inputDateFormat(order.closeDate),
-      orderSize: order.orderSize,
-      openPrice: order.openPrice,
-      closePrice: order.closePrice,
-      openUnderlyingPrice: order.openUnderlyingPrice,
-      closeUnderlyingPrice: order.closeUnderlyingPrice,
-      strikeUpperLegPrice: order.strikeUpperLegPrice,
-      strikeLowerLegPrice: order.strikeLowerLegPrice,
-      contractType: order.contractType,
-      tradeSide: order.tradeSide,
-      spreadExpirationDate: inputDateFormat(order.spreadExpirationDate),
-      openDelta: order.openDelta || "0.00",
-      closeDelta: order.closeDelta || "0.00",
-      openGamma: order.openGamma || "0.00",
-      closeGamma: order.closeGamma || "0.00",
-      openVega: order.openVega || "0.00",
-      closeVega: order.closeVega || "0.00",
-      openTheta: order.openTheta || "0.00",
-      closeTheta: order.closeTheta || "0.00",
-      openImpliedVolatility: order.openImpliedVolatility || "0.00",
-      closeImpliedVolatility: order.closeImpliedVolatility || "0.00",
-    });
-    setSelectedSignals(order.signalList);
-  }, [order]);
+    if (isSaving) {
+      history.push(`/investing/journal/${account.id}`);
+    }
+  }, [isSaving, history]);
 
   function validateForm() {
     return (
@@ -123,14 +99,14 @@ export default function VerticalSpreadsOrderEdit(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
+      setIsSaving(true);
       const newPL = optionsProfitLossHandler(
-        orderSize,
-        openPrice,
-        closePrice,
-        tradeSide
+        fields.orderSize,
+        fields.openPrice,
+        fields.closePrice,
+        fields.tradeSide
       );
       const newAccountBalance = updateOrderHandler(
         order.profitLoss,
@@ -138,7 +114,6 @@ export default function VerticalSpreadsOrderEdit(props) {
         account.accountBalance
       );
       await handleUpdateOrder(newAccountBalance, newPL);
-      history.push(`/investing/journal/${account.id}`);
     } catch (e) {
       onError(e);
     }
@@ -148,8 +123,8 @@ export default function VerticalSpreadsOrderEdit(props) {
     await dispatch(
       updateVerticalSpreadOrder({
         order: {
-					...order,
-					...fields,
+          ...order,
+          ...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
           spreadExpirationDate: Date.parse(fields.spreadExpirationDate),
@@ -174,9 +149,9 @@ export default function VerticalSpreadsOrderEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={validateForm() || status === "pending"}
+                  disabled={validateForm()}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Updating"} /> : "Update"}
+                  Update
                 </button>
               </div>
             </section>

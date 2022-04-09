@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllCategories,
@@ -6,9 +6,12 @@ import {
   activeSubcategoryUpdated,
   selectActiveCategory,
   selectActiveSubcategory,
+  deleteCategory,
 } from "../../../redux/spending/categoriesSlice";
+import { selectAllSpendingTransactions } from "../../../redux/spending/spendingTransactionsSlice";
 import CategoriesSelector from "./CategoriesSelector";
 import CategoriesForm from "./CategoriesForm";
+import { onError } from "../../../lib/errorLib";
 
 export default function Categories() {
   const dispatch = useDispatch();
@@ -18,6 +21,24 @@ export default function Categories() {
     selectActiveSubcategory(state)
   );
   const [subcategories, setSubcategories] = useState([]);
+  const allTransactions = useSelector(selectAllSpendingTransactions);
+  const transactionStatus = useSelector(
+    (state) => state.spendingTransactions.status
+  );
+  const categoryStatus = useSelector((state) => state.categories.status);
+	const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    function validateStatus() {
+      return transactionStatus === "pending" || categoryStatus === "pending";
+    }
+
+    if (validateStatus() && !isLoading) {
+      setIsLoading(true);
+    } else if (!validateStatus() && isLoading) {
+      setIsLoading(false);
+    }
+  }, [transactionStatus, categoryStatus, isLoading]);
 
   function handleCategoryToggle(category) {
     dispatch(activeCategoryUpdated(category));
@@ -26,6 +47,17 @@ export default function Categories() {
 
   function handleSubcategoryToggle(subcategory) {
     dispatch(activeSubcategoryUpdated(subcategory));
+  }
+
+  async function handleCategoryDelete(category) {
+    try {
+      const transactions = allTransactions.filter(
+        (trans) => trans.categoryId === category.id
+      );
+      await dispatch(deleteCategory({ category, transactions })).unwrap();
+    } catch (e) {
+      onError(e);
+    }
   }
 
   return (
@@ -40,11 +72,13 @@ export default function Categories() {
               activeSubcategory={activeSubcategory}
               toggleCategory={handleCategoryToggle}
               toggleSubcategory={handleSubcategoryToggle}
+              deleteCategory={handleCategoryDelete}
+							isLoading={isLoading}
             />
           </section>
           <section>
             <form>
-              <CategoriesForm />
+              <CategoriesForm isLoading={isLoading}/>
             </form>
           </section>
         </div>

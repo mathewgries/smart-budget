@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,22 +7,27 @@ import {
 } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function SpendingAccountEdit(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectSpendingAccountById(state, id));
-	const status = useSelector((state) => state.spendingAccounts.status)
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     accountName: account.accountName,
     accountBalance: account.accountBalance,
   });
 
+  useEffect(() => {
+    if (isSaving) {
+      history.push(`/spending/accounts/${id}`);
+    }
+  }, [isSaving, history, id]);
+
   function handleChange(e) {
     const { name, value } = e.target;
-    setFields({ ...fields, [name]: value });
+    setFields((prev) => ({ ...prev, [name]: value }));
   }
 
   const handleCurrencyInput = ({ name, value }) => {
@@ -35,13 +40,13 @@ export default function SpendingAccountEdit(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { accountName, accountBalance } = fields;
 
     try {
+      setIsSaving(true);
+      const { accountName, accountBalance } = fields;
       await dispatch(
         updateSpendingAccount({ id, accountName, accountBalance })
       ).unwrap();
-      history.push(`/spending/accounts/${id}`);
     } catch (e) {
       onError(e);
     }
@@ -60,9 +65,9 @@ export default function SpendingAccountEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || status === "pending"}
+                  disabled={!validateForm()}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Updating"}/> : "Update"}
+                  Update
                 </button>
               </div>
             </section>
@@ -76,16 +81,15 @@ export default function SpendingAccountEdit(props) {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleChange}
-									data-lpignore="true"
+                  data-lpignore="true"
                 />
               </div>
               <div>
                 <CurrencyInput
                   inputName={"accountBalance"}
                   inputLabel={"Account Balance"}
-									inputValue={fields.accountBalance}
+                  inputValue={fields.accountBalance}
                   inputChangeHandler={handleCurrencyInput}
-									allowNegative={true}
                 />
               </div>
             </section>
