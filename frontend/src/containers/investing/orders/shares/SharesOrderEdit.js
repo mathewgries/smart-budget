@@ -14,7 +14,6 @@ import {
 } from "../../../../helpers/currencyHandler";
 import SignalsListGroup from "../SignalListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../../components/LoadingSpinner";
 
 export default function SharesOrderEdit(props) {
   const { id } = useParams();
@@ -24,30 +23,23 @@ export default function SharesOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-  const status = useSelector((state) => state.sharesOrders.status);
-  const [selectedSignals, setSelectedSignals] = useState([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [selectedSignals, setSelectedSignals] = useState(order.signalList);
   const [fields, setFields] = useState({
-    ticker: "",
-    openDate: "",
-    closeDate: "",
-    orderSize: "",
-    openPrice: "",
-    closePrice: "",
-    tradeSide: "",
+    ticker: order.ticker,
+    openDate: inputDateFormat(order.openDate),
+    closeDate: inputDateFormat(order.closeDate),
+    orderSize: order.orderSize,
+    openPrice: order.openPrice,
+    closePrice: order.closePrice,
+    tradeSide: order.tradeSide,
   });
 
   useEffect(() => {
-    setFields({
-      ticker: order.ticker,
-      openDate: inputDateFormat(order.openDate),
-      closeDate: inputDateFormat(order.closeDate),
-      orderSize: order.orderSize,
-      openPrice: order.openPrice,
-      closePrice: order.closePrice,
-      tradeSide: order.tradeSide,
-    });
-    setSelectedSignals(order.signalList);
-  }, [order]);
+    if (isSaving) {
+      history.push(`/investing/journal/${account.id}`);
+    }
+  }, [isSaving, history, account.id]);
 
   function validateForm() {
     return (
@@ -83,14 +75,14 @@ export default function SharesOrderEdit(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { orderSize, openPrice, closePrice, tradeSide } = fields;
 
     try {
+      setIsSaving(true);
       const newPL = sharesProfitLossHandler(
-        orderSize,
-        openPrice,
-        closePrice,
-        tradeSide
+        fields.orderSize,
+        fields.openPrice,
+        fields.closePrice,
+        fields.tradeSide
       );
       const newAccountBalance = updateOrderHandler(
         order.profitLoss,
@@ -98,7 +90,6 @@ export default function SharesOrderEdit(props) {
         account.accountBalance
       );
       await handleUpdateOrder(newAccountBalance, newPL);
-      history.push(`/investing/journal/${account.id}`);
     } catch (e) {
       onError(e);
     }
@@ -136,13 +127,9 @@ export default function SharesOrderEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={validateForm() || status === "pending"}
+                  disabled={validateForm()}
                 >
-                  {status === "pending" ? (
-                    <LoadingSpinner text={"Updating"} />
-                  ) : (
-                    "Update"
-                  )}
+                  Update
                 </button>
               </div>
             </section>

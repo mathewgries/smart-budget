@@ -33,14 +33,14 @@ export default function SharesOrder(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-  const status = useSelector((state) => state.sharesOrders.status);
+  const [isDelete, setIsDelete] = useState(false);
   const [showConfrim, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    if (status === "pending") {
+    if (isDelete) {
       history.push(`/investing/journal/${account.id}`);
     }
-  }, [status, history, account.id]);
+  }, [isDelete, history, account.id]);
 
   function handleCancel() {
     setShowConfirm(!showConfrim);
@@ -53,6 +53,7 @@ export default function SharesOrder(props) {
 
   async function onDelete() {
     try {
+      setIsDelete(true);
       const newAccountBalance = deleteOrderHandler(
         order.profitLoss,
         account.accountBalance

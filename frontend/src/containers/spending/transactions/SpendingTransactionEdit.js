@@ -57,7 +57,7 @@ export default function SpendingTransactionEdit(props) {
     );
     dispatch(activeCategoryUpdated(activeCategory));
     dispatch(activeSubcategoryUpdated(transaction.subcategory));
-  }, [transaction.categoryName, categories, dispatch]);
+  }, [transaction.categoryId, transaction.subcategory, categories, dispatch]);
 
   useEffect(() => {
     function validateStatus() {
