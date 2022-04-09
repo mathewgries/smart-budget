@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
@@ -37,7 +37,6 @@ export default function InvestingJournal(props) {
   const optionsPL = useSelector((state) =>
     selectOptionsPLByAccountGSI(state, account.GSI1_PK)
   );
-
   const sharesPL = useSelector((state) =>
     selectSharesPLByAccountGSI(state, account.GSI1_PK)
   );
@@ -46,9 +45,18 @@ export default function InvestingJournal(props) {
     selectVerticalSpreadsPLByAccountGSI(state, account.GSI1_PK)
   );
   const status = useSelector((state) => state.investingAccounts.status);
+  const [isLoading, setIsLoading] = useState(false);
   const [openOrderSelect, setOpenOrderSelect] = useState(false);
   const [openViewSelect, setOpenViewSelect] = useState(false);
   const [selectedView, setSelectedView] = useState("View All");
+
+  useEffect(() => {
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
 
   function handleSelectView(e) {
     const { innerText } = e.target;
@@ -64,10 +72,16 @@ export default function InvestingJournal(props) {
       <div className="page-wrapper">
         <section className="investing-journal-account-performance-wrapper">
           <div>
-            <InvestingBalance account={account} />
+            <InvestingBalance
+              accountBalance={account.accountBalance}
+              isLoading={isLoading}
+            />
           </div>
           <div>
-            <GrowthRate growthRate={`P/L$: ${handlePLCalculate()}`} />
+            <GrowthRate
+              growthRate={`P/L$: ${handlePLCalculate()}`}
+              isLoading={isLoading}
+            />
           </div>
           <div>
             <GrowthRate
@@ -77,6 +91,7 @@ export default function InvestingJournal(props) {
                   (account.accountBalance - handlePLCalculate())) *
                 100
               ).toFixed(2)}`}
+              isLoading={isLoading}
             />
           </div>
         </section>
@@ -160,7 +175,7 @@ export default function InvestingJournal(props) {
           </div>
         </section>
 
-        {status !== "pending" && (
+        {!isLoading && (
           <section className="journal-table-section">
             {shares.length === 0 &&
             options.length === 0 &&

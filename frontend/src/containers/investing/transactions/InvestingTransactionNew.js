@@ -7,7 +7,6 @@ import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function InvestingTransactionNew(props) {
   const { id } = useParams();
@@ -15,8 +14,6 @@ export default function InvestingTransactionNew(props) {
   const dispatch = useDispatch();
   const typeList = ["Withdrawal", "Deposit"];
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-  const status = useSelector((state) => state.investingTransactions.status);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     transactionAmount: "0.00",
@@ -24,14 +21,6 @@ export default function InvestingTransactionNew(props) {
     transactionType: "Withdrawal",
     transactionNote: "",
   });
-
-  useEffect(() => {
-    if (status === "pending" && !isLoading) {
-      setIsLoading(true);
-    } else if (status !== "pending" && isLoading) {
-      setIsLoading(false);
-    }
-  }, [status, isLoading]);
 
   useEffect(() => {
     if (isSaving) {
@@ -102,13 +91,9 @@ export default function InvestingTransactionNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isLoading || isSaving}
+                  disabled={!validateForm()}
                 >
-                  {isLoading || isSaving ? (
-                    <LoadingSpinner text={"Saving"} />
-                  ) : (
-                    "Save"
-                  )}
+                  Save
                 </button>
               </div>
             </section>
@@ -120,7 +105,6 @@ export default function InvestingTransactionNew(props) {
                   inputLabel={"Transaction Amount"}
                   inputValue={fields.transactionAmount}
                   inputChangeHandler={handleCurrencyInput}
-                  isDisabled={isLoading || isSaving}
                 />
               </div>
 
@@ -131,7 +115,6 @@ export default function InvestingTransactionNew(props) {
                   name="transactionType"
                   value={fields.transactionType}
                   onChange={handleChange}
-                  disabled={isLoading || isSaving}
                 >
                   {typeList.map((element, index, arr) => (
                     <option key={index} value={element}>
@@ -149,7 +132,6 @@ export default function InvestingTransactionNew(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
-                  disabled={isLoading || isSaving}
                   data-lpignore="true"
                 />
               </div>
@@ -163,7 +145,6 @@ export default function InvestingTransactionNew(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
-                  disabled={isLoading || isSaving}
                   data-lpignore="true"
                 />
               </div>

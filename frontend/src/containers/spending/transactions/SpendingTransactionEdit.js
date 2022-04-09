@@ -37,9 +37,8 @@ export default function SpendingTransactionEdit(props) {
   const activeSubcategory = useSelector((state) =>
     selectActiveSubcategory(state)
   );
-  const [subcategories, setSubcategories] = useState([]);
-  const transactionStatus = useSelector(
-    (state) => state.spendingTransactions.status
+  const [subcategories, setSubcategories] = useState(
+    activeCategory.subcategories
   );
   const categoryStatus = useSelector((state) => state.categories.status);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,8 +52,16 @@ export default function SpendingTransactionEdit(props) {
   });
 
   useEffect(() => {
+    const activeCategory = categories.find(
+      (category) => category.id === transaction.categoryId
+    );
+    dispatch(activeCategoryUpdated(activeCategory));
+    dispatch(activeSubcategoryUpdated(transaction.subcategory));
+  }, [transaction.categoryName, categories, dispatch]);
+
+  useEffect(() => {
     function validateStatus() {
-      return transactionStatus === "pending" || categoryStatus === "pending";
+      return categoryStatus === "pending";
     }
 
     if (validateStatus() && !isLoading) {
@@ -62,14 +69,7 @@ export default function SpendingTransactionEdit(props) {
     } else if (!validateStatus() && isLoading) {
       setIsLoading(false);
     }
-  }, [transactionStatus, categoryStatus, isLoading]);
-
-  useEffect(() => {
-    const activeCategory = categories.find(
-      (category) => category.categoryName === transaction.categoryName
-    );
-    dispatch(activeCategoryUpdated(activeCategory));
-  }, [transaction.categoryName, categories, dispatch]);
+  }, [categoryStatus, isLoading]);
 
   useEffect(() => {
     if (isSaving) {
@@ -152,13 +152,9 @@ export default function SpendingTransactionEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isLoading || isSaving}
+                  disabled={!validateForm() || isLoading}
                 >
-                  {isLoading || isSaving ? (
-                    <LoadingSpinner text={"Updating"} />
-                  ) : (
-                    "Update"
-                  )}
+                  {isLoading ? <LoadingSpinner text={"Updating"} /> : "Update"}
                 </button>
               </div>
             </section>
@@ -170,7 +166,7 @@ export default function SpendingTransactionEdit(props) {
                   inputLabel={"Transaction Amount"}
                   inputValue={fields.transactionAmount}
                   inputChangeHandler={handleCurrencyInput}
-                  isDisabled={isLoading || isSaving}
+                  isDisabled={isLoading}
                 />
               </div>
 
@@ -181,7 +177,7 @@ export default function SpendingTransactionEdit(props) {
                   name="transactionType"
                   value={fields.transactionType}
                   onChange={handleChange}
-                  disabled={isLoading || isSaving}
+                  disabled={isLoading}
                 >
                   {typeList.map((element, index, arr) => (
                     <option key={index} value={element}>
@@ -199,7 +195,7 @@ export default function SpendingTransactionEdit(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
-                  disabled={isLoading || isSaving}
+                  disabled={isLoading}
                   data-lpignore="true"
                 />
               </div>
@@ -213,11 +209,11 @@ export default function SpendingTransactionEdit(props) {
                     activeSubcategory={activeSubcategory}
                     toggleCategory={handleCategoryToggle}
                     toggleSubcategory={handleSubcategoryToggle}
-                    isLoading={isLoading || isSaving}
+                    isLoading={isLoading}
                   />
                 </div>
                 <div>
-                  <CategoriesForm isLoading={isLoading || isSaving} />
+                  <CategoriesForm isLoading={isLoading} />
                 </div>
               </div>
 
@@ -230,7 +226,7 @@ export default function SpendingTransactionEdit(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
-                  disabled={isLoading || isSaving}
+                  disabled={isLoading}
                   data-lpignore="true"
                 />
               </div>

@@ -7,28 +7,17 @@ import {
 } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function SpendingAccountEdit(props) {
   const { id } = useParams();
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectSpendingAccountById(state, id));
-  const status = useSelector((state) => state.spendingAccounts.status);
-  const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     accountName: account.accountName,
     accountBalance: account.accountBalance,
   });
-
-  useEffect(() => {
-    if (status === "pending" && !isLoading) {
-      setIsLoading(true);
-    } else if (status !== "pending" && isLoading) {
-      setIsLoading(false);
-    }
-  }, [status, isLoading]);
 
   useEffect(() => {
     if (isSaving) {
@@ -76,9 +65,9 @@ export default function SpendingAccountEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || isLoading}
+                  disabled={!validateForm()}
                 >
-                  {isLoading ? <LoadingSpinner text={"Updating"} /> : "Update"}
+                  Update
                 </button>
               </div>
             </section>
@@ -92,7 +81,6 @@ export default function SpendingAccountEdit(props) {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleChange}
-                  disabled={isLoading}
                   data-lpignore="true"
                 />
               </div>
@@ -102,7 +90,6 @@ export default function SpendingAccountEdit(props) {
                   inputLabel={"Account Balance"}
                   inputValue={fields.accountBalance}
                   inputChangeHandler={handleCurrencyInput}
-                  isDisabled={isLoading}
                 />
               </div>
             </section>

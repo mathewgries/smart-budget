@@ -8,6 +8,7 @@ import {
 import { selectSpendingAccountByGSI } from "../../../redux/spending/spendingAccountsSlice";
 import { deleteTransactionHandler } from "../../../helpers/currencyHandler";
 import { onError } from "../../../lib/errorLib";
+import { Link } from "react-router-dom";
 import SpendingTransactionCard from "./SpendingTransactionCard";
 import SpendingTransactionButtons from "./SpendingTransactionButtons";
 import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
@@ -73,7 +74,9 @@ export default function SpendingTransaction(props) {
       <div className="page-wrapper">
         <section>
           <header>
-            <h3>Spending Account</h3>
+            <Link to={`/spending/accounts/${account.id}`}>
+              <h3>Spending Account</h3>
+            </Link>
           </header>
         </section>
 

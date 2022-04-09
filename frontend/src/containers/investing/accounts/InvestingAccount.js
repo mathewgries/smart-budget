@@ -47,7 +47,7 @@ export default function InvestingAccount() {
     } else if (status !== "pending" && isLoading) {
       setIsLoading(false);
     }
-  }, [status, history, isLoading, isDelete]);
+  }, [status, isLoading]);
 
   useEffect(() => {
     if (isDelete) {

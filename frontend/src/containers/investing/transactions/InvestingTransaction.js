@@ -8,6 +8,7 @@ import {
 import { selectInvestingAccountByGSI } from "../../../redux/investing/investingAccountsSlice";
 import { deleteTransactionHandler } from "../../../helpers/currencyHandler";
 import { onError } from "../../../lib/errorLib";
+import { Link } from "react-router-dom";
 import InvestingTransactionCard from "./InvestingTransactionCard";
 import InvestingTransactionButtons from "./InvestingTransactionButtons";
 import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
@@ -72,7 +73,9 @@ export default function InvestingTransaction(props) {
       <div className="page-wrapper">
         <section>
           <header>
-            <h3>Investing Account</h3>
+            <Link to={`/investing/accounts/${account.id}`}>
+              <h3>Investing Account</h3>
+            </Link>
           </header>
         </section>
 

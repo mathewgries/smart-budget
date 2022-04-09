@@ -29,10 +29,7 @@ export default function SpendingTransactionNew(props) {
   const activeSubcategory = useSelector((state) =>
     selectActiveSubcategory(state)
   );
-  const [subcategories, setSubcategories] = useState([]);
-  const transactionStatus = useSelector(
-    (state) => state.spendingTransactions.status
-  );
+  const [subcategories, setSubcategories] = useState(activeCategory.subcategories);
   const categoryStatus = useSelector((state) => state.categories.status);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -45,7 +42,7 @@ export default function SpendingTransactionNew(props) {
 
   useEffect(() => {
     function validateStatus() {
-      return transactionStatus === "pending" || categoryStatus === "pending";
+      return categoryStatus === "pending";
     }
 
     if (validateStatus() && !isLoading) {
@@ -53,13 +50,17 @@ export default function SpendingTransactionNew(props) {
     } else if (!validateStatus() && isLoading) {
       setIsLoading(false);
     }
-  }, [transactionStatus, categoryStatus, isLoading]);
+  }, [categoryStatus, isLoading]);
 
   useEffect(() => {
     if (isSaving) {
       history.push(`/spending/accounts/${id}`);
     }
   }, [isSaving, history, id]);
+
+  function validateForm() {
+    return fields.transactionAmount > 0.0;
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -77,10 +78,6 @@ export default function SpendingTransactionNew(props) {
 
   function handleSubcategoryToggle(subcategory) {
     dispatch(activeSubcategoryUpdated(subcategory));
-  }
-
-  function validateForm() {
-    return fields.transactionAmount > 0.0;
   }
 
   const handleSubmit = async (e) => {
