@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewInvestingTransaction } from "../../../redux/investing/investingTransactionsSlice";
@@ -16,12 +16,32 @@ export default function InvestingTransactionNew(props) {
   const typeList = ["Withdrawal", "Deposit"];
   const account = useSelector((state) => selectInvestingAccountById(state, id));
   const status = useSelector((state) => state.investingTransactions.status);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     transactionAmount: "0.00",
     transactionDate: inputDateFormat(new Date()),
     transactionType: "Withdrawal",
     transactionNote: "",
   });
+
+  useEffect(() => {
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
+
+  useEffect(() => {
+    if (isSaving) {
+      history.push(`/investing/accounts/${id}`);
+    }
+  }, [isSaving, history, id]);
+
+  function validateForm() {
+    return fields.transactionAmount !== "0.00";
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -32,17 +52,13 @@ export default function InvestingTransactionNew(props) {
     setFields({ ...fields, [name]: value });
   };
 
-  function validateForm() {
-    return fields.transactionAmount !== "0.00";
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      setIsSaving(true);
       const newAccountBalance = getNewAccountBalance();
       await handleSaveNewTransaction(newAccountBalance);
-      history.push(`/investing/accounts/${id}`);
     } catch (e) {
       onError(e);
     }
@@ -86,9 +102,9 @@ export default function InvestingTransactionNew(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || status === "pending"}
+                  disabled={!validateForm() || isLoading || isSaving}
                 >
-                  {status === "pending" ? (
+                  {isLoading || isSaving ? (
                     <LoadingSpinner text={"Saving"} />
                   ) : (
                     "Save"
@@ -104,6 +120,7 @@ export default function InvestingTransactionNew(props) {
                   inputLabel={"Transaction Amount"}
                   inputValue={fields.transactionAmount}
                   inputChangeHandler={handleCurrencyInput}
+                  isDisabled={isLoading || isSaving}
                 />
               </div>
 
@@ -114,6 +131,7 @@ export default function InvestingTransactionNew(props) {
                   name="transactionType"
                   value={fields.transactionType}
                   onChange={handleChange}
+                  disabled={isLoading || isSaving}
                 >
                   {typeList.map((element, index, arr) => (
                     <option key={index} value={element}>
@@ -131,6 +149,7 @@ export default function InvestingTransactionNew(props) {
                   name="transactionDate"
                   value={fields.transactionDate}
                   onChange={handleChange}
+                  disabled={isLoading || isSaving}
                   data-lpignore="true"
                 />
               </div>
@@ -144,6 +163,7 @@ export default function InvestingTransactionNew(props) {
                   value={fields.transactionNote}
                   onChange={handleChange}
                   placeholder="Enter transaction detail..."
+                  disabled={isLoading || isSaving}
                   data-lpignore="true"
                 />
               </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
@@ -10,10 +10,26 @@ export default function SpendingAccountNew() {
   const history = useHistory();
   const dispatch = useDispatch();
   const status = useSelector((state) => state.spendingAccounts.status);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     accountName: "",
     accountBalance: "0.00",
   });
+
+  useEffect(() => {
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
+
+  useEffect(() => {
+    if (isSaving) {
+      history.push("/");
+    }
+  }, [isSaving, history]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -32,8 +48,10 @@ export default function SpendingAccountNew() {
     event.preventDefault();
 
     try {
-      await dispatch(addNewSpendingAccount(fields)).unwrap();
-      history.push("/");
+      setIsSaving(true);
+      await dispatch(
+        addNewSpendingAccount({ account: { ...fields } })
+      ).unwrap();
     } catch (e) {
       onError(e);
     }
@@ -52,13 +70,9 @@ export default function SpendingAccountNew() {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || status === "pending"}
+                  disabled={!validateForm() || isLoading}
                 >
-                  {status === "pending" ? (
-                    <LoadingSpinner text={"Saving"} />
-                  ) : (
-                    "Save"
-                  )}
+                  {isLoading ? <LoadingSpinner text={"Saving"} /> : "Save"}
                 </button>
               </div>
             </section>
@@ -72,6 +86,7 @@ export default function SpendingAccountNew() {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleOnChange}
+                  disabled={isLoading}
                   data-lpignore="true"
                 />
               </div>
@@ -81,6 +96,7 @@ export default function SpendingAccountNew() {
                   inputLabel={"Starting Balance"}
                   inputValue={fields.accountBalance}
                   inputChangeHandler={handleCurrencyInput}
+                  isDisabled={isLoading}
                 />
               </div>
             </section>

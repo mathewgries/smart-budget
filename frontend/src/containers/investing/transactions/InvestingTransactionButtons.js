@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
@@ -15,9 +14,13 @@ const ConfirmMessage = () => {
 };
 
 export default function InvestingTransactionButtons(props) {
-  const { transactionId } = props;
+  const { transactionId, isLoading } = props;
+  const history = useHistory();
   const [showConfrim, setShowConfirm] = useState(false);
-  const status = useSelector((state) => state.investingTransactions.status);
+
+  function handleRedirect() {
+    history.push(`/investing/transactions/edit/${transactionId}`);
+  }
 
   function handleCancel() {
     setShowConfirm(!showConfrim);
@@ -31,25 +34,25 @@ export default function InvestingTransactionButtons(props) {
   return (
     <div className="transaction-card-btn-container">
       <div>
-        <Link
-          to={`/investing/transactions/edit/${transactionId}`}
+        <button
           className="btn btn-primary"
+          onClick={handleRedirect}
+          disabled={isLoading}
         >
-          Edit
-        </Link>
+          {isLoading ? <LoadingSpinner /> : "Edit"}
+        </button>
       </div>
+
       <div>
         <button
           className="btn btn-danger"
           onClick={() => setShowConfirm(!showConfrim)}
+          disabled={isLoading}
         >
-          {status === "pending" ? (
-            <LoadingSpinner text={"Deleting"} />
-          ) : (
-            "Delete"
-          )}
+          {isLoading ? <LoadingSpinner /> : "Delete"}
         </button>
       </div>
+			
       {showConfrim && (
         <section className="confirmation-popup-section">
           <ConfirmationPopup onCancel={handleCancel} onConfirm={handleConfirm}>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 export default function CurrencyInput(props) {
-  const { inputLabel, inputName, inputValue, inputChangeHandler } = props;
+  const { inputLabel, inputName, inputValue, inputChangeHandler, isDisabled } = props;
   const [keyEvent, setKeyEvent] = useState("");
 
   function handleOnChange(e) {
@@ -69,6 +69,7 @@ export default function CurrencyInput(props) {
         value={inputValue || "0.00"}
         onKeyDown={handleKeyPress}
         onChange={handleOnChange}
+				disabled={isDisabled}
         data-lpignore="true"
       />
     </div>

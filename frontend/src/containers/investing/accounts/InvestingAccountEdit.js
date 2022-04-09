@@ -14,26 +14,34 @@ export default function InvestingAccountsEdit(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
-	const status = useSelector((state) => state.investingAccounts.status)
+  const status = useSelector((state) => state.investingAccounts.status);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
-    accountName: "",
-    accountBalance: "",
+    accountName: account.accountName,
+    accountBalance: account.accountBalance,
   });
 
   useEffect(() => {
-    setFields((prev) => ({
-      ...prev,
-      accountName: account.accountName,
-      accountBalance: account.accountBalance,
-    }));
-  }, [account]);
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
+
+  useEffect(() => {
+    if (isSaving) {
+      history.push(`/investing/accounts/${id}`);
+    }
+  }, [id, isSaving, history]);
 
   function handleChange(e) {
     const { name, value } = e.target;
     setFields((prev) => ({ ...prev, [name]: value }));
   }
 
-	const handleCurrencyInput = ({ name, value }) => {
+  const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
 
@@ -43,9 +51,10 @@ export default function InvestingAccountsEdit(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { accountName, accountBalance } = fields;
 
     try {
+      setIsSaving(false);
+      const { accountName, accountBalance } = fields;
       await dispatch(
         updateInvestingAccount({ id, accountName, accountBalance })
       ).unwrap();
@@ -68,9 +77,9 @@ export default function InvestingAccountsEdit(props) {
                 <button
                   type="submit"
                   className="btn btn-primary form-control"
-                  disabled={!validateForm() || status === "pending"}
+                  disabled={!validateForm() || isLoading}
                 >
-                  {status === "pending" ? <LoadingSpinner text={"Updating"}/> : "Update"}
+                  {isLoading ? <LoadingSpinner text={"Updating"} /> : "Update"}
                 </button>
               </div>
             </section>
@@ -89,15 +98,17 @@ export default function InvestingAccountsEdit(props) {
                   name="accountName"
                   value={fields.accountName}
                   onChange={handleChange}
-									data-lpignore="true"
+                  disabled={isLoading}
+                  data-lpignore="true"
                 />
               </div>
-							<div>
+              <div>
                 <CurrencyInput
                   inputName={"accountBalance"}
                   inputLabel={"Starting Balance"}
                   inputValue={fields.accountBalance}
                   inputChangeHandler={handleCurrencyInput}
+                  isDisabled={isLoading}
                 />
               </div>
             </section>

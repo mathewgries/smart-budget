@@ -135,11 +135,9 @@ export const optionsOrdersSlice = createSlice({
       .addCase(deleteInvestingAccount.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { orders } = action.payload;
-        const options = orders.filter((order) => {
-          if (order.type === "ORDER#OPTIONS#") {
-            return order.id;
-          }
-        });
+        const options = orders
+          .filter((order) => order.type === "ORDER#OPTIONS#")
+          .map((order) => order.id);
         optionsAdapter.removeMany(state, options);
       })
       .addCase(deleteInvestingAccount.rejected, (state, action) => {

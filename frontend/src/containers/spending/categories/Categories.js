@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllCategories,
@@ -22,6 +22,23 @@ export default function Categories() {
   );
   const [subcategories, setSubcategories] = useState([]);
   const allTransactions = useSelector(selectAllSpendingTransactions);
+  const transactionStatus = useSelector(
+    (state) => state.spendingTransactions.status
+  );
+  const categoryStatus = useSelector((state) => state.categories.status);
+	const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    function validateStatus() {
+      return transactionStatus === "pending" || categoryStatus === "pending";
+    }
+
+    if (validateStatus() && !isLoading) {
+      setIsLoading(true);
+    } else if (!validateStatus() && isLoading) {
+      setIsLoading(false);
+    }
+  }, [transactionStatus, categoryStatus, isLoading]);
 
   function handleCategoryToggle(category) {
     dispatch(activeCategoryUpdated(category));
@@ -56,11 +73,12 @@ export default function Categories() {
               toggleCategory={handleCategoryToggle}
               toggleSubcategory={handleSubcategoryToggle}
               deleteCategory={handleCategoryDelete}
+							isLoading={isLoading}
             />
           </section>
           <section>
             <form>
-              <CategoriesForm />
+              <CategoriesForm isLoading={isLoading}/>
             </form>
           </section>
         </div>

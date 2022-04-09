@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import { onError } from "../../../lib/errorLib";
 import InvestingAccountCard from "./InvestingAccountCard";
 import InvestingTransactionsList from "../transactions/InvestingTransactionsList";
+import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
 
 export default function InvestingAccount() {
   const { id } = useParams();
@@ -37,17 +38,28 @@ export default function InvestingAccount() {
         selectVerticalSpreadsOrdersByAccountGSI(state, account.GSI1_PK)
       )
     );
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
-    if (status === "pending") {
-      history.push("/");
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
     }
-  }, [status]);
+  }, [status, history, isLoading, isDelete]);
+
+  useEffect(() => {
+    if (isDelete) {
+      history.push("/investing");
+    }
+  }, [isDelete, history]);
 
   async function handleDeleteAccount(e) {
     e.preventDefault();
 
     try {
+      setIsDelete(true);
       await dispatch(
         deleteInvestingAccount({ account, transactions, orders })
       ).unwrap();
@@ -64,15 +76,24 @@ export default function InvestingAccount() {
             <h3>Investing Account</h3>
           </header>
         </section>
+
         <div className="account-wrapper">
           <section className="account-card-section">
             <header>
               <h6>Account</h6>
             </header>
-            <div>
-              <InvestingAccountCard account={account} />
-            </div>
-            <section className="account-btn-section">
+
+            {isLoading ? (
+              <div>
+                <AccountCardLoader status={status} />
+              </div>
+            ) : (
+              <div>
+                <InvestingAccountCard account={account} />
+              </div>
+            )}
+
+            <div className="account-btn-section">
               <div className="account-btn-wrapper">
                 <Link
                   to={`/investing/journal/${id}`}
@@ -90,6 +111,7 @@ export default function InvestingAccount() {
                   Add Transaction
                 </Link>
               </div>
+
               <div className="account-btn-wrapper">
                 <Link
                   to={`/investing/accounts/edit/${id}`}
@@ -98,6 +120,7 @@ export default function InvestingAccount() {
                   Edit Account
                 </Link>
               </div>
+
               <div className="account-btn-wrapper">
                 <button
                   className="btn btn-danger form-control"
@@ -106,19 +129,22 @@ export default function InvestingAccount() {
                   Delete
                 </button>
               </div>
-            </section>
+            </div>
           </section>
+
           <section className="transaction-list-section">
             <div>
               <header>
                 <h6>Transactions</h6>
               </header>
             </div>
-            {status !== "pending" && (
-              <div>
-                <InvestingTransactionsList transactions={transactions} />
-              </div>
-            )}
+            <div>
+              <InvestingTransactionsList
+                account={account}
+                transactions={transactions}
+                status={status}
+              />
+            </div>
           </section>
         </div>
       </div>

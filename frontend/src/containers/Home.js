@@ -16,7 +16,6 @@ export default function Home() {
   const history = useHistory();
   const dispatch = useDispatch();
   const prevLocation = useSelector((state) => state.history.lastRoute);
-  const status = useSelector((state) => state.users.status);
   const usersStatus = useSelector((state) => state.users.status);
   const spendingAccountStatus = useSelector(
     (state) => state.spendingAccounts.status
@@ -34,6 +33,14 @@ export default function Home() {
       if (!isAuthenticated) {
         return;
       }
+
+			function validateStatus() {
+				return (
+					usersStatus === "pending" ||
+					spendingAccountStatus === "pending" ||
+					investingAccountStatus === "pending"
+				);
+			}
 
       if (validateStatus() && !isLoading) {
         setIsLoading(true);
@@ -53,20 +60,13 @@ export default function Home() {
     onLoad();
   }, [
     isAuthenticated,
+		isLoading,
     usersStatus,
     spendingAccountStatus,
     investingAccountStatus,
     prevLocation,
     dispatch,
   ]);
-
-  function validateStatus() {
-    return (
-      usersStatus === "pending" ||
-      spendingAccountStatus === "pending" ||
-      investingAccountStatus === "pending"
-    );
-  }
 
   function handleRedirect(path) {
     history.push(path);

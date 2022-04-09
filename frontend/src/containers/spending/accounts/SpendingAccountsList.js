@@ -17,7 +17,11 @@ export default function SpendingAccountsList(props) {
           </div>
         ))
       ) : (
-        <AccountCardLoader status={status} text={"Add new account..."} />
+        <AccountCardLoader
+          status={status}
+          text={"Add new account..."}
+          path={"/spending/accounts/new"}
+        />
       )}
     </div>
   );

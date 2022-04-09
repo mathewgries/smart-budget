@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -10,6 +10,8 @@ import { deleteTransactionHandler } from "../../../helpers/currencyHandler";
 import { onError } from "../../../lib/errorLib";
 import SpendingTransactionCard from "./SpendingTransactionCard";
 import SpendingTransactionButtons from "./SpendingTransactionButtons";
+import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
+import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function SpendingTransaction(props) {
   const { id } = useParams();
@@ -22,15 +24,26 @@ export default function SpendingTransaction(props) {
     selectSpendingAccountByGSI(state, transaction.GSI1_PK)
   );
   const status = useSelector((state) => state.spendingTransactions.status);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
-    if (status === "pending") {
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
+
+  useEffect(() => {
+    if (isDelete) {
       history.push(`/spending/accounts/${account.id}`);
     }
-  }, [status, history, account.id]);
+  }, [isDelete, history, account.id]);
 
   async function onDelete() {
     try {
+      setIsDelete(true);
       const newAccountBalance = getNewAccountBalance();
       await handleTransactionDelete(newAccountBalance);
     } catch (e) {
@@ -72,13 +85,18 @@ export default function SpendingTransaction(props) {
           </div>
 
           <div className="transaction-info-section">
-            <SpendingTransactionCard transaction={transaction} />
+            {isLoading ? (
+              <TransactionCardLoader status={status} />
+            ) : (
+              <SpendingTransactionCard transaction={transaction} />
+            )}
           </div>
 
           <div className="transaction-btn-wrapper">
             <SpendingTransactionButtons
               transactionId={transaction.id}
               onDelete={onDelete}
+              isLoading={isLoading}
             />
           </div>
 
@@ -88,7 +106,9 @@ export default function SpendingTransaction(props) {
                 <h6>Note:</h6>
               </header>
             </div>
-            <div>{transaction.transactionNote}</div>
+            <div>
+              {isLoading ? <LoadingSpinner /> : transaction.transactionNote}
+            </div>
           </div>
         </section>
       </div>

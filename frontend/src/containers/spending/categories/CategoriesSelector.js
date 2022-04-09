@@ -1,9 +1,9 @@
 import React from "react";
-import { useSelector } from "react-redux";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 export default function CategoriesSelector(props) {
   const {
+    isLoading,
     categories,
     subcategories,
     activeCategory,
@@ -12,7 +12,7 @@ export default function CategoriesSelector(props) {
     toggleSubcategory,
     deleteCategory,
   } = props;
-  const status = useSelector((state) => state.categories.status);
+  // const status = useSelector((state) => state.categories.status);
 
   function handleCategoryToggle(category) {
     toggleCategory(category);
@@ -43,9 +43,9 @@ export default function CategoriesSelector(props) {
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
-              disabled={status === "pending"}
+              disabled={isLoading}
             >
-              {status === "pending" ? (
+              {isLoading ? (
                 <LoadingSpinner />
               ) : (
                 `${activeCategory.categoryName}`
@@ -64,6 +64,7 @@ export default function CategoriesSelector(props) {
                     <button
                       className="btn btn-danger btn-sm"
                       onClick={() => handleCategoryDelete(category)}
+                      disabled={isLoading}
                     >
                       Remove
                     </button>
@@ -90,13 +91,9 @@ export default function CategoriesSelector(props) {
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
-              disabled={status === "pending"}
+              disabled={isLoading}
             >
-              {status === "pending" ? (
-                <LoadingSpinner />
-              ) : (
-                `${activeSubcategory}`
-              )}
+              {isLoading ? <LoadingSpinner /> : `${activeSubcategory}`}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {subcategories.length > 0 &&

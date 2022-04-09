@@ -17,7 +17,7 @@ export default function InvestingAccounts(props) {
     } else if (status !== "pending" && isLoading) {
       setIsLoading(false);
     }
-  }, [status]);
+  }, [status, isLoading]);
 
   function handleRedirect(path) {
     history.push(path);

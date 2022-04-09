@@ -29,8 +29,13 @@ export const fetchSpendingAccounts = createAsyncThunk(
 
 export const addNewSpendingAccount = createAsyncThunk(
   "spendingAccounts/addNewSpendingAccount",
-  async (data) => {
-    return await amplifyClient.post(data, "smartbudget", "/spending/accounts");
+  async ({ account }) => {
+    const result = await amplifyClient.post(
+      account,
+      "smartbudget",
+      "/spending/accounts"
+    );
+    return { account: result };
   }
 );
 
@@ -95,7 +100,8 @@ export const spendingAccountsSlice = createSlice({
       })
       .addCase(addNewSpendingAccount.fulfilled, (state, action) => {
         state.status = "succeeded";
-        spendingAccountsAdapter.addOne(state, action.payload);
+        const { account } = action.payload;
+        spendingAccountsAdapter.addOne(state, account);
       })
       .addCase(addNewSpendingAccount.rejected, (state, action) => {
         state.status = "failed";
@@ -119,7 +125,7 @@ export const spendingAccountsSlice = createSlice({
       })
       .addCase(deleteSpendingAccount.fulfilled, (state, action) => {
         state.status = "succeeded";
-				const {id} = action.payload.account
+        const { id } = action.payload.account;
         spendingAccountsAdapter.removeOne(state, id);
       })
       .addCase(deleteSpendingAccount.rejected, (state, action) => {

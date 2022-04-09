@@ -8,7 +8,7 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 export default function SpendingAccounts(props) {
   const history = useHistory();
   const status = useSelector((state) => state.spendingAccounts.status);
-	const accounts = useSelector(selectAllSpendingAcounts);
+  const accounts = useSelector(selectAllSpendingAcounts);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function SpendingAccounts(props) {
     } else if (status !== "pending" && isLoading) {
       setIsLoading(false);
     }
-  }, [status]);
+  }, [status, isLoading]);
 
   function handleRedirect(path) {
     history.push(path);
@@ -42,7 +42,7 @@ export default function SpendingAccounts(props) {
             </div>
           </div>
           <div className="spending-accounts-list-section">
-            <SpendingAccountsList status={status} accounts={accounts}/>
+            <SpendingAccountsList status={status} accounts={accounts} />
           </div>
         </div>
       </div>
