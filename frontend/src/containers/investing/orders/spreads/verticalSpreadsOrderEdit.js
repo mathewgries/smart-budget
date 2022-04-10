@@ -59,7 +59,7 @@ export default function VerticalSpreadsOrderEdit(props) {
     if (isSaving) {
       history.push(`/investing/journal/${account.id}`);
     }
-  }, [isSaving, history]);
+  }, [isSaving, history, account.id]);
 
   function validateForm() {
     return (

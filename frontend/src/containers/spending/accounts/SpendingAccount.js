@@ -11,6 +11,17 @@ import { onError } from "../../../lib/errorLib";
 import SpendingAccountCard from "./SpendingAccountCard";
 import SpendingTransactionsList from "../transactions/SpendingTransactionsList";
 import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
+import ConfirmationPopup from "../../popups/ConfirmationPopup";
+
+const ConfirmMessage = () => {
+  return (
+    <div>
+      <p>You are about to delete an account!</p>
+      <p>This will remove all related transactions as well!</p>
+      <p>Please confirm!</p>
+    </div>
+  );
+};
 
 export default function SpendingAccount() {
   const { id } = useParams();
@@ -23,6 +34,7 @@ export default function SpendingAccount() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
+  const [showConfrim, setShowConfirm] = useState(false);
 
   useEffect(() => {
     if (status === "pending" && !isLoading) {
@@ -38,9 +50,16 @@ export default function SpendingAccount() {
     }
   }, [isDelete, history]);
 
-  async function handleDeleteAccount(e) {
-    e.preventDefault();
+  function handleCancel() {
+    setShowConfirm(!showConfrim);
+  }
 
+  async function handleConfirm() {
+    setShowConfirm(!showConfrim);
+    await onDelete();
+  }
+
+  async function onDelete() {
     try {
       setIsDelete(true);
       await dispatch(deleteSpendingAccount({ account, transactions })).unwrap();
@@ -52,6 +71,19 @@ export default function SpendingAccount() {
   return (
     <div className="page-container">
       <div className="page-wrapper">
+        <section>
+          {showConfrim && (
+            <section className="confirmation-popup-section">
+              <ConfirmationPopup
+                onCancel={handleCancel}
+                onConfirm={handleConfirm}
+              >
+                <ConfirmMessage />
+              </ConfirmationPopup>
+            </section>
+          )}
+        </section>
+
         <section>
           <header>
             <h3>Spending Account</h3>
@@ -77,6 +109,15 @@ export default function SpendingAccount() {
             <div className="account-btn-section">
               <div className="account-btn-wrapper">
                 <Link
+                  to={`/spending/transactions/new/${id}`}
+                  className="btn btn-success form-control"
+                >
+                  Add Transaction
+                </Link>
+              </div>
+
+              <div className="account-btn-wrapper">
+                <Link
                   to={`/spending/accounts/edit/${id}`}
                   className="btn btn-primary form-control"
                 >
@@ -87,19 +128,10 @@ export default function SpendingAccount() {
               <div className="account-btn-wrapper">
                 <button
                   className="btn btn-danger form-control"
-                  onClick={handleDeleteAccount}
+                  onClick={() => setShowConfirm(!showConfrim)}
                 >
                   Delete
                 </button>
-              </div>
-
-              <div className="account-btn-wrapper">
-                <Link
-                  to={`/spending/transactions/new/${id}`}
-                  className="btn btn-success form-control"
-                >
-                  Add Transaction
-                </Link>
               </div>
             </div>
           </section>
@@ -112,7 +144,7 @@ export default function SpendingAccount() {
             </div>
             <div>
               <SpendingTransactionsList
-								account={account}
+                account={account}
                 transactions={transactions}
                 status={status}
               />

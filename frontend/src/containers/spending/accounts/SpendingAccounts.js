@@ -12,6 +12,12 @@ export default function SpendingAccounts(props) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    if (accounts.length === 0) {
+      history.push("/");
+    }
+  });
+
+  useEffect(() => {
     if (status === "pending" && !isLoading) {
       setIsLoading(true);
     } else if (status !== "pending" && isLoading) {

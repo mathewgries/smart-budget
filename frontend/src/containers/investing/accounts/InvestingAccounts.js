@@ -8,8 +8,14 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 export default function InvestingAccounts(props) {
   const history = useHistory();
   const status = useSelector((state) => state.investingAccounts.status);
-	const accounts = useSelector(selectAllInvestingAccounts);
+  const accounts = useSelector(selectAllInvestingAccounts);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (accounts.length === 0) {
+      history.push("/");
+    }
+  });
 
   useEffect(() => {
     if (status === "pending" && !isLoading) {
@@ -40,7 +46,7 @@ export default function InvestingAccounts(props) {
             </button>
           </div>
           <div className="accounts-list-section">
-            <InvestingAccountsList status={status} accounts={accounts}/>
+            <InvestingAccountsList status={status} accounts={accounts} />
           </div>
         </div>
       </div>
