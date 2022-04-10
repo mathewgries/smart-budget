@@ -28,6 +28,7 @@ export default function VerticalSpreadsOrderEdit(props) {
   const [isSaving, setIsSaving] = useState(false);
   const [selectedSignals, setSelectedSignals] = useState(order.signalList);
   const [openGreeks, setOpenGreeks] = useState(false);
+	
 
   const [fields, setFields] = useState({
     ticker: order.ticker,
