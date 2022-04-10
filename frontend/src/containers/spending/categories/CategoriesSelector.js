@@ -121,7 +121,8 @@ export default function CategoriesSelector(props) {
   async function onSubcategoryDelete(subcategory) {
     try {
       const transactions = setTransactionsOnSubcategoryDelete(
-        getTransactionsByCategoryId(activeCategory.id)
+        getTransactionsByCategoryId(activeCategory.id),
+        subcategory
       );
       const updatedSubList = activeCategory.subcategories.filter(
         (subs) => subs !== subcategory
@@ -153,11 +154,13 @@ export default function CategoriesSelector(props) {
     }));
   }
 
-  function setTransactionsOnSubcategoryDelete(transactions) {
-    return transactions.map((transaction) => ({
-      ...transaction,
-      subcategory: "",
-    }));
+  function setTransactionsOnSubcategoryDelete(transactions, subcategory) {
+    return transactions
+      .filter((transaction) => transaction.subcategory === subcategory)
+      .map((transaction) => ({
+        ...transaction,
+        subcategory: "",
+      }));
   }
 
   return (
