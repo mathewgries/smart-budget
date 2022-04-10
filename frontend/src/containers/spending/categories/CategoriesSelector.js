@@ -7,16 +7,27 @@ import {
   selectActiveCategory,
   selectActiveSubcategory,
   deleteCategory,
+  deleteSubcategory,
 } from "../../../redux/spending/categoriesSlice";
 import { selectAllSpendingTransactions } from "../../../redux/spending/spendingTransactionsSlice";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import { onError } from "../../../lib/errorLib";
 
-const ConfirmMessage = () => {
+const CategoryConfirmMessage = () => {
   return (
     <div>
       <p>You are about to delete a category and its subcategories!</p>
+      <p>They will be removed from any transactions as well!</p>
+      <p>Please confirm!</p>
+    </div>
+  );
+};
+
+const SubcategoryConfirmMessage = () => {
+  return (
+    <div>
+      <p>You are about to delete a subcategory!</p>
       <p>They will be removed from any transactions as well!</p>
       <p>Please confirm!</p>
     </div>
@@ -37,8 +48,11 @@ export default function CategoriesSelector(props) {
   const categoryStatus = useSelector((state) => state.categories.status);
   const [subcategories, setSubcategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [showConfrim, setShowConfirm] = useState(false);
-  const [stagedForDelete, setStagedForDelete] = useState();
+  const [showCategoryConfrim, setShowCategoryConfirm] = useState(false);
+  const [stagedCategoryForDelete, setStagedCategoryForDelete] = useState();
+  const [showSubcategoryConfrim, setShowSubcategoryConfirm] = useState(false);
+  const [stagedSubcategoryForDelete, setStagedSubcategoryForDelete] =
+    useState();
 
   useEffect(() => {
     setSubcategories(activeCategory.subcategories);
@@ -61,50 +75,118 @@ export default function CategoriesSelector(props) {
     setSubcategories(category.subcategories);
   }
 
-  function handleSubcategoryToggle(subcategory) {
-    dispatch(activeSubcategoryUpdated(subcategory));
+  function handleShowCategoryConfirm(category) {
+    setShowCategoryConfirm(true);
+    setStagedCategoryForDelete(category);
   }
 
-  function handleShowConfirm(category) {
-    setShowConfirm(true);
-    setStagedForDelete(category);
+  function handleCategoryCancel() {
+    setShowCategoryConfirm(false);
   }
 
-  function handleCancel() {
-    setShowConfirm(false);
+  async function handleCategoryConfirm() {
+    setShowCategoryConfirm(false);
+    await onCategoryDelete(stagedCategoryForDelete);
   }
 
-  async function handleConfirm() {
-    setShowConfirm(!showConfrim);
-    await onDelete(stagedForDelete);
-  }
-
-  async function onDelete(category) {
+  async function onCategoryDelete(category) {
     try {
-      const transactions = getTransactionsByCategory(category);
+      const transactions = setTransactionsOnCategoryDelete(
+        getTransactionsByCategoryId(category.id)
+      );
       await dispatch(deleteCategory({ category, transactions })).unwrap();
     } catch (e) {
       onError(e);
     }
   }
 
-  function getTransactionsByCategory(category) {
-    return allTransactions.filter((trans) => trans.categoryId === category.id);
+  function handleSubcategoryToggle(subcategory) {
+    dispatch(activeSubcategoryUpdated(subcategory));
+  }
+
+  function handleShowSubcategoryConfirm(subcategory) {
+    setShowSubcategoryConfirm(true);
+    setStagedSubcategoryForDelete(subcategory);
+  }
+
+  function handleSubcategoryCancel() {
+    setShowSubcategoryConfirm(false);
+  }
+
+  async function handleSubcategoryConfirm() {
+    setShowSubcategoryConfirm(false);
+    await onSubcategoryDelete(stagedSubcategoryForDelete);
+  }
+
+  async function onSubcategoryDelete(subcategory) {
+    try {
+      const transactions = setTransactionsOnSubcategoryDelete(
+        getTransactionsByCategoryId(activeCategory.id)
+      );
+      const updatedSubList = activeCategory.subcategories.filter(
+        (subs) => subs !== subcategory
+      );
+      await dispatch(
+        deleteSubcategory({
+          category: {
+            ...activeCategory,
+            subcategories: updatedSubList,
+          },
+          transactions,
+        })
+      ).unwrap();
+    } catch (e) {
+      onError(e);
+    }
+  }
+
+  function getTransactionsByCategoryId(categoryId) {
+    return allTransactions.filter((trans) => trans.categoryId === categoryId);
+  }
+
+  function setTransactionsOnCategoryDelete(transactions) {
+    return transactions.map((transaction) => ({
+      ...transaction,
+      categoryName: "",
+      categoryId: "",
+      subcategory: "",
+    }));
+  }
+
+  function setTransactionsOnSubcategoryDelete(transactions) {
+    return transactions.map((transaction) => ({
+      ...transaction,
+      subcategory: "",
+    }));
   }
 
   return (
     <div className="categories-wrapper">
       <section>
-        {showConfrim && (
-          <section className="confirmation-popup-section">
-            <ConfirmationPopup
-              onCancel={handleCancel}
-              onConfirm={handleConfirm}
-            >
-              <ConfirmMessage />
-            </ConfirmationPopup>
-          </section>
-        )}
+        <div>
+          {showCategoryConfrim && (
+            <section className="confirmation-popup-section">
+              <ConfirmationPopup
+                onCancel={handleCategoryCancel}
+                onConfirm={handleCategoryConfirm}
+              >
+                <CategoryConfirmMessage />
+              </ConfirmationPopup>
+            </section>
+          )}
+        </div>
+        <div>
+          {showSubcategoryConfrim && (
+            <section className="confirmation-popup-section">
+              <ConfirmationPopup
+                onCancel={handleSubcategoryCancel}
+                onConfirm={handleSubcategoryConfirm}
+              >
+                <SubcategoryConfirmMessage />
+              </ConfirmationPopup>
+            </section>
+          )}
+        </div>
       </section>
       <section>
         <div>
@@ -138,14 +220,16 @@ export default function CategoriesSelector(props) {
                   >
                     <div>{category.categoryName}</div>
                   </div>
-                  <div>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => handleShowConfirm(category)}
-                      disabled={isLoading}
-                    >
-                      Remove
-                    </button>
+                  <div className="category-btn-container">
+                    <div>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleShowCategoryConfirm(category)}
+                        disabled={isLoading}
+                      >
+                        Remove
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -178,12 +262,26 @@ export default function CategoriesSelector(props) {
                 <div>
                   {subcategories.length > 0 &&
                     subcategories.map((subcategory) => (
-                      <div
-                        key={subcategory}
-                        className="dropdown-item"
-                        onClick={() => handleSubcategoryToggle(subcategory)}
-                      >
-                        {subcategory}
+                      <div key={subcategory} className="category-list-item">
+                        <div
+                          className="dropdown-item"
+                          onClick={() => handleSubcategoryToggle(subcategory)}
+                        >
+                          <div>{subcategory}</div>
+                        </div>
+                        <div className="category-btn-container">
+                          <div>
+                            <button
+                              className="btn btn-danger btn-sm"
+                              onClick={() =>
+                                handleShowSubcategoryConfirm(subcategory)
+                              }
+                              disabled={isLoading}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                 </div>

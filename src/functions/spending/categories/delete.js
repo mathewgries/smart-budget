@@ -20,29 +20,31 @@ export const main = handler(async (event) => {
     },
   });
 
-  if (transactions.length > 0) {
-    transactions.forEach((transactions) =>
-      items.push({
-        Update: {
-          TableName: process.env.TABLE_NAME,
-          Key: {
-            PK: `USER#${userId}`,
-            SK: `TRANS#SPENDING#${transactions.id}`,
+  if (transactions) {
+    if (transactions.length > 0) {
+      transactions.forEach((transactions) =>
+        items.push({
+          Update: {
+            TableName: process.env.TABLE_NAME,
+            Key: {
+              PK: `USER#${userId}`,
+              SK: `TRANS#SPENDING#${transactions.id}`,
+            },
+            UpdateExpression: `SET 
+						categoryName = :categoryName, 
+						categoryId = :categoryId, 
+						subcategory = :subcategory, 
+						modifyDate = :modifyDate`,
+            ExpressionAttributeValues: {
+              ":categoryName": "",
+              ":categoryId": "",
+              ":subcategory": "",
+              ":modifyDate": Date.now(),
+            },
           },
-          UpdateExpression: `SET 
-					categoryName = :categoryName, 
-					categoryId = :categoryId, 
-					subcategory = :subcategory, 
-					modifyDate = :modifyDate`,
-          ExpressionAttributeValues: {
-            ":categoryName": "",
-            ":categoryId": "",
-            ":subcategory": "",
-            ":modifyDate": Date.now(),
-          },
-        },
-      })
-    );
+        })
+      );
+    }
   }
 
   itemsLength = items.length;

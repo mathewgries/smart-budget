@@ -24,9 +24,9 @@ export const fetchCategories = createAsyncThunk(
 
 export const saveNewCategory = createAsyncThunk(
   "categories/saveNewCategory",
-  async (data) => {
+  async ({ category }) => {
     return await amplifyClient.post(
-      data,
+      { category },
       "smartbudget",
       "/spending/categories"
     );
@@ -35,13 +35,13 @@ export const saveNewCategory = createAsyncThunk(
 
 export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
-  async (data) => {
+  async ({ category }) => {
     await amplifyClient.put(
-      data,
+      { category },
       "smartbudget",
-      `/spending/categories/${data.id}`
+      `/spending/categories/${category.id}`
     );
-    return data;
+    return { category };
   }
 );
 
@@ -57,14 +57,26 @@ export const deleteCategory = createAsyncThunk(
   }
 );
 
+export const deleteSubcategory = createAsyncThunk(
+  "categories/deleteSubcategory",
+  async ({ category, transactions }) => {
+    await amplifyClient.put(
+      { category, transactions },
+      "smartbudget",
+      `/spending/categories/${category.id}`
+    );
+    return { category, transactions };
+  }
+);
+
 export const categoriesSlice = createSlice({
   name: "categories",
   initialState,
   reducers: {
     activeCategoryUpdated(state, action) {
-			const category = state.entities[action.payload]
+      const category = state.entities[action.payload];
       state.activeCategory = category;
-			
+
       const subcategories = category.subcategories;
       state.activeSubcategory =
         subcategories.length > 0 ? subcategories[0] : "No subcategories";
@@ -143,7 +155,7 @@ export const categoriesSlice = createSlice({
       })
       .addCase(updateCategory.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const category = action.payload;
+        const { category } = action.payload;
         const subcategories = category.subcategories;
         categoriesAdapter.upsertOne(state, category);
         state.activeCategory = category;
@@ -163,6 +175,23 @@ export const categoriesSlice = createSlice({
         categoriesAdapter.removeOne(state, id);
       })
       .addCase(deleteCategory.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteSubcategory.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteSubcategory.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { category } = action.payload;
+        categoriesAdapter.upsertOne(state, category);
+        state.activeCategory = category;
+        const subcategories = category.subcategories;
+        state.activeSubcategory =
+          subcategories.length > 0 ? subcategories[0] : "No subcategories";
+      })
+      .addCase(deleteSubcategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

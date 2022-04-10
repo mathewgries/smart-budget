@@ -4,6 +4,7 @@ import dynamoDb from "../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
+	const {category} = data
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
 	const categoryId = uuid.v1();
 	const type = "CATEGORY#"; 
@@ -15,8 +16,8 @@ export const main = handler(async (event) => {
       SK: `${type}${categoryId}`,
 			id: categoryId,
 			type: type,
-      categoryName: data.categoryName,
-      subcategories: data.subcategories,
+      categoryName: category.categoryName,
+      subcategories: category.subcategories,
       createDate: Date.now(),
       modifyDate: Date.now(),
     },

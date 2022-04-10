@@ -12,20 +12,20 @@ export default function CategoriesForm(props) {
   // const { isLoading } = props;
   const dispatch = useDispatch();
   const activeCategory = useSelector((state) => selectActiveCategory(state));
-	const status = useSelector((state) => state.categories.status)
-	const [isLoading, setIsLoading] = useState(false)
+  const status = useSelector((state) => state.categories.status);
+  const [isLoading, setIsLoading] = useState(false);
   const [fields, setFields] = useState({
     categoryName: "",
     subcategory: "",
   });
 
-	useEffect(() => {
-		if(status === "pending" && !isLoading){
-			setIsLoading(true)
-		}else if(status !== "pending" && isLoading){
-			setIsLoading(false)
-		}
-	}, [status, isLoading])
+  useEffect(() => {
+    if (status === "pending" && !isLoading) {
+      setIsLoading(true);
+    } else if (status !== "pending" && isLoading) {
+      setIsLoading(false);
+    }
+  }, [status, isLoading]);
 
   function handleOnChange(e) {
     const { name, value } = e.target;
@@ -43,11 +43,15 @@ export default function CategoriesForm(props) {
   async function handleCategorySubmit(e) {
     e.preventDefault();
     try {
-      const data = {
-        categoryName: fields.categoryName,
-        subcategories: fields.subcategory === "" ? [] : [fields.subcategory],
-      };
-      await dispatch(saveNewCategory(data)).unwrap();
+      await dispatch(
+        saveNewCategory({
+          category: {
+            categoryName: fields.categoryName,
+            subcategories:
+              fields.subcategory === "" ? [] : [fields.subcategory],
+          },
+        })
+      ).unwrap();
       setFields({ categoryName: "", subcategory: "" });
     } catch (e) {
       onError(e);
@@ -57,11 +61,17 @@ export default function CategoriesForm(props) {
   async function handleSubategorySubmit(e) {
     e.preventDefault();
     try {
-      const data = {
-        ...activeCategory,
-        subcategories: [...activeCategory.subcategories, fields.subcategory],
-      };
-      await dispatch(updateCategory(data)).unwrap();
+      await dispatch(
+        updateCategory({
+          category: {
+            ...activeCategory,
+            subcategories: [
+              ...activeCategory.subcategories,
+              fields.subcategory,
+            ],
+          },
+        })
+      ).unwrap();
       setFields({ categoryName: "", subcategory: "" });
     } catch (e) {
       onError(e);
