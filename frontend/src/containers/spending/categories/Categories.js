@@ -20,13 +20,15 @@ export default function Categories() {
   const activeSubcategory = useSelector((state) =>
     selectActiveSubcategory(state)
   );
-  const [subcategories, setSubcategories] = useState([]);
+  const [subcategories, setSubcategories] = useState(
+    activeCategory.subcategories
+  );
   const allTransactions = useSelector(selectAllSpendingTransactions);
   const transactionStatus = useSelector(
     (state) => state.spendingTransactions.status
   );
   const categoryStatus = useSelector((state) => state.categories.status);
-	const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     function validateStatus() {
@@ -40,6 +42,7 @@ export default function Categories() {
     }
   }, [transactionStatus, categoryStatus, isLoading]);
 
+
   function handleCategoryToggle(category) {
     dispatch(activeCategoryUpdated(category));
     setSubcategories(category.subcategories);
@@ -51,18 +54,21 @@ export default function Categories() {
 
   async function handleCategoryDelete(category) {
     try {
-      const transactions = allTransactions.filter(
-        (trans) => trans.categoryId === category.id
-      );
+      const transactions = getTransactionsByCategory(category);
       await dispatch(deleteCategory({ category, transactions })).unwrap();
     } catch (e) {
       onError(e);
     }
   }
 
+  function getTransactionsByCategory(category) {
+    return allTransactions.filter((trans) => trans.categoryId === category.id);
+  }
+
   return (
     <div className="page-container">
       <div className="page-wrapper">
+
         <div className="form-wrapper">
           <section>
             <CategoriesSelector
@@ -73,12 +79,12 @@ export default function Categories() {
               toggleCategory={handleCategoryToggle}
               toggleSubcategory={handleSubcategoryToggle}
               deleteCategory={handleCategoryDelete}
-							isLoading={isLoading}
+              isLoading={isLoading}
             />
           </section>
           <section>
             <form>
-              <CategoriesForm isLoading={isLoading}/>
+              <CategoriesForm isLoading={isLoading} />
             </form>
           </section>
         </div>
