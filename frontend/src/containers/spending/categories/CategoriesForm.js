@@ -9,7 +9,6 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import { onError } from "../../../lib/errorLib";
 
 export default function CategoriesForm(props) {
-  // const { isLoading } = props;
   const dispatch = useDispatch();
   const activeCategory = useSelector((state) => selectActiveCategory(state));
   const status = useSelector((state) => state.categories.status);
