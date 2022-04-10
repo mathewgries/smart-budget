@@ -3,9 +3,6 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewSpendingTransaction } from "../../../redux/spending/spendingTransactionsSlice";
 import {
-  selectAllCategories,
-  activeCategoryUpdated,
-  activeSubcategoryUpdated,
   selectActiveCategory,
   selectActiveSubcategory,
 } from "../../../redux/spending/categoriesSlice";
@@ -24,12 +21,10 @@ export default function SpendingTransactionNew(props) {
   const dispatch = useDispatch();
   const typeList = ["Withdrawal", "Deposit"];
   const account = useSelector((state) => selectSpendingAccountById(state, id));
-  const categories = useSelector(selectAllCategories);
   const activeCategory = useSelector((state) => selectActiveCategory(state));
   const activeSubcategory = useSelector((state) =>
     selectActiveSubcategory(state)
   );
-  const [subcategories, setSubcategories] = useState(activeCategory.subcategories);
   const categoryStatus = useSelector((state) => state.categories.status);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -70,15 +65,6 @@ export default function SpendingTransactionNew(props) {
   const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
-
-  function handleCategoryToggle(category) {
-    dispatch(activeCategoryUpdated(category));
-    setSubcategories(category.subcategories);
-  }
-
-  function handleSubcategoryToggle(subcategory) {
-    dispatch(activeSubcategoryUpdated(subcategory));
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -187,18 +173,10 @@ export default function SpendingTransactionNew(props) {
 
               <div>
                 <div>
-                  <CategoriesSelector
-                    categories={categories}
-                    subcategories={subcategories}
-                    activeCategory={activeCategory}
-                    activeSubcategory={activeSubcategory}
-                    toggleCategory={handleCategoryToggle}
-                    toggleSubcategory={handleSubcategoryToggle}
-                    isLoading={isLoading || isSaving}
-                  />
+                  <CategoriesSelector />
                 </div>
                 <div>
-                  <CategoriesForm isLoading={isLoading || isSaving} />
+                  <CategoriesForm />
                 </div>
               </div>
 

@@ -6,7 +6,6 @@ import {
   updateSpendingTransaction,
 } from "../../../redux/spending/spendingTransactionsSlice";
 import {
-  selectAllCategories,
   activeCategoryUpdated,
   activeSubcategoryUpdated,
   selectActiveCategory,
@@ -32,13 +31,9 @@ export default function SpendingTransactionEdit(props) {
   const account = useSelector((state) =>
     selectSpendingAccountByGSI(state, transaction.GSI1_PK)
   );
-  const categories = useSelector(selectAllCategories);
   const activeCategory = useSelector((state) => selectActiveCategory(state));
   const activeSubcategory = useSelector((state) =>
     selectActiveSubcategory(state)
-  );
-  const [subcategories, setSubcategories] = useState(
-    activeCategory.subcategories
   );
   const categoryStatus = useSelector((state) => state.categories.status);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,12 +47,9 @@ export default function SpendingTransactionEdit(props) {
   });
 
   useEffect(() => {
-    const activeCategory = categories.find(
-      (category) => category.id === transaction.categoryId
-    );
-    dispatch(activeCategoryUpdated(activeCategory));
+    dispatch(activeCategoryUpdated(transaction.categoryId));
     dispatch(activeSubcategoryUpdated(transaction.subcategory));
-  }, [transaction.categoryId, transaction.subcategory, categories, dispatch]);
+  }, [transaction.categoryId, transaction.subcategory, dispatch]);
 
   useEffect(() => {
     function validateStatus() {
@@ -89,15 +81,6 @@ export default function SpendingTransactionEdit(props) {
   const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
-
-  function handleCategoryToggle(category) {
-    dispatch(activeCategoryUpdated(category));
-    setSubcategories(category.subcategories);
-  }
-
-  function handleSubcategoryToggle(subcategory) {
-    dispatch(activeSubcategoryUpdated(subcategory));
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -202,18 +185,10 @@ export default function SpendingTransactionEdit(props) {
 
               <div>
                 <div>
-                  <CategoriesSelector
-                    categories={categories}
-                    subcategories={subcategories}
-                    activeCategory={activeCategory}
-                    activeSubcategory={activeSubcategory}
-                    toggleCategory={handleCategoryToggle}
-                    toggleSubcategory={handleSubcategoryToggle}
-                    isLoading={isLoading}
-                  />
+                  <CategoriesSelector />
                 </div>
                 <div>
-                  <CategoriesForm isLoading={isLoading} />
+                  <CategoriesForm />
                 </div>
               </div>
 

@@ -62,8 +62,10 @@ export const categoriesSlice = createSlice({
   initialState,
   reducers: {
     activeCategoryUpdated(state, action) {
-      state.activeCategory = action.payload;
-      const subcategories = action.payload.subcategories;
+			const category = state.entities[action.payload]
+      state.activeCategory = category;
+			
+      const subcategories = category.subcategories;
       state.activeSubcategory =
         subcategories.length > 0 ? subcategories[0] : "No subcategories";
     },

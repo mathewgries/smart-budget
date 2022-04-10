@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   saveNewCategory,
@@ -9,13 +9,23 @@ import LoadingSpinner from "../../../components/LoadingSpinner";
 import { onError } from "../../../lib/errorLib";
 
 export default function CategoriesForm(props) {
-  const { isLoading } = props;
+  // const { isLoading } = props;
   const dispatch = useDispatch();
   const activeCategory = useSelector((state) => selectActiveCategory(state));
+	const status = useSelector((state) => state.categories.status)
+	const [isLoading, setIsLoading] = useState(false)
   const [fields, setFields] = useState({
     categoryName: "",
     subcategory: "",
   });
+
+	useEffect(() => {
+		if(status === "pending" && !isLoading){
+			setIsLoading(true)
+		}else if(status !== "pending" && isLoading){
+			setIsLoading(false)
+		}
+	}, [status, isLoading])
 
   function handleOnChange(e) {
     const { name, value } = e.target;

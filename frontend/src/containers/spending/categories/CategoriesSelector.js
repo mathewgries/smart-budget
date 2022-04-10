@@ -1,6 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  selectAllCategories,
+  activeCategoryUpdated,
+  activeSubcategoryUpdated,
+  selectActiveCategory,
+  selectActiveSubcategory,
+  deleteCategory,
+} from "../../../redux/spending/categoriesSlice";
+import { selectAllSpendingTransactions } from "../../../redux/spending/spendingTransactionsSlice";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
+import { onError } from "../../../lib/errorLib";
 
 const ConfirmMessage = () => {
   return (
@@ -13,43 +24,72 @@ const ConfirmMessage = () => {
 };
 
 export default function CategoriesSelector(props) {
+  const dispatch = useDispatch();
+  const categories = useSelector(selectAllCategories);
+  const activeCategory = useSelector((state) => selectActiveCategory(state));
+  const activeSubcategory = useSelector((state) =>
+    selectActiveSubcategory(state)
+  );
+  const allTransactions = useSelector(selectAllSpendingTransactions);
+  const transactionStatus = useSelector(
+    (state) => state.spendingTransactions.status
+  );
+  const categoryStatus = useSelector((state) => state.categories.status);
+  const [subcategories, setSubcategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [showConfrim, setShowConfirm] = useState(false);
-	const [stagedForDelete, setStagedForDelete] = useState()
-  const {
-    isLoading,
-    categories,
-    subcategories,
-    activeCategory,
-    activeSubcategory,
-    toggleCategory,
-    toggleSubcategory,
-    deleteCategory,
-  } = props;
+  const [stagedForDelete, setStagedForDelete] = useState();
 
-	function handleShowConfirm(category){
-		setShowConfirm(!showConfrim);
-		setStagedForDelete(category)
-	}
+  useEffect(() => {
+    setSubcategories(activeCategory.subcategories);
+  }, [activeCategory]);
+
+  useEffect(() => {
+    function validateStatus() {
+      return transactionStatus === "pending" || categoryStatus === "pending";
+    }
+
+    if (validateStatus() && !isLoading) {
+      setIsLoading(true);
+    } else if (!validateStatus() && isLoading) {
+      setIsLoading(false);
+    }
+  }, [transactionStatus, categoryStatus, isLoading]);
+
+  function handleCategoryToggle(category) {
+    dispatch(activeCategoryUpdated(category.id));
+    setSubcategories(category.subcategories);
+  }
+
+  function handleSubcategoryToggle(subcategory) {
+    dispatch(activeSubcategoryUpdated(subcategory));
+  }
+
+  function handleShowConfirm(category) {
+    setShowConfirm(true);
+    setStagedForDelete(category);
+  }
 
   function handleCancel() {
-    setShowConfirm(!showConfrim);
+    setShowConfirm(false);
   }
 
   async function handleConfirm() {
     setShowConfirm(!showConfrim);
-    await onDelete();
+    await onDelete(stagedForDelete);
   }
 
-  function handleCategoryToggle(category) {
-    toggleCategory(category);
+  async function onDelete(category) {
+    try {
+      const transactions = getTransactionsByCategory(category);
+      await dispatch(deleteCategory({ category, transactions })).unwrap();
+    } catch (e) {
+      onError(e);
+    }
   }
 
-  function handleSubcategoryToggle(subcategory) {
-    toggleSubcategory(subcategory);
-  }
-
-  async function onDelete() {
-    deleteCategory(stagedForDelete);
+  function getTransactionsByCategory(category) {
+    return allTransactions.filter((trans) => trans.categoryId === category.id);
   }
 
   return (
@@ -134,16 +174,20 @@ export default function CategoriesSelector(props) {
               {isLoading ? <LoadingSpinner /> : `${activeSubcategory}`}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {subcategories.length > 0 &&
-                subcategories.map((subcategory) => (
-                  <div
-                    key={subcategory}
-                    className="dropdown-item"
-                    onClick={() => handleSubcategoryToggle(subcategory)}
-                  >
-                    {subcategory}
-                  </div>
-                ))}
+              {!isLoading && (
+                <div>
+                  {subcategories.length > 0 &&
+                    subcategories.map((subcategory) => (
+                      <div
+                        key={subcategory}
+                        className="dropdown-item"
+                        onClick={() => handleSubcategoryToggle(subcategory)}
+                      >
+                        {subcategory}
+                      </div>
+                    ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
