@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { selectAllSignals } from "../../../redux/investing/investingSignalsSlice";
+import { selectAllSignals } from "../../../redux/investing/signalsSlice";
 
 function SignalListItem(props) {
   const { signal, handleSignalSelection, persistState } = props;

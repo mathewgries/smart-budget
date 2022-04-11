@@ -9,27 +9,24 @@ const initialState = {
 };
 
 export const fetchSignals = createAsyncThunk(
-  "investingSignals/fetchSignals",
+  "signals/fetchSignals",
   async () => {
     return amplifyClient.get("smartbudget", "/investing/signals");
   }
 );
 
-export const updateSignals = createAsyncThunk(
-  "investingSignals/updateSignals",
-  async (signalList) => {
-    await amplifyClient.put(signalList, "smartbudget", "/investing/signals");
+export const saveSignal = createAsyncThunk(
+  "signals/saveSignal",
+  async (signals) => {
+    await amplifyClient.put(signals, "smartbudget", "/investing/signals");
+    return signals;
   }
 );
 
-export const investingSignalsSlice = createSlice({
-  name: "investingSignals",
+export const signalsSlice = createSlice({
+  name: "signals",
   initialState,
-  reducers: {
-    addNewSignal(state, action) {
-      state.items.push(action.payload);
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
     builder
       .addCase(fetchAllData.pending, (state, action) => {
@@ -37,8 +34,8 @@ export const investingSignalsSlice = createSlice({
       })
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const signals = action.payload.filter((item) => item.type === "SIGNAL");
-        state.items = signals[0];
+        const signals = action.payload.find((item) => item.type === "SIGNALS#");
+        state.items = signals.signalList;
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -56,22 +53,21 @@ export const investingSignalsSlice = createSlice({
         state.error = action.error.message;
       });
     builder
-      .addCase(updateSignals.pending, (state, action) => {
+      .addCase(saveSignal.pending, (state, action) => {
         state.status = "pending";
       })
-      .addCase(updateSignals.fulfilled, (state, action) => {
+      .addCase(saveSignal.fulfilled, (state, action) => {
         state.status = "succeeded";
+				state.items = action.payload
       })
-      .addCase(updateSignals.rejected, (state, action) => {
+      .addCase(saveSignal.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
   },
 });
 
-export const { addNewSignal } = investingSignalsSlice.actions;
-
-export default investingSignalsSlice.reducer;
+export default signalsSlice.reducer;
 
 export const selectAllSignals = (state) =>
-  state.investingSignals.items.signalList;
+  state.signals.items;

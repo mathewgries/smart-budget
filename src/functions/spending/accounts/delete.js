@@ -1,10 +1,11 @@
 import handler from "../../../util/handler"
-import dynamodb from "../../../util/dynamodb"
+import dynamoDb from "../../../util/dynamodb"
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const { account, transactions } = data;
+	
   let items = [];
   let itemsLength = 0;
   let loopCount = 0;
@@ -43,7 +44,7 @@ export const main = handler(async (event) => {
     } else {
       params = { TransactItems: items.slice(startIndex, endIndex) };
     }
-    await dynamodb.transactWrite(params);
+    await dynamoDb.transactWrite(params);
   }
   return { status: true };
 });
