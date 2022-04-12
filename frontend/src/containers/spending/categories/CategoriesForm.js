@@ -36,6 +36,18 @@ export default function CategoriesForm(props) {
     }
   }, [status, isLoading]);
 
+  function validateCategoryForm() {
+    return fields.categoryName.length > 0;
+  }
+
+  function validateSubcategoryForm() {
+		if(!activeCategory && !validateCategoryForm()){
+			return false
+		}else if(fields.subcategory.length > 0 && !validateCategoryForm()){
+			return true
+		}
+  }
+
   function handleCancel() {
     setShowConfirm(!showConfrim);
   }
@@ -43,14 +55,6 @@ export default function CategoriesForm(props) {
   function handleOnChange(e) {
     const { name, value } = e.target;
     setFields({ ...fields, [name]: value });
-  }
-
-  function validateCategoryForm() {
-    return fields.categoryName.length > 0;
-  }
-
-  function validateSubcategoryForm() {
-    return fields.subcategory.length > 0 && !validateCategoryForm();
   }
 
   async function handleAddNewCategory(e) {
@@ -74,7 +78,7 @@ export default function CategoriesForm(props) {
   async function handleAddNewSubcategory(e) {
     e.preventDefault();
     if (activeCategory.subcategories.includes(fields.subcategory)) {
-			setShowConfirm(true)
+      setShowConfirm(true);
       return;
     }
 
@@ -101,9 +105,7 @@ export default function CategoriesForm(props) {
       <section>
         {showConfrim && (
           <section className="confirmation-popup-section">
-            <AlertPopup
-              onCancel={handleCancel}
-            >
+            <AlertPopup onCancel={handleCancel}>
               <AlertMessage />
             </AlertPopup>
           </section>

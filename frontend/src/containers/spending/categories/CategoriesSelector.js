@@ -54,8 +54,18 @@ export default function CategoriesSelector(props) {
   const [stagedSubcategoryForDelete, setStagedSubcategoryForDelete] =
     useState();
 
+	useEffect(() => {
+		if(categories.length === 0){
+			dispatch(activeCategoryUpdated(undefined))
+		}
+	}, [categories, dispatch])
+
   useEffect(() => {
-    setSubcategories(activeCategory.subcategories);
+    if (activeCategory) {
+      setSubcategories(activeCategory.subcategories);
+    }else{
+			setSubcategories([]);
+		}
   }, [activeCategory]);
 
   useEffect(() => {
@@ -210,8 +220,10 @@ export default function CategoriesSelector(props) {
             >
               {isLoading ? (
                 <LoadingSpinner />
+              ) : categories.length > 0 ? (
+                activeCategory.categoryName
               ) : (
-                `${activeCategory.categoryName}`
+                "Add a category..."
               )}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -258,12 +270,19 @@ export default function CategoriesSelector(props) {
               aria-expanded="false"
               disabled={isLoading}
             >
-              {isLoading ? <LoadingSpinner /> : `${activeSubcategory}`}
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : !subcategories || subcategories.length === 0 ? (
+                "No subcategories"
+              ) : (
+                activeSubcategory
+              )}
             </button>
             <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
               {!isLoading && (
                 <div>
-                  {subcategories.length > 0 &&
+                  {subcategories &&
+                    subcategories.length > 0 &&
                     subcategories.map((subcategory) => (
                       <div key={subcategory} className="category-list-item">
                         <div

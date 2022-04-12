@@ -77,9 +77,14 @@ export const categoriesSlice = createSlice({
       const category = state.entities[action.payload];
       state.activeCategory = category;
 
-      const subcategories = category.subcategories;
-      state.activeSubcategory =
-        subcategories.length > 0 ? subcategories[0] : "No subcategories";
+			if(category){
+				const subcategories = category.subcategories;
+				state.activeSubcategory =
+					subcategories.length > 0 ? subcategories[0] : "No subcategories";
+			}else{
+				state.activeSubcategory = undefined
+			}
+      
     },
     activeSubcategoryUpdated(state, action) {
       state.activeSubcategory = action.payload;
@@ -113,8 +118,8 @@ export const categoriesSlice = createSlice({
           (item) => item.type === "CATEGORY#"
         );
         categoriesAdapter.upsertMany(state, categories);
-        state.activeCategory = categories[0];
-        state.activeSubcategory = categories[0].subcategories[0];
+        state.activeCategory = categories.length > 0 ? categories[0] : undefined;
+        state.activeSubcategory = categories.length > 0 ? categories[0].subcategories[0] : undefined;
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -173,6 +178,7 @@ export const categoriesSlice = createSlice({
         state.status = "succeeded";
         const { id } = action.payload.category;
         categoriesAdapter.removeOne(state, id);
+				console.log(state.categories)
       })
       .addCase(deleteCategory.rejected, (state, action) => {
         state.status = "failed";
