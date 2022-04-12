@@ -6,13 +6,18 @@ import {
   updateSharesOrder,
 } from "../../../../redux/investing/sharesOrdersSlice";
 import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
+import {
+  selectActiveStrategy,
+  activeStrategyRemoved,
+  activeStrategyUpdated,
+} from "../../../../redux/investing/strategiesSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
   sharesProfitLossHandler,
   updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
-import SignalsListGroup from "../SignalListGroup";
+import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
 
 export default function SharesOrderEdit(props) {
@@ -23,8 +28,8 @@ export default function SharesOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
+	const activeStrategy = useSelector((state) => selectActiveStrategy(state));
   const [isSaving, setIsSaving] = useState(false);
-  const [selectedSignals, setSelectedSignals] = useState(order.signalList);
   const [fields, setFields] = useState({
     ticker: order.ticker,
     openDate: inputDateFormat(order.openDate),
@@ -34,6 +39,16 @@ export default function SharesOrderEdit(props) {
     closePrice: order.closePrice,
     tradeSide: order.tradeSide,
   });
+
+	console.log(activeStrategy)
+
+	useEffect(() => {
+		if(order.strategyId){
+			dispatch(activeStrategyUpdated(order.strategyId))
+		}else{
+			dispatch(activeStrategyRemoved());
+		}
+  }, [dispatch, order.strategyId]);
 
   useEffect(() => {
     if (isSaving) {
@@ -64,14 +79,6 @@ export default function SharesOrderEdit(props) {
   const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
-
-  function handleSignalSelection(signal, action) {
-    if (action) {
-      setSelectedSignals([...selectedSignals, signal]);
-    } else {
-      setSelectedSignals(selectedSignals.filter((item) => item !== signal));
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,7 +111,8 @@ export default function SharesOrderEdit(props) {
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
           profitLoss: profitLoss,
-          signalList: selectedSignals,
+          strategyId: activeStrategy ? activeStrategy.id : null,
+          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: {
           id: account.id,
@@ -251,10 +259,7 @@ export default function SharesOrderEdit(props) {
               </div>
             </section>
             <section>
-              <SignalsListGroup
-                handleSignalSelection={handleSignalSelection}
-                selectedSignals={selectedSignals}
-              />
+              <StrategyListGroup />
             </section>
           </form>
         </div>

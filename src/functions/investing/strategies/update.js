@@ -1,26 +1,26 @@
 import handler from "../../../util/handler";
-import dynamoDb from "../../../util/dynamodb";
+import dynamodb from "../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
+  const { strategy } = data;
 
   const params = {
     TableName: process.env.TABLE_NAME,
     Key: {
       PK: `USER#${userId}`,
-      SK: "SIGNALS#",
+      SK: `STRATEGY#${strategy.id}`,
     },
     UpdateExpression:
-      "SET signalList = :signalList, modifyDate = :modifyDate",
+      "SET strategyName = :strategyName, signals = :signals, modifyDate = :modifyDate",
     ExpressionAttributeValues: {
-      ":signalList": data,
+      ":strategyName": strategy.strategyName,
+      ":signals": strategy.signals,
       ":modifyDate": Date.now(),
     },
     ReturnValues: "ALL_NEW",
   };
 
-  await dynamoDb.update(params);
-
-  return { status: true };
+  return await dynamodb.update(params);
 });

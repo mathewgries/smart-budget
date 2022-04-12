@@ -17,9 +17,9 @@ import {
 import { Link } from "react-router-dom";
 import InvestingBalance from "./InvestingBalance";
 import GrowthRate from "./GrowthRate";
-import SharesOrdersTable from "./shares/SharesOrdersTable";
-import OptionsOrdersTable from "./options/OptionsOrderTable";
-import VerticalSpreadsTable from "./spreads/VerticalSpreadsTable";
+import SharesOrdersTable from "../orders/shares/SharesOrdersTable"
+import OptionsOrdersTable from "../orders/options/OptionsOrderTable";
+import VerticalSpreadsTable from "../orders/spreads/VerticalSpreadsTable";
 
 export default function InvestingJournal(props) {
   const { id } = useParams();

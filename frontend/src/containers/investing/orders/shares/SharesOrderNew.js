@@ -3,13 +3,17 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewSharesOrder } from "../../../../redux/investing/sharesOrdersSlice";
 import { selectInvestingAccountById } from "../../../../redux/investing/investingAccountsSlice";
+import {
+  selectActiveStrategy,
+  activeStrategyRemoved,
+} from "../../../../redux/investing/strategiesSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
   sharesProfitLossHandler,
   addOrderHandler,
 } from "../../../../helpers/currencyHandler";
-import SignalsListGroup from "../SignalListGroup";
+import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
 
 export default function SharesOrderNew(props) {
@@ -17,8 +21,8 @@ export default function SharesOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
+  const activeStrategy = useSelector((state) => selectActiveStrategy(state));
   const [isSaving, setIsSaving] = useState(false);
-  const [selectedSignals, setSelectedSignals] = useState([]);
   const [fields, setFields] = useState({
     ticker: "",
     openDate: inputDateFormat(new Date()),
@@ -28,6 +32,12 @@ export default function SharesOrderNew(props) {
     closePrice: "0.00",
     tradeSide: "",
   });
+
+	console.log(activeStrategy)
+
+  useEffect(() => {
+    dispatch(activeStrategyRemoved());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isSaving) {
@@ -58,14 +68,6 @@ export default function SharesOrderNew(props) {
   const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
-
-  function handleSignalSelection(signal, action) {
-    if (action) {
-      setSelectedSignals([...selectedSignals, signal]);
-    } else {
-      setSelectedSignals(selectedSignals.filter((item) => item !== signal));
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -100,7 +102,8 @@ export default function SharesOrderNew(props) {
           closePrice: fields.closePrice,
           tradeSide: fields.tradeSide,
           profitLoss: profitLoss,
-          signalList: selectedSignals,
+          strategyId: activeStrategy ? activeStrategy.id : null,
+          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: {
           id: account.id,
@@ -247,10 +250,7 @@ export default function SharesOrderNew(props) {
               </div>
             </section>
             <section>
-              <SignalsListGroup
-                handleSignalSelection={handleSignalSelection}
-                selectedSignals={selectedSignals}
-              />
+              <StrategyListGroup />
             </section>
           </form>
         </div>
