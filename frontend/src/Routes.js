@@ -38,7 +38,7 @@ import VerticalSpreadsOrderNew from "./containers/investing/orders/spreads/Verti
 import VerticalSpreadsOrderEdit from "./containers/investing/orders/spreads/VerticalSpreadsOrderEdit";
 
 import Strategies from "./containers/investing/strategies/Strategies";
-import StrategySignals from "./containers/investing/strategies/StrategySignals";
+
 import NotFound from "./containers/NotFound";
 
 export default function Routes() {
@@ -163,10 +163,6 @@ export default function Routes() {
 
       <AuthenticatedRoute exact path="/investing/strategies">
         <Strategies />
-      </AuthenticatedRoute>
-
-      <AuthenticatedRoute exact path="/investing/signals">
-        <StrategySignals />
       </AuthenticatedRoute>
 
       {/* INVESTING JOURNAL */}

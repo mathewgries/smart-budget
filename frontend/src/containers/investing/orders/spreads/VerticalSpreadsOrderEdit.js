@@ -6,13 +6,18 @@ import {
   selectVerticalSpreadsOrderById,
 } from "../../../../redux/investing/verticalSpreadsOrdersSlice";
 import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
+import {
+  selectActiveStrategy,
+  activeStrategyRemoved,
+  activeStrategyUpdated,
+} from "../../../../redux/investing/strategiesSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
   optionsProfitLossHandler,
   updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
-import SignalsListGroup from "../SignalListGroup";
+import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
 
 export default function VerticalSpreadsOrderEdit(props) {
@@ -25,11 +30,9 @@ export default function VerticalSpreadsOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
+  const activeStrategy = useSelector((state) => selectActiveStrategy(state));
   const [isSaving, setIsSaving] = useState(false);
-  const [selectedSignals, setSelectedSignals] = useState(order.signalList);
   const [openGreeks, setOpenGreeks] = useState(false);
-	
-
   const [fields, setFields] = useState({
     ticker: order.ticker,
     openDate: inputDateFormat(order.openDate),
@@ -55,6 +58,16 @@ export default function VerticalSpreadsOrderEdit(props) {
     openImpliedVolatility: order.openImpliedVolatility || "0.00",
     closeImpliedVolatility: order.closeImpliedVolatility || "0.00",
   });
+
+	console.log(activeStrategy)
+
+  useEffect(() => {
+    if (order.strategyId) {
+      dispatch(activeStrategyUpdated(order.strategyId));
+    } else {
+      dispatch(activeStrategyRemoved());
+    }
+  }, [dispatch, order.strategyId]);
 
   useEffect(() => {
     if (isSaving) {
@@ -90,14 +103,6 @@ export default function VerticalSpreadsOrderEdit(props) {
     setFields({ ...fields, [name]: value });
   };
 
-  function handleSignalSelection(signal, action) {
-    if (action) {
-      setSelectedSignals([...selectedSignals, signal]);
-    } else {
-      setSelectedSignals(selectedSignals.filter((item) => item !== signal));
-    }
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -130,7 +135,8 @@ export default function VerticalSpreadsOrderEdit(props) {
           closeDate: Date.parse(fields.closeDate),
           spreadExpirationDate: Date.parse(fields.spreadExpirationDate),
           profitLoss: profitLoss,
-          signalList: selectedSignals,
+          strategyId: activeStrategy ? activeStrategy.id : null,
+          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: { id: account.id, accountBalance: newAccountBalance },
       })
@@ -213,10 +219,7 @@ export default function VerticalSpreadsOrderEdit(props) {
             </section>
 
             <section>
-              <SignalsListGroup
-                handleSignalSelection={handleSignalSelection}
-                selectedSignals={selectedSignals}
-              />
+              <StrategyListGroup />
             </section>
 
             <section className="order-form-section">

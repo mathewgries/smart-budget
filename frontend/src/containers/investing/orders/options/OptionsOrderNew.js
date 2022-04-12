@@ -3,13 +3,17 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewOptionsOrder } from "../../../../redux/investing/optionsOrdersSlice";
 import { selectInvestingAccountById } from "../../../../redux/investing/investingAccountsSlice";
+import {
+  selectActiveStrategy,
+  activeStrategyRemoved,
+} from "../../../../redux/investing/strategiesSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
   optionsProfitLossHandler,
   addOrderHandler,
 } from "../../../../helpers/currencyHandler";
-import SignalsListGroup from "../SignalListGroup";
+import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
 
 export default function OptionsOrderNew(props) {
@@ -17,8 +21,8 @@ export default function OptionsOrderNew(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const account = useSelector((state) => selectInvestingAccountById(state, id));
+  const activeStrategy = useSelector((state) => selectActiveStrategy(state));
   const [isSaving, setIsSaving] = useState(false);
-  const [selectedSignals, setSelectedSignals] = useState([]);
   const [openGreeks, setOpenGreeks] = useState(false);
   const [fields, setFields] = useState({
     ticker: "",
@@ -44,6 +48,10 @@ export default function OptionsOrderNew(props) {
     openImpliedVolatility: "0.00",
     closeImpliedVolatility: "0.00",
   });
+
+  useEffect(() => {
+    dispatch(activeStrategyRemoved());
+  }, [dispatch]);
 
   useEffect(() => {
     if (isSaving) {
@@ -74,14 +82,6 @@ export default function OptionsOrderNew(props) {
   const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
-
-  function handleSignalSelection(signal, action) {
-    if (action) {
-      setSelectedSignals([...selectedSignals, signal]);
-    } else {
-      setSelectedSignals(selectedSignals.filter((item) => item !== signal));
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -131,7 +131,8 @@ export default function OptionsOrderNew(props) {
           openImpliedVolatility: fields.openImpliedVolatility,
           closeImpliedVolatility: fields.closeImpliedVolatility,
           profitLoss: profitLoss,
-          signalList: selectedSignals,
+          strategyId: activeStrategy ? activeStrategy.id : null,
+          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: { id: account.id, accountBalance: newAccountBalance },
       })
@@ -214,10 +215,7 @@ export default function OptionsOrderNew(props) {
             </section>
 
             <section>
-              <SignalsListGroup
-                handleSignalSelection={handleSignalSelection}
-                selectedSignals={selectedSignals}
-              />
+              <StrategyListGroup />
             </section>
 
             <section className="order-form-section">

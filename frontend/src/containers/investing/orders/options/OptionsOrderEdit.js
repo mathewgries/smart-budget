@@ -6,13 +6,18 @@ import {
   updateOptionsOrder,
 } from "../../../../redux/investing/optionsOrdersSlice";
 import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
+import {
+  selectActiveStrategy,
+  activeStrategyRemoved,
+	activeStrategyUpdated,
+} from "../../../../redux/investing/strategiesSlice";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
   optionsProfitLossHandler,
   updateOrderHandler,
 } from "../../../../helpers/currencyHandler";
-import SignalsListGroup from "../SignalListGroup";
+import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
 
 export default function OptionsOrderEdit(props) {
@@ -23,8 +28,8 @@ export default function OptionsOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
+	const activeStrategy = useSelector((state) => selectActiveStrategy(state));
   const [openGreeks, setOpenGreeks] = useState(false);
-  const [selectedSignals, setSelectedSignals] = useState(order.signalList);
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     ticker: order.ticker,
@@ -50,6 +55,14 @@ export default function OptionsOrderEdit(props) {
     openImpliedVolatility: order.openImpliedVolatility || "0.00",
     closeImpliedVolatility: order.closeImpliedVolatility || "0.00",
   });
+
+	useEffect(() => {
+		if(order.strategyId){
+			dispatch(activeStrategyUpdated(order.strategyId))
+		}else{
+			dispatch(activeStrategyRemoved());
+		}
+  }, [dispatch, order.strategyId]);
 
   useEffect(() => {
     if (isSaving) {
@@ -80,14 +93,6 @@ export default function OptionsOrderEdit(props) {
   const handleCurrencyInput = ({ name, value }) => {
     setFields({ ...fields, [name]: value });
   };
-
-  function handleSignalSelection(signal, action) {
-    if (action) {
-      setSelectedSignals([...selectedSignals, signal]);
-    } else {
-      setSelectedSignals(selectedSignals.filter((item) => item !== signal));
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,7 +126,8 @@ export default function OptionsOrderEdit(props) {
           closeDate: Date.parse(fields.closeDate),
           contractExpirationDate: Date.parse(fields.contractExpirationDate),
           profitLoss: profitLoss,
-          signalList: selectedSignals,
+          strategyId: activeStrategy ? activeStrategy.id : null,
+          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: { id: account.id, accountBalance: newAccountBalance },
       })
@@ -204,11 +210,7 @@ export default function OptionsOrderEdit(props) {
             </section>
 
             <section>
-              <SignalsListGroup
-                handleSignalSelection={handleSignalSelection}
-                selectedSignals={selectedSignals}
-                editPage={true}
-              />
+              <StrategyListGroup />
             </section>
 
             <section className="order-form-section">

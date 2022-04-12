@@ -63,9 +63,13 @@ export const strategiesSlice = createSlice({
   initialState,
   reducers: {
     activeStrategyUpdated(state, action) {
-      const strategy = action.payload;
+      const strategy = state.entities[action.payload];
+
       state.activeStrategy = strategy;
       state.activeSignals = strategy.signals;
+    },
+    activeStrategyRemoved(state, action) {
+      state.activeStrategy = undefined;
     },
   },
   extraReducers(builder) {
@@ -116,7 +120,8 @@ export const strategiesSlice = createSlice({
   },
 });
 
-export const { activeStrategyUpdated } = strategiesSlice.actions;
+export const { activeStrategyUpdated, activeStrategyRemoved } =
+  strategiesSlice.actions;
 
 export default strategiesSlice.reducer;
 
