@@ -11,7 +11,16 @@ import { selectAllSignals } from "../../../redux/investing/signalsSlice";
 import { onError } from "../../../lib/errorLib";
 import StrategyNew from "./StrategyNew";
 import SignalNew from "./SignalNew";
+import AlertPopup from "../../popups/AlertPopup";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+
+const AlertMessage = () => {
+  return (
+    <div>
+      <p>The strategy already contains that signal!</p>
+    </div>
+  );
+};
 
 export default function Strategies(props) {
   const dispatch = useDispatch();
@@ -21,6 +30,7 @@ export default function Strategies(props) {
   const activeSignals = useSelector((state) => selectActiveSignals(state));
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
+  const [showConfrim, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -39,15 +49,20 @@ export default function Strategies(props) {
     }
   }, [strategiesStatus, signalsStatus, isLoading]);
 
+  function handleCancel() {
+    setShowConfirm(!showConfrim);
+  }
+
   function handleStrategyToggle(strategy) {
     dispatch(activeStrategyUpdated(strategy.id));
   }
 
   async function addSignalToStrategy(signal) {
     if (activeSignals.includes(signal)) {
+      setShowConfirm(true);
       return;
     } else {
-      const updatedSignals = [...signals, signal];
+      const updatedSignals = [...activeStrategy.signals, signal];
       await handleUpdateStrategy(updatedSignals);
     }
   }
@@ -77,6 +92,15 @@ export default function Strategies(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
+        <section>
+          {showConfrim && (
+            <section className="confirmation-popup-section">
+              <AlertPopup onCancel={handleCancel}>
+                <AlertMessage />
+              </AlertPopup>
+            </section>
+          )}
+        </section>
         <div className="form-wrapper">
           <section>
             <div>
@@ -191,9 +215,11 @@ export default function Strategies(props) {
                 <h5>Signals</h5>
               </header>
             </div>
+
             <div>
               <SignalNew />
             </div>
+
             <div>
               <ul className="list-group">
                 {signals.length > 0 &&

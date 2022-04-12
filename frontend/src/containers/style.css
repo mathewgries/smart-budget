@@ -188,7 +188,7 @@ caption {
 .confirm-popup-btn-wrapper {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .categories-dropdown-section {

@@ -5,13 +5,23 @@ import {
   updateCategory,
   selectActiveCategory,
 } from "../../../redux/spending/categoriesSlice";
+import AlertPopup from "../../popups/AlertPopup";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import { onError } from "../../../lib/errorLib";
+
+const AlertMessage = () => {
+  return (
+    <div>
+      <p>Subcategory already exists!</p>
+    </div>
+  );
+};
 
 export default function CategoriesForm(props) {
   const dispatch = useDispatch();
   const activeCategory = useSelector((state) => selectActiveCategory(state));
   const status = useSelector((state) => state.categories.status);
+  const [showConfrim, setShowConfirm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [fields, setFields] = useState({
     categoryName: "",
@@ -26,6 +36,10 @@ export default function CategoriesForm(props) {
     }
   }, [status, isLoading]);
 
+  function handleCancel() {
+    setShowConfirm(!showConfrim);
+  }
+
   function handleOnChange(e) {
     const { name, value } = e.target;
     setFields({ ...fields, [name]: value });
@@ -39,7 +53,7 @@ export default function CategoriesForm(props) {
     return fields.subcategory.length > 0 && !validateCategoryForm();
   }
 
-  async function handleCategorySubmit(e) {
+  async function handleAddNewCategory(e) {
     e.preventDefault();
     try {
       await dispatch(
@@ -57,8 +71,13 @@ export default function CategoriesForm(props) {
     }
   }
 
-  async function handleSubategorySubmit(e) {
+  async function handleAddNewSubcategory(e) {
     e.preventDefault();
+    if (activeCategory.subcategories.includes(fields.subcategory)) {
+			setShowConfirm(true)
+      return;
+    }
+
     try {
       await dispatch(
         updateCategory({
@@ -80,8 +99,19 @@ export default function CategoriesForm(props) {
   return (
     <div>
       <section>
+        {showConfrim && (
+          <section className="confirmation-popup-section">
+            <AlertPopup
+              onCancel={handleCancel}
+            >
+              <AlertMessage />
+            </AlertPopup>
+          </section>
+        )}
+      </section>
+      <section>
         <div>
-          <div onSubmit={handleCategorySubmit} className="categories-form">
+          <div className="categories-form">
             <div className="form-group categories-form">
               <input
                 className="form-control"
@@ -100,7 +130,7 @@ export default function CategoriesForm(props) {
                     : "btn-primary"
                 }`}
                 disabled={!validateCategoryForm() || isLoading}
-                onClick={handleCategorySubmit}
+                onClick={handleAddNewCategory}
               >
                 {isLoading ? <LoadingSpinner /> : "Add"}
               </button>
@@ -111,7 +141,7 @@ export default function CategoriesForm(props) {
 
       <section>
         <div>
-          <div onSubmit={handleSubategorySubmit} className="categories-form">
+          <div className="categories-form">
             <div className="form-group categories-form">
               <input
                 className="form-control"
@@ -130,7 +160,7 @@ export default function CategoriesForm(props) {
                     : "btn-primary"
                 }`}
                 disabled={!validateSubcategoryForm() || isLoading}
-                onClick={handleSubategorySubmit}
+                onClick={handleAddNewSubcategory}
               >
                 {isLoading ? <LoadingSpinner /> : "Add"}
               </button>
