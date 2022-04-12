@@ -40,8 +40,6 @@ export default function SharesOrderEdit(props) {
     tradeSide: order.tradeSide,
   });
 
-	console.log(activeStrategy)
-
 	useEffect(() => {
 		if(order.strategyId){
 			dispatch(activeStrategyUpdated(order.strategyId))

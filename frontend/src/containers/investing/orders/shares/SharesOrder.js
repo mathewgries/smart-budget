@@ -6,6 +6,7 @@ import {
   deleteSharesOrder,
 } from "../../../../redux/investing/sharesOrdersSlice";
 import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
+import { selectStrategyById } from "../../../../redux/investing/strategiesSlice";
 import {
   getPLPercent,
   deleteOrderHandler,
@@ -33,6 +34,9 @@ export default function SharesOrder(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
+	const strategy = useSelector((state) =>
+	selectStrategyById(state, order.strategyId)
+);
   const [isDelete, setIsDelete] = useState(false);
   const [showConfrim, setShowConfirm] = useState(false);
 
@@ -132,6 +136,42 @@ export default function SharesOrder(props) {
             </table>
           </section>
 
+					{strategy && (
+            <section>
+              <table className="table table-bordered table-sm">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Strategy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{strategy.strategyName}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          )}
+
+          {strategy && strategy.signals.length > 0 && (
+            <section>
+              <table className="table table-bordered table-sm">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Signals</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {strategy.signals.map((signal) => (
+                    <tr key={signal}>
+                      <td>{signal}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
+
           <section className="option-order-contract-section">
             <table className="table table-bordered table-sm">
               <thead className="thead-light">
@@ -162,25 +202,6 @@ export default function SharesOrder(props) {
               </tbody>
             </table>
           </section>
-
-          {order.signalList && order.signalList.length > 0 && (
-            <section>
-              <table className="table table-bordered">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Signals</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.signalList.map((signal) => (
-                    <tr key={signal}>
-                      <td>{signal}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-          )}
         </div>
       </div>
     </div>

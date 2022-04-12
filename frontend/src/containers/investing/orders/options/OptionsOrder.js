@@ -6,6 +6,7 @@ import {
   deleteOptionsOrder,
 } from "../../../../redux/investing/optionsOrdersSlice";
 import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
+import { selectStrategyById } from "../../../../redux/investing/strategiesSlice";
 import {
   getPLPercent,
   deleteOrderHandler,
@@ -33,7 +34,10 @@ export default function OptionsOrder(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-	const [isDelete, setIsDelete] = useState(false)
+  const strategy = useSelector((state) =>
+    selectStrategyById(state, order.strategyId)
+  );
+  const [isDelete, setIsDelete] = useState(false);
   const [showConfrim, setShowConfirm] = useState(false);
 
   useEffect(() => {
@@ -53,7 +57,7 @@ export default function OptionsOrder(props) {
 
   async function onDelete() {
     try {
-			setIsDelete(true)
+      setIsDelete(true);
       const newAccountBalance = deleteOrderHandler(
         order.profitLoss,
         account.accountBalance
@@ -135,6 +139,42 @@ export default function OptionsOrder(props) {
               </tbody>
             </table>
           </section>
+
+          {strategy && (
+            <section>
+              <table className="table table-bordered table-sm">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Strategy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{strategy.strategyName}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          )}
+
+          {strategy && strategy.signals.length > 0 && (
+            <section>
+              <table className="table table-bordered table-sm">
+                <thead className="thead-light">
+                  <tr>
+                    <th>Signals</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {strategy.signals.map((signal) => (
+                    <tr key={signal}>
+                      <td>{signal}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
 
           <section className="option-order-ticker-section">
             <table className="table table-bordered table-sm">
@@ -227,25 +267,6 @@ export default function OptionsOrder(props) {
               </tbody>
             </table>
           </section>
-
-          {order.signalList && order.signalList.length > 0 && (
-            <section>
-              <table className="table table-bordered">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Signals</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.signalList.map((signal) => (
-                    <tr key={signal}>
-                      <td>{signal}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-          )}
         </div>
       </div>
     </div>

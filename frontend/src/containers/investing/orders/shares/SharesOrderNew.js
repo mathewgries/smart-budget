@@ -33,8 +33,6 @@ export default function SharesOrderNew(props) {
     tradeSide: "",
   });
 
-	console.log(activeStrategy)
-
   useEffect(() => {
     dispatch(activeStrategyRemoved());
   }, [dispatch]);

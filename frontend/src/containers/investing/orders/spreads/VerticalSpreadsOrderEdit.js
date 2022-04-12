@@ -59,8 +59,6 @@ export default function VerticalSpreadsOrderEdit(props) {
     closeImpliedVolatility: order.closeImpliedVolatility || "0.00",
   });
 
-	console.log(activeStrategy)
-
   useEffect(() => {
     if (order.strategyId) {
       dispatch(activeStrategyUpdated(order.strategyId));

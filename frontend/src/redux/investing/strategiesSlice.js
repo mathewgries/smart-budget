@@ -36,7 +36,6 @@ export const saveStrategy = createAsyncThunk(
 export const updateStrategy = createAsyncThunk(
   "strategies/updateStrategy",
   async ({ strategy }) => {
-    console.log(strategy);
     await amplifyClient.put(
       { strategy },
       "smartbudget",
@@ -130,6 +129,6 @@ export const selectActiveSignals = (state) => state.strategies.activeSignals;
 
 export const {
   selectAll: selectAllStrategies,
-  selectById: selectStrategiesId,
+  selectById: selectStrategyById,
   selectIds: selectStrategiesIds,
 } = strategiesAdapter.getSelectors((state) => state.strategies);
