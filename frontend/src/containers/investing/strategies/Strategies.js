@@ -6,18 +6,34 @@ import {
   selectActiveSignals,
   activeStrategyUpdated,
   updateStrategy,
+  deleteStrategy,
 } from "../../../redux/investing/strategiesSlice";
+import { selectAllSharesOrders } from "../../../redux/investing/sharesOrdersSlice";
+import { selectAllOptionsOrders } from "../../../redux/investing/optionsOrdersSlice";
+import { selectAllVerticalSpreadsOrders } from "../../../redux/investing/verticalSpreadsOrdersSlice";
 import { selectAllSignals } from "../../../redux/investing/signalsSlice";
 import { onError } from "../../../lib/errorLib";
 import StrategyNew from "./StrategyNew";
 import SignalNew from "./SignalNew";
 import AlertPopup from "../../popups/AlertPopup";
+import ConfirmationPopup from "../../popups/ConfirmationPopup";
+import DropDownLoader from "../../loadingContainers/DropDownLoader";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 
 const AlertMessage = () => {
   return (
     <div>
       <p>The strategy already contains that signal!</p>
+    </div>
+  );
+};
+
+const StrategyConfirmMessage = () => {
+  return (
+    <div>
+      <p>You are about to delete a strategy!</p>
+      <p>The strategy will be removed from all orders as well</p>
+      <p>Please Confrim!</p>
     </div>
   );
 };
@@ -30,8 +46,13 @@ export default function Strategies(props) {
   const activeSignals = useSelector((state) => selectActiveSignals(state));
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
-  const [showConfrim, setShowConfirm] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [strategyDelete, setStrategyDelete] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const orders = useSelector(selectAllSharesOrders)
+    .concat(useSelector(selectAllOptionsOrders))
+    .concat(useSelector(selectAllVerticalSpreadsOrders));
 
   useEffect(() => {
     function validateStatus() {
@@ -49,8 +70,12 @@ export default function Strategies(props) {
     }
   }, [strategiesStatus, signalsStatus, isLoading]);
 
-  function handleCancel() {
-    setShowConfirm(!showConfrim);
+  function handleAlertCancel() {
+    setShowAlert(!showAlert);
+  }
+
+  function handleStrategyCancel() {
+    setShowConfirm(!showConfirm);
   }
 
   function handleStrategyToggle(strategy) {
@@ -59,7 +84,7 @@ export default function Strategies(props) {
 
   async function addSignalToStrategy(signal) {
     if (activeSignals.includes(signal)) {
-      setShowConfirm(true);
+      setShowAlert(true);
       return;
     } else {
       const updatedSignals = [...activeStrategy.signals, signal];
@@ -89,31 +114,79 @@ export default function Strategies(props) {
     }
   }
 
+  function handleShowStrategyConfirm(strategy) {
+    setShowConfirm(true);
+    setStrategyDelete(strategy);
+  }
+
+  async function handleStrategyConfirm() {
+    setShowConfirm(false);
+    await onStrategyDelete(strategyDelete);
+  }
+
+  async function onStrategyDelete(strategy) {
+    try {
+      const orders = setOrdersByStrategyId(strategy.id);
+      await dispatch(deleteStrategy({ strategy, orders })).unwrap();
+    } catch (e) {
+      onError(e);
+    }
+  }
+
+  function setOrdersByStrategyId(id) {
+    return orders.filter((order) => order.strategyId === id);
+  }
+
   return (
     <div className="page-container">
       <div className="page-wrapper">
-        <section>
-          {showConfrim && (
-            <section className="confirmation-popup-section">
-              <AlertPopup onCancel={handleCancel}>
-                <AlertMessage />
-              </AlertPopup>
-            </section>
-          )}
-        </section>
         <div className="form-wrapper">
+          <section>
+            {showAlert && (
+              <section className="confirmation-popup-section">
+                <AlertPopup onCancel={handleAlertCancel}>
+                  <AlertMessage />
+                </AlertPopup>
+              </section>
+            )}
+          </section>
+
+          <section>
+            {showConfirm && (
+              <section className="confirmation-popup-section">
+                <ConfirmationPopup
+                  onCancel={handleStrategyCancel}
+                  onConfirm={handleStrategyConfirm}
+                >
+                  <StrategyConfirmMessage />
+                </ConfirmationPopup>
+              </section>
+            )}
+          </section>
+
           <section>
             <div>
               <header>
                 <h5>Strategies</h5>
               </header>
             </div>
+          </section>
 
-            <div>
-              <StrategyNew />
-            </div>
+          <section>
+            <StrategyNew />
+          </section>
 
-            <div>
+          {(isLoading || !strategies[0]) && (
+            <section>
+              <DropDownLoader
+                isLoading={isLoading}
+                text={"Add a strategy..."}
+              />
+            </section>
+          )}
+
+          {!isLoading && strategies[0] && (
+            <section>
               <div className="categories-dropdown-section">
                 <div className="dropdown form-group">
                   <button
@@ -147,7 +220,9 @@ export default function Strategies(props) {
                           <div>
                             <button
                               className="btn btn-danger btn-sm"
-                              // onClick={() => handleShowCategoryConfirm(category)}
+                              onClick={() =>
+                                handleShowStrategyConfirm(strategy)
+                              }
                               disabled={isLoading}
                             >
                               Remove
@@ -159,9 +234,20 @@ export default function Strategies(props) {
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
+          )}
 
-            <div>
+          {(isLoading || !strategies[0]) && (
+            <section>
+              <DropDownLoader
+                isLoading={isLoading}
+                text={"Add a strategy..."}
+              />
+            </section>
+          )}
+
+          {!isLoading && strategies[0] && (
+            <section>
               <div className="categories-dropdown-section">
                 <div className="dropdown form-group">
                   <button
@@ -178,7 +264,7 @@ export default function Strategies(props) {
                     ) : activeSignals.length === 0 ? (
                       "No Signals In Strategy..."
                     ) : (
-                      "Signals In Strategy..."
+                      "View Signals..."
                     )}
                   </button>
                   <div
@@ -206,8 +292,8 @@ export default function Strategies(props) {
                   </div>
                 </div>
               </div>
-            </div>
-          </section>
+            </section>
+          )}
 
           <section>
             <div>
@@ -215,26 +301,27 @@ export default function Strategies(props) {
                 <h5>Signals</h5>
               </header>
             </div>
-
-            <div>
-              <SignalNew />
-            </div>
-
-            <div>
-              <ul className="list-group">
-                {signals.length > 0 &&
-                  signals.map((signal) => (
-                    <li
-                      key={signal}
-                      className="list-group-item"
-                      onClick={() => addSignalToStrategy(signal)}
-                    >
-                      {signal}
-                    </li>
-                  ))}
-              </ul>
-            </div>
           </section>
+
+          <section>
+            <SignalNew />
+          </section>
+
+          {signals.length > 0 && (
+            <section>
+              <ul className="list-group">
+                {signals.map((signal) => (
+                  <li
+                    key={signal}
+                    className="list-group-item"
+                    onClick={() => addSignalToStrategy(signal)}
+                  >
+                    {signal}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
       </div>
     </div>

@@ -101,7 +101,6 @@ export default function SharesOrderNew(props) {
           tradeSide: fields.tradeSide,
           profitLoss: profitLoss,
           strategyId: activeStrategy ? activeStrategy.id : null,
-          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: {
           id: account.id,

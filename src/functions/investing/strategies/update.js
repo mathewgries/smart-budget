@@ -12,8 +12,10 @@ export const main = handler(async (event) => {
       PK: `USER#${userId}`,
       SK: `STRATEGY#${strategy.id}`,
     },
-    UpdateExpression:
-      "SET strategyName = :strategyName, signals = :signals, modifyDate = :modifyDate",
+    UpdateExpression: `SET 
+			strategyName = :strategyName, 
+			signals = :signals,
+			modifyDate = :modifyDate`,
     ExpressionAttributeValues: {
       ":strategyName": strategy.strategyName,
       ":signals": strategy.signals,

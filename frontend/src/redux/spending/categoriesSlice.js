@@ -157,7 +157,7 @@ export const categoriesSlice = createSlice({
         state.status = "succeeded";
         const { category } = action.payload;
         const subcategories = category.subcategories;
-				
+
         categoriesAdapter.upsertOne(state, category);
         state.activeCategory = category;
         state.activeSubcategory = subcategories[subcategories.length - 1];
@@ -178,8 +178,7 @@ export const categoriesSlice = createSlice({
         );
         categoriesAdapter.removeOne(state, id);
         if (!categories[0]) {
-          state.activeCategory = {};
-          state.activeSubcategory = "";
+          state = initialState;
         }
       })
       .addCase(deleteCategory.rejected, (state, action) => {

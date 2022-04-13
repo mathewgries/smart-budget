@@ -28,7 +28,7 @@ export default function SharesOrderEdit(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-	const activeStrategy = useSelector((state) => selectActiveStrategy(state));
+  const activeStrategy = useSelector((state) => selectActiveStrategy(state));
   const [isSaving, setIsSaving] = useState(false);
   const [fields, setFields] = useState({
     ticker: order.ticker,
@@ -40,12 +40,12 @@ export default function SharesOrderEdit(props) {
     tradeSide: order.tradeSide,
   });
 
-	useEffect(() => {
-		if(order.strategyId){
-			dispatch(activeStrategyUpdated(order.strategyId))
-		}else{
-			dispatch(activeStrategyRemoved());
-		}
+  useEffect(() => {
+    if (order.strategyId) {
+      dispatch(activeStrategyUpdated(order.strategyId));
+    } else {
+      dispatch(activeStrategyRemoved());
+    }
   }, [dispatch, order.strategyId]);
 
   useEffect(() => {
@@ -110,7 +110,6 @@ export default function SharesOrderEdit(props) {
           closeDate: Date.parse(fields.closeDate),
           profitLoss: profitLoss,
           strategyId: activeStrategy ? activeStrategy.id : null,
-          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: {
           id: account.id,

@@ -132,7 +132,6 @@ export default function OptionsOrderNew(props) {
           closeImpliedVolatility: fields.closeImpliedVolatility,
           profitLoss: profitLoss,
           strategyId: activeStrategy ? activeStrategy.id : null,
-          strategyName: activeStrategy ? activeStrategy.strategyName : null,
         },
         account: { id: account.id, accountBalance: newAccountBalance },
       })

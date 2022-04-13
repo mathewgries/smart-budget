@@ -45,17 +45,17 @@ export const updateStrategy = createAsyncThunk(
   }
 );
 
-// export const deleteOptionsOrder = createAsyncThunk(
-//   "optionsOrders/deleteOptionsOrder",
-//   async ({ order, account }) => {
-//     await amplifyClient.remove(
-//       { order, account },
-//       "smartbudget",
-//       `/investing/orders/${order.id}`
-//     );
-//     return { order, account };
-//   }
-// );
+export const deleteStrategy = createAsyncThunk(
+  "strategies/deleteStrategy",
+  async ({ strategy, orders }) => {
+    await amplifyClient.remove(
+      { strategy, orders },
+      "smartbudget",
+      `/investing/strategies/${strategy.id}`
+    );
+    return { strategy, orders };
+  }
+);
 
 export const strategiesSlice = createSlice({
   name: "strategies",
@@ -82,8 +82,10 @@ export const strategiesSlice = createSlice({
           (item) => item.type === "STRATEGY#"
         );
         strategiesAdapter.setAll(state, strategies);
-        state.activeStrategy = strategies[0];
-        state.activeSignals = strategies[0].signals;
+        if (strategies[0]) {
+          state.activeStrategy = strategies[0];
+          state.activeSignals = strategies[0].signals;
+        }
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -114,6 +116,24 @@ export const strategiesSlice = createSlice({
         state.activeSignals = strategy.signals;
       })
       .addCase(updateStrategy.rejected, (state, action) => {
+        state.status = "failed";
+      });
+    builder
+      .addCase(deleteStrategy.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteStrategy.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { id } = action.payload.strategy;
+        const strategies = Object.values(state.entities).filter(
+          (strategy) => strategy.id !== id
+        );
+        strategiesAdapter.removeOne(state, id);
+				if(!strategies[0]){
+					state = initialState
+				}
+      })
+      .addCase(deleteStrategy.rejected, (state, action) => {
         state.status = "failed";
       });
   },
