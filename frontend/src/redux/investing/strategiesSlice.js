@@ -15,13 +15,6 @@ const initialState = strategiesAdapter.getInitialState({
   error: null,
 });
 
-// export const fetchOptionsOrders = createAsyncThunk(
-//   "optionsOrders/fetchOptionsOrders",
-//   async () => {
-//     return amplifyClient.get("smartbudget", "/investing/orders/options");
-//   }
-// );
-
 export const saveStrategy = createAsyncThunk(
   "strategies/saveStrategy",
   async ({ strategy }) => {

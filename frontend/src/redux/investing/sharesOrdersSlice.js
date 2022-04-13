@@ -16,13 +16,6 @@ const initialState = sharesAdapter.getInitialState({
   error: null,
 });
 
-export const fetchSharesOrders = createAsyncThunk(
-  "sharesOrders/fetchSharesOrders",
-  async () => {
-    return amplifyClient.get("smartbudget", "/investing/orders/shares");
-  }
-);
-
 export const saveNewSharesOrder = createAsyncThunk(
   "sharesOrders/saveNewSharesOrder",
   async (newOrder) => {
@@ -76,18 +69,6 @@ export const sharesOrdersSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchSharesOrders.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchSharesOrders.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        sharesAdapter.upsertMany(state, action.payload);
-      })
-      .addCase(fetchSharesOrders.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(saveNewSharesOrder.pending, (state, action) => {

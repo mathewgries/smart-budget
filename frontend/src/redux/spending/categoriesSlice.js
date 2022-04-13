@@ -15,13 +15,6 @@ const initialState = categoriesAdapter.getInitialState({
   error: null,
 });
 
-export const fetchCategories = createAsyncThunk(
-  "categories/fetchCategories",
-  async () => {
-    return amplifyClient.get("smartbudget", "/spending/categories");
-  }
-);
-
 export const saveNewCategory = createAsyncThunk(
   "categories/saveNewCategory",
   async ({ category }) => {
@@ -119,18 +112,6 @@ export const categoriesSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchCategories.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchCategories.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        categoriesAdapter.upsertMany(state, action.payload);
-      })
-      .addCase(fetchCategories.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(saveNewCategory.pending, (state, action) => {

@@ -35,13 +35,6 @@ const initialState = investingAccountsAdapter.getInitialState({
   error: null,
 });
 
-export const fetchInvestingAccounts = createAsyncThunk(
-  "investingAccounts/fetchInvestingAccounts",
-  async () => {
-    return amplifyClient.get("smartbudget", "/investing/accounts");
-  }
-);
-
 export const addNewInvestingAccount = createAsyncThunk(
   "investingAccounts/addNewInvestingAccount",
   async ({ account }) => {
@@ -96,18 +89,6 @@ export const investingAccountsSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchInvestingAccounts.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchInvestingAccounts.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        investingAccountsAdapter.upsertMany(state, action.payload);
-      })
-      .addCase(fetchInvestingAccounts.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(addNewInvestingAccount.pending, (state, action) => {

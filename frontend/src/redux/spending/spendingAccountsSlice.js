@@ -20,13 +20,6 @@ const initialState = spendingAccountsAdapter.getInitialState({
   error: null,
 });
 
-export const fetchSpendingAccounts = createAsyncThunk(
-  "spendingAccounts/fetchSpendingAccounts",
-  async () => {
-    return amplifyClient.get("smartbudget", "/spending/accounts");
-  }
-);
-
 export const addNewSpendingAccount = createAsyncThunk(
   "spendingAccounts/addNewSpendingAccount",
   async ({ account }) => {
@@ -81,18 +74,6 @@ export const spendingAccountsSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchSpendingAccounts.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchSpendingAccounts.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        spendingAccountsAdapter.upsertMany(state, action.payload);
-      })
-      .addCase(fetchSpendingAccounts.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(addNewSpendingAccount.pending, (state, action) => {

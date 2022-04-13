@@ -16,13 +16,6 @@ const initialState = investingTransactionAdapter.getInitialState({
   error: null,
 });
 
-export const fetchInvestingTransactions = createAsyncThunk(
-  "investingTransactions/fetchInvestingTransactions",
-  async () => {
-    return amplifyClient.get("smartbudget", "/investing/transactions");
-  }
-);
-
 export const saveNewInvestingTransaction = createAsyncThunk(
   "investingTransactions/saveNewInvestingTransaction",
   async (newTransaction) => {
@@ -76,18 +69,6 @@ export const investingTransactionsSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchInvestingTransactions.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchInvestingTransactions.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        investingTransactionAdapter.upsertMany(state, action.payload);
-      })
-      .addCase(fetchInvestingTransactions.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(saveNewInvestingTransaction.pending, (state, action) => {

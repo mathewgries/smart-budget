@@ -16,16 +16,6 @@ const initialState = vertSpreadsAdapter.getInitialState({
   error: null,
 });
 
-export const fetchVerticalSpreadsOrders = createAsyncThunk(
-  "verticalSpreadsOrders/fetchVerticalSpreadsOrders",
-  async () => {
-    return amplifyClient.get(
-      "smartbudget",
-      "/investing/orders/spreads/vertical"
-    );
-  }
-);
-
 export const saveNewVerticalSpreadsOrder = createAsyncThunk(
   "verticalSpreadsOrders/saveNewVerticalSpreadsOrder",
   async (newOrder) => {
@@ -79,18 +69,6 @@ export const verticalSpreadsOrdersSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchVerticalSpreadsOrders.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchVerticalSpreadsOrders.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        vertSpreadsAdapter.upsertMany(state, action.payload);
-      })
-      .addCase(fetchVerticalSpreadsOrders.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(saveNewVerticalSpreadsOrder.pending, (state, action) => {

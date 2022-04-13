@@ -8,13 +8,6 @@ const initialState = {
   error: null,
 };
 
-export const fetchSignals = createAsyncThunk(
-  "signals/fetchSignals",
-  async () => {
-    return amplifyClient.get("smartbudget", "/investing/signals");
-  }
-);
-
 export const saveSignal = createAsyncThunk(
   "signals/saveSignal",
   async (signals) => {
@@ -39,18 +32,6 @@ export const signalsSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchSignals.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchSignals.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.items = action.payload.signalList;
-      })
-      .addCase(fetchSignals.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(saveSignal.pending, (state, action) => {

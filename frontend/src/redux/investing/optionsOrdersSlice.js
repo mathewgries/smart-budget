@@ -16,13 +16,6 @@ const initialState = optionsAdapter.getInitialState({
   error: null,
 });
 
-export const fetchOptionsOrders = createAsyncThunk(
-  "optionsOrders/fetchOptionsOrders",
-  async () => {
-    return amplifyClient.get("smartbudget", "/investing/orders/options");
-  }
-);
-
 export const saveNewOptionsOrder = createAsyncThunk(
   "optionsOrders/saveNewOptionsOrder",
   async (newOrder) => {
@@ -76,18 +69,6 @@ export const optionsOrdersSlice = createSlice({
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
-      });
-    builder
-      .addCase(fetchOptionsOrders.pending, (state, action) => {
-        state.status = "pending";
-      })
-      .addCase(fetchOptionsOrders.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        optionsAdapter.upsertMany(state, action.payload);
-      })
-      .addCase(fetchOptionsOrders.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
       });
     builder
       .addCase(saveNewOptionsOrder.pending, (state, action) => {
