@@ -38,6 +38,23 @@ const StrategyConfirmMessage = () => {
   );
 };
 
+const SignalRemoveConfirmMessage = () => {
+  return (
+    <div>
+      <p>You are about to remove a signal from the strategy!</p>
+      <p>
+        If this strategy is applied to orders already, then this is
+        <span style={{ color: "red" }}> NOT RECOMMENDED </span>
+      </p>
+      <p>
+        If you are trying a new set up, it is recommended to create a new
+        strategy
+      </p>
+      <p>Please Confrim!</p>
+    </div>
+  );
+};
+
 export default function Strategies(props) {
   const dispatch = useDispatch();
   const strategies = useSelector(selectAllStrategies);
@@ -47,7 +64,10 @@ export default function Strategies(props) {
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
   const [showAlert, setShowAlert] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [showStrategyDeleteConfirm, setShowStrategyDeleteConfirm] =
+    useState(false);
+  const [showRemoveSignalConfirm, setShowRemoveSignalConfirm] = useState(false);
+  const [stagedSignalToRemove, setStagedSignalToRemove] = useState();
   const [strategyDelete, setStrategyDelete] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const orders = useSelector(selectAllSharesOrders)
@@ -74,10 +94,6 @@ export default function Strategies(props) {
     setShowAlert(!showAlert);
   }
 
-  function handleStrategyCancel() {
-    setShowConfirm(!showConfirm);
-  }
-
   function handleStrategyToggle(strategy) {
     dispatch(activeStrategyUpdated(strategy.id));
   }
@@ -92,9 +108,24 @@ export default function Strategies(props) {
     }
   }
 
-  async function removeSignalFromStrategy(signalToRemove) {
+  // REMOVE SIGNAL FROM STRATEGY
+  function handleShowRemoveSignalConfirm(signal) {
+    setShowRemoveSignalConfirm(true);
+    setStagedSignalToRemove(signal);
+  }
+
+  function handleRemoveSignalCancel(signalToRemove) {
+    setShowRemoveSignalConfirm(false);
+  }
+
+  function handleRemoveSignalConfirm() {
+    setShowRemoveSignalConfirm(false);
+    removeSignalFromStrategy();
+  }
+
+  async function removeSignalFromStrategy() {
     const updatedSignals = activeSignals.filter(
-      (signal) => signal !== signalToRemove
+      (signal) => signal !== stagedSignalToRemove
     );
     await handleUpdateStrategy(updatedSignals);
   }
@@ -114,13 +145,18 @@ export default function Strategies(props) {
     }
   }
 
+  // DELETE STRATEGY
   function handleShowStrategyConfirm(strategy) {
-    setShowConfirm(true);
+    setShowStrategyDeleteConfirm(true);
     setStrategyDelete(strategy);
   }
 
+  function handleStrategyCancel() {
+    setShowStrategyDeleteConfirm(!showStrategyDeleteConfirm);
+  }
+
   async function handleStrategyConfirm() {
-    setShowConfirm(false);
+    setShowStrategyDeleteConfirm(false);
     await onStrategyDelete(strategyDelete);
   }
 
@@ -152,13 +188,26 @@ export default function Strategies(props) {
           </section>
 
           <section>
-            {showConfirm && (
+            {showStrategyDeleteConfirm && (
               <section className="confirmation-popup-section">
                 <ConfirmationPopup
                   onCancel={handleStrategyCancel}
                   onConfirm={handleStrategyConfirm}
                 >
                   <StrategyConfirmMessage />
+                </ConfirmationPopup>
+              </section>
+            )}
+          </section>
+
+          <section>
+            {showRemoveSignalConfirm && (
+              <section className="confirmation-popup-section">
+                <ConfirmationPopup
+                  onCancel={handleRemoveSignalCancel}
+                  onConfirm={handleRemoveSignalConfirm}
+                >
+                  <SignalRemoveConfirmMessage />
                 </ConfirmationPopup>
               </section>
             )}
@@ -280,7 +329,9 @@ export default function Strategies(props) {
                           <div>
                             <button
                               className="btn btn-danger btn-sm"
-                              onClick={() => removeSignalFromStrategy(signal)}
+                              onClick={() =>
+                                handleShowRemoveSignalConfirm(signal)
+                              }
                               disabled={isLoading}
                             >
                               Remove
