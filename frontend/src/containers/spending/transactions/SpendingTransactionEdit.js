@@ -47,8 +47,10 @@ export default function SpendingTransactionEdit(props) {
   });
 
   useEffect(() => {
-    dispatch(activeCategoryUpdated(transaction.categoryId));
-    dispatch(activeSubcategoryUpdated(transaction.subcategory));
+    if (transaction.categoryId) {
+      dispatch(activeCategoryUpdated(transaction.categoryId));
+      dispatch(activeSubcategoryUpdated(transaction.subcategory));
+    }
   }, [transaction.categoryId, transaction.subcategory, dispatch]);
 
   useEffect(() => {
@@ -110,9 +112,9 @@ export default function SpendingTransactionEdit(props) {
           ...fields,
           transactionDate: Date.parse(fields.transactionDate),
           transactionType: fields.transactionType.charAt(0),
-          categoryName: activeCategory.categoryName,
-          categoryId: activeCategory.id,
-          subcategory: activeSubcategory,
+          categoryName: activeCategory.categoryName || null,
+          categoryId: activeCategory.id || null,
+          subcategory: activeSubcategory || null,
         },
         account: {
           id: account.id,

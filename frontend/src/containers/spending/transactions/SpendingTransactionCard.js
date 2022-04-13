@@ -13,7 +13,13 @@ export default function SpendingTransactionCard(props) {
     <div className="spending-transaction-card-container">
       <section>
         <div>{displayAmount}</div>
-        <div>{`${transaction.categoryName}: ${transaction.subcategory}`}</div>
+        {transaction.categoryName ? (
+          <div>{`${transaction.categoryName} ${
+            transaction.subcategory ? ":" + transaction.subcategory : ""
+          }`}</div>
+        ) : (
+          "No category"
+        )}
       </section>
       <section>
         <div>

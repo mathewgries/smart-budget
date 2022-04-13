@@ -10,8 +10,8 @@ import {
   deleteSubcategory,
 } from "../../../redux/spending/categoriesSlice";
 import { selectAllSpendingTransactions } from "../../../redux/spending/spendingTransactionsSlice";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
+import DropDownLoader from "../../loadingContainers/DropDownLoader";
 import { onError } from "../../../lib/errorLib";
 
 const CategoryConfirmMessage = () => {
@@ -54,18 +54,10 @@ export default function CategoriesSelector(props) {
   const [stagedSubcategoryForDelete, setStagedSubcategoryForDelete] =
     useState();
 
-	useEffect(() => {
-		if(categories.length === 0){
-			dispatch(activeCategoryUpdated(undefined))
-		}
-	}, [categories, dispatch])
-
   useEffect(() => {
     if (activeCategory) {
       setSubcategories(activeCategory.subcategories);
-    }else{
-			setSubcategories([]);
-		}
+    }
   }, [activeCategory]);
 
   useEffect(() => {
@@ -201,57 +193,64 @@ export default function CategoriesSelector(props) {
           )}
         </div>
       </section>
+
       <section>
         <div>
           <header>
             <h5>Categories</h5>
           </header>
         </div>
-        <div className="categories-dropdown-section">
-          <div className="dropdown form-group">
-            <button
-              className="btn dropdown-toggle"
-              type="input"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <LoadingSpinner />
-              ) : categories.length > 0 ? (
-                activeCategory.categoryName
-              ) : (
-                "Add a category..."
-              )}
-            </button>
-            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {categories.map((category) => (
-                <div key={category.id} className="category-list-item">
-                  <div
-                    className="dropdown-item"
-                    onClick={() => handleCategoryToggle(category)}
-                  >
-                    <div>{category.categoryName}</div>
-                  </div>
-                  <div className="category-btn-container">
-                    <div>
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => handleShowCategoryConfirm(category)}
-                        disabled={isLoading}
-                      >
-                        Remove
-                      </button>
+      </section>
+
+      {(isLoading || !categories || !categories[0]) && (
+        <section>
+          <DropDownLoader text={"Add a category..."} isLoading={isLoading} />
+        </section>
+      )}
+
+      {!isLoading && categories && categories[0] && (
+        <section>
+          <div className="categories-dropdown-section">
+            <div className="dropdown form-group">
+              <button
+                className="btn dropdown-toggle"
+                type="input"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {activeCategory.categoryName}
+              </button>
+              <div
+                className="dropdown-menu"
+                aria-labelledby="dropdownMenuButton"
+              >
+                {categories.map((category) => (
+                  <div key={category.id} className="category-list-item">
+                    <div
+                      className="dropdown-item"
+                      onClick={() => handleCategoryToggle(category)}
+                    >
+                      <div>{category.categoryName}</div>
+                    </div>
+                    <div className="category-btn-container">
+                      <div>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleShowCategoryConfirm(category)}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <section>
         <div>
@@ -259,59 +258,68 @@ export default function CategoriesSelector(props) {
             <h5>Subcategories</h5>
           </header>
         </div>
-        <div className="categories-dropdown-section">
-          <div className="dropdown form-group">
-            <button
-              className="btn dropdown-toggle"
-              type="button"
-              id="dropdownMenuButton"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <LoadingSpinner />
-              ) : !subcategories || subcategories.length === 0 ? (
-                "No subcategories"
-              ) : (
-                activeSubcategory
-              )}
-            </button>
-            <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              {!isLoading && (
+      </section>
+
+      {(isLoading ||
+        !categories ||
+        !categories[0] ||
+        !subcategories ||
+        !subcategories[0]) && (
+        <section>
+          <DropDownLoader
+            text={!categories[0] ? "Add a category..." : "Add a subcategory..."}
+            isLoading={isLoading}
+          />
+        </section>
+      )}
+
+      {!isLoading && categories && subcategories && subcategories.length > 0 && (
+        <section>
+          <div className="categories-dropdown-section">
+            <div className="dropdown form-group">
+              <button
+                className="btn dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                {activeSubcategory}
+              </button>
+              <div
+                className="dropdown-menu"
+                aria-labelledby="dropdownMenuButton"
+              >
                 <div>
-                  {subcategories &&
-                    subcategories.length > 0 &&
-                    subcategories.map((subcategory) => (
-                      <div key={subcategory} className="category-list-item">
-                        <div
-                          className="dropdown-item"
-                          onClick={() => handleSubcategoryToggle(subcategory)}
-                        >
-                          <div>{subcategory}</div>
-                        </div>
-                        <div className="category-btn-container">
-                          <div>
-                            <button
-                              className="btn btn-danger btn-sm"
-                              onClick={() =>
-                                handleShowSubcategoryConfirm(subcategory)
-                              }
-                              disabled={isLoading}
-                            >
-                              Remove
-                            </button>
-                          </div>
+                  {subcategories.map((subcategory) => (
+                    <div key={subcategory} className="category-list-item">
+                      <div
+                        className="dropdown-item"
+                        onClick={() => handleSubcategoryToggle(subcategory)}
+                      >
+                        <div>{subcategory}</div>
+                      </div>
+                      <div className="category-btn-container">
+                        <div>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() =>
+                              handleShowSubcategoryConfirm(subcategory)
+                            }
+                          >
+                            Remove
+                          </button>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
