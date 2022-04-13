@@ -18,7 +18,6 @@ import SignalNew from "./SignalNew";
 import AlertPopup from "../../popups/AlertPopup";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import DropDownLoader from "../../loadingContainers/DropDownLoader";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 
 const AlertMessage = () => {
   return (
@@ -247,11 +246,7 @@ export default function Strategies(props) {
                     aria-expanded="false"
                     disabled={isLoading}
                   >
-                    {isLoading ? (
-                      <LoadingSpinner />
-                    ) : (
-                      `${activeStrategy.strategyName}`
-                    )}
+                    {activeStrategy.strategyName}
                   </button>
                   <div
                     className="dropdown-menu"
@@ -286,16 +281,16 @@ export default function Strategies(props) {
             </section>
           )}
 
-          {(isLoading || !strategies[0]) && (
+          {(isLoading || !strategies[0] || !activeSignals[0]) && (
             <section>
               <DropDownLoader
                 isLoading={isLoading}
-                text={"Add a strategy..."}
+                text={!strategies[0] ? "Add a strategy..." : "No signals..."}
               />
             </section>
           )}
 
-          {!isLoading && strategies[0] && (
+          {!isLoading && strategies[0] && activeSignals[0] && (
             <section>
               <div className="categories-dropdown-section">
                 <div className="dropdown form-group">
@@ -308,13 +303,7 @@ export default function Strategies(props) {
                     aria-expanded="false"
                     disabled={isLoading}
                   >
-                    {isLoading ? (
-                      <LoadingSpinner />
-                    ) : activeSignals.length === 0 ? (
-                      "No Signals In Strategy..."
-                    ) : (
-                      "View Signals..."
-                    )}
+                    View Signals...
                   </button>
                   <div
                     className="dropdown-menu"
