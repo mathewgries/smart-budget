@@ -68,7 +68,8 @@ export default function OptionsOrderNew(props) {
       fields.closePrice === "" ||
       fields.strikePrice === "" ||
       fields.contractType === "" ||
-      fields.tradeSide === ""
+      fields.tradeSide === "" ||
+      validateOpenAndCloseDates()
     );
   }
 
@@ -78,6 +79,12 @@ export default function OptionsOrderNew(props) {
       ...prev,
       [name]: value,
     }));
+  }
+
+  function validateOpenAndCloseDates() {
+    const open = new Date(fields.openDate).getTime();
+    const close = new Date(fields.closeDate).getTime();
+    return open > close;
   }
 
   const handleCurrencyInput = ({ name, value }) => {
@@ -110,7 +117,7 @@ export default function OptionsOrderNew(props) {
     await dispatch(
       saveNewOptionsOrder({
         order: {
-					...fields,
+          ...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
           contractExpirationDate: Date.parse(fields.contractExpirationDate),
@@ -176,6 +183,12 @@ export default function OptionsOrderNew(props) {
                     data-lpignore="true"
                   />
                 </div>
+              </div>
+              <div>
+                <span style={{ fontSize: "12px", color: "red" }}>
+                  {validateOpenAndCloseDates() &&
+                    "Open must be less than or equal to close"}
+                </span>
               </div>
               <div className="order-form-row-group">
                 <div className="form-group">

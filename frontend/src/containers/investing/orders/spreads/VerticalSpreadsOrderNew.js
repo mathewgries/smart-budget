@@ -73,7 +73,8 @@ export default function VerticalSpreadsOrderNew(props) {
       fields.strikeLowerLegPrice === "" ||
       fields.contractType === "" ||
       fields.tradeSide === "" ||
-      fields.spreadExpirationDate === ""
+      fields.spreadExpirationDate === "" ||
+      validateOpenAndCloseDates()
     );
   }
 
@@ -83,6 +84,12 @@ export default function VerticalSpreadsOrderNew(props) {
       ...prev,
       [name]: value,
     }));
+  }
+
+  function validateOpenAndCloseDates() {
+    const open = new Date(fields.openDate).getTime();
+    const close = new Date(fields.closeDate).getTime();
+    return open > close;
   }
 
   const handleCurrencyInput = ({ name, value }) => {
@@ -181,6 +188,12 @@ export default function VerticalSpreadsOrderNew(props) {
                     data-lpignore="true"
                   />
                 </div>
+              </div>
+              <div>
+                <span style={{ fontSize: "12px", color: "red" }}>
+                  {validateOpenAndCloseDates() &&
+                    "Open must be less than or equal to close"}
+                </span>
               </div>
               <div className="order-form-row-group">
                 <div className="form-group">

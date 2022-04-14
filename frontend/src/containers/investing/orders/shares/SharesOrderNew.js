@@ -52,7 +52,8 @@ export default function SharesOrderNew(props) {
       fields.orderSize === "" ||
       fields.openPrice === "" ||
       fields.closePrice === "" ||
-      fields.tradeSide === ""
+      fields.tradeSide === "" ||
+      validateOpenAndCloseDates()
     );
   }
 
@@ -62,6 +63,12 @@ export default function SharesOrderNew(props) {
       ...prev,
       [name]: value,
     }));
+  }
+
+  function validateOpenAndCloseDates() {
+    const open = new Date(fields.openDate).getTime();
+    const close = new Date(fields.closeDate).getTime();
+    return open > close;
   }
 
   const handleCurrencyInput = ({ name, value }) => {
@@ -163,7 +170,12 @@ export default function SharesOrderNew(props) {
                   />
                 </div>
               </div>
-
+              <div>
+                <span style={{ fontSize: "12px", color: "red" }}>
+                  {validateOpenAndCloseDates() &&
+                    "Open must be less than or equal to close"}
+                </span>
+              </div>
               <div className="order-form-row-group">
                 <div className="form-group">
                   <label htmlFor="openDate">Open Date</label>
