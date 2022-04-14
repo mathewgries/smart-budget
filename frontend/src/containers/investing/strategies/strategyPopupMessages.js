@@ -1,7 +1,16 @@
-export const AlertPopupMessage = () => {
+export const SignalAlertPopupMessage = () => {
   return (
     <div>
       <p>The strategy already contains that signal!</p>
+    </div>
+  );
+};
+
+export const StrategyAlertPopupMessage = () => {
+  return (
+    <div>
+      <p>A similar strategy name already exists!</p>
+			<p>Please choose a different name</p>
     </div>
   );
 };

@@ -2,11 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { onError } from "../../../lib/errorLib";
 import { saveStrategy } from "../../../redux/investing/strategiesSlice";
+import AlertPopup from "../../popups/AlertPopup";
+import { StrategyAlertPopupMessage } from "./strategyPopupMessages";
 
 export default function StrategyNew(props) {
+  const { strategies } = props;
   const dispatch = useDispatch();
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
+  const [showAlertPopup, setShowAlertPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [strategy, setStrategy] = useState("");
 
@@ -26,8 +30,18 @@ export default function StrategyNew(props) {
     }
   }, [strategiesStatus, signalsStatus, isLoading]);
 
+  function handleAlertPopupCancel() {
+    setShowAlertPopup(false);
+  }
+
   async function handleSaveStrategy(e) {
     e.preventDefault();
+    if (validateStrategyName()) {
+      setShowAlertPopup(true);
+			setStrategy("")
+      return;
+    }
+
     try {
       await dispatch(
         saveStrategy({ strategy: { strategyName: strategy } })
@@ -38,8 +52,28 @@ export default function StrategyNew(props) {
     }
   }
 
+  function validateStrategyName() {
+    const existingNames = strategies.map((strategy) =>
+      strategy.strategyName.toLowerCase().replace(/\s/g, "")
+    );
+    if (existingNames.includes(strategy.toLowerCase().replace(/\s/g, ""))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <div>
+      <section>
+        {showAlertPopup && (
+          <section className="confirmation-popup-section">
+            <AlertPopup onCancel={handleAlertPopupCancel}>
+              <StrategyAlertPopupMessage />
+            </AlertPopup>
+          </section>
+        )}
+      </section>
       <form onSubmit={handleSaveStrategy} className="categories-form">
         <div className="form-group categories-form">
           <input
