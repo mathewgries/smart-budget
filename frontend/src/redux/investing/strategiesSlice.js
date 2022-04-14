@@ -137,7 +137,16 @@ export const strategiesSlice = createSlice({
       .addCase(updateSignals.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { strategies } = action.payload;
-        strategiesAdapter.upsertMany(state, strategies);
+        if (strategies) {
+          strategiesAdapter.upsertMany(state, strategies);
+          const activeStrategy = strategies.find(
+            (strategy) => strategy.id === state.activeStrategy.id
+          );
+          if (activeStrategy) {
+            state.activeStrategy = activeStrategy;
+            state.activeSignals = activeStrategy.signals;
+          }
+        }
       })
       .addCase(updateSignals.rejected, (state, action) => {
         state.status = "failed";
