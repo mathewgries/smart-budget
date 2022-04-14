@@ -8,11 +8,15 @@ const initialState = {
   error: null,
 };
 
-export const saveSignal = createAsyncThunk(
-  "signals/saveSignal",
-  async (signals) => {
-    await amplifyClient.put(signals, "smartbudget", "/investing/signals");
-    return signals;
+export const updateSignals = createAsyncThunk(
+  "signals/updateSignals",
+  async ({ signals, strategies }) => {
+    await amplifyClient.put(
+      { signals, strategies },
+      "smartbudget",
+      "/investing/signals"
+    );
+    return { signals, strategies };
   }
 );
 
@@ -34,14 +38,15 @@ export const signalsSlice = createSlice({
         state.status = "failed";
       });
     builder
-      .addCase(saveSignal.pending, (state, action) => {
+      .addCase(updateSignals.pending, (state, action) => {
         state.status = "pending";
       })
-      .addCase(saveSignal.fulfilled, (state, action) => {
+      .addCase(updateSignals.fulfilled, (state, action) => {
         state.status = "succeeded";
-				state.items = action.payload
+        const { signals } = action.payload;
+        state.items = signals;
       })
-      .addCase(saveSignal.rejected, (state, action) => {
+      .addCase(updateSignals.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
@@ -50,5 +55,4 @@ export const signalsSlice = createSlice({
 
 export default signalsSlice.reducer;
 
-export const selectAllSignals = (state) =>
-  state.signals.items;
+export const selectAllSignals = (state) => state.signals.items;

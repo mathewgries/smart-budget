@@ -3,6 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
+import { updateSignals } from "./signalsSlice";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -122,12 +123,25 @@ export const strategiesSlice = createSlice({
           (strategy) => strategy.id !== id
         );
         strategiesAdapter.removeOne(state, id);
-				if(!strategies[0]){
-					state = initialState
-				}
+        if (!strategies[0]) {
+          state = initialState;
+        }
       })
       .addCase(deleteStrategy.rejected, (state, action) => {
         state.status = "failed";
+      });
+    builder
+      .addCase(updateSignals.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(updateSignals.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const { strategies } = action.payload;
+        strategiesAdapter.upsertMany(state, strategies);
+      })
+      .addCase(updateSignals.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllSignals,
-  saveSignal,
+  updateSignals,
 } from "../../../redux/investing/signalsSlice";
 import { onError } from "../../../lib/errorLib";
 
@@ -33,7 +33,7 @@ export default function StrategyNew(props) {
   async function handleSaveSignal(e) {
     e.preventDefault();
     try {
-      await dispatch(saveSignal([...signals, signal])).unwrap();
+      await dispatch(updateSignals({ signals: [...signals, signal] })).unwrap();
       setSignal("");
     } catch (e) {
       onError(e);

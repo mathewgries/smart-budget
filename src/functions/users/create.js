@@ -63,14 +63,14 @@ export const main = handler(async (event) => {
   }
 
   for (const prop in defaultStrategies) {
-    const strategylId = uuid.v1();
+    const strategyId = uuid.v1();
     items.push({
       Put: {
         TableName: process.env.TABLE_NAME,
         Item: {
           PK: `USER#${userId}`,
-          SK: `STRATEGY#${strategylId}`,
-          id: strategylId,
+          SK: `STRATEGY#${strategyId}`,
+          id: strategyId,
           type: "STRATEGY#",
           strategyName: prop,
           signals: defaultStrategies[prop],

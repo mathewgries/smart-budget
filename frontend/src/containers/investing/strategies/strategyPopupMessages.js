@@ -32,3 +32,20 @@ export const SignalRemoveConfirmMessage = () => {
     </div>
   );
 };
+
+export const SignalDeleteConfirmMessage = () => {
+  return (
+    <div>
+      <p>You are about to delete a signal!</p>
+      <p>
+        If the signal is applied to strategies in use, this is
+        <span style={{ color: "red" }}> NOT RECOMMENDED </span>
+      </p>
+      <p>
+        If you are trying a new set up, it is recommended to create a new
+        strategy
+      </p>
+      <p>Please Confrim!</p>
+    </div>
+  );
+};

@@ -11,7 +11,10 @@ import {
 import { selectAllSharesOrders } from "../../../redux/investing/sharesOrdersSlice";
 import { selectAllOptionsOrders } from "../../../redux/investing/optionsOrdersSlice";
 import { selectAllVerticalSpreadsOrders } from "../../../redux/investing/verticalSpreadsOrdersSlice";
-import { selectAllSignals } from "../../../redux/investing/signalsSlice";
+import {
+  selectAllSignals,
+  updateSignals,
+} from "../../../redux/investing/signalsSlice";
 import { onError } from "../../../lib/errorLib";
 import StrategyNew from "./StrategyNew";
 import SignalNew from "./SignalNew";
@@ -23,6 +26,7 @@ import {
   AlertPopupMessage,
   DeleteStrategyConfirmMessage,
   SignalRemoveConfirmMessage,
+  SignalDeleteConfirmMessage,
 } from "./strategyPopupMessages";
 
 export default function Strategies(props) {
@@ -34,6 +38,8 @@ export default function Strategies(props) {
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
   const [showAlertPopup, setShowAlertPopup] = useState(false);
+  const [showDeleteSignalConfirm, setShowDeleteSignalConfirm] = useState(false);
+  const [stagedSignalToDelete, setStagedSignalToDelete] = useState();
   const [showDeleteStrategyConfirm, setShowDeleteStrategyConfirm] =
     useState(false);
   const [stagedStrategyToDelete, setStagedStrategyToDelete] = useState();
@@ -86,7 +92,7 @@ export default function Strategies(props) {
     setStagedSignalToRemove(signal);
   }
 
-  function handleRemoveSignalCancel(signalToRemove) {
+  function handleRemoveSignalCancel() {
     setShowRemoveSignalConfirm(false);
   }
 
@@ -100,6 +106,46 @@ export default function Strategies(props) {
       (signal) => signal !== stagedSignalToRemove
     );
     await handleUpdateStrategy(updatedSignals);
+  }
+
+  // DELETE SIGNAL
+  function handleShowDeleteSignalConfirm(signal) {
+    setShowDeleteSignalConfirm(true);
+    setStagedSignalToDelete(signal);
+  }
+
+  function handleDeleteSignalCancel() {
+    setShowDeleteSignalConfirm(false);
+  }
+
+  async function handleDeleteSignalConfirm() {
+    setShowDeleteSignalConfirm(false);
+    await onDeleteSignal();
+  }
+
+  async function onDeleteSignal() {
+    try {
+      await dispatch(
+        updateSignals({
+          signals: signals.filter((signal) => signal !== stagedSignalToDelete),
+          strategies: setStrategiesOnSignalDelete(),
+        })
+      ).unwrap();
+			setStagedSignalToDelete()
+    } catch (e) {
+      onError(e);
+    }
+  }
+
+  function setStrategiesOnSignalDelete() {
+    return strategies
+      .filter((strategy) => strategy.signals.includes(stagedSignalToDelete))
+      .map((strategy) => ({
+        ...strategy,
+        signals: strategy.signals.filter(
+          (signal) => signal !== stagedSignalToDelete
+        ),
+      }));
   }
 
   async function handleUpdateStrategy(updatedSignals) {
@@ -203,6 +249,19 @@ export default function Strategies(props) {
                   onConfirm={handleRemoveSignalConfirm}
                 >
                   <SignalRemoveConfirmMessage />
+                </ConfirmationPopup>
+              </section>
+            )}
+          </section>
+
+          <section>
+            {showDeleteSignalConfirm && (
+              <section className="confirmation-popup-section">
+                <ConfirmationPopup
+                  onCancel={handleDeleteSignalCancel}
+                  onConfirm={handleDeleteSignalConfirm}
+                >
+                  <SignalDeleteConfirmMessage />
                 </ConfirmationPopup>
               </section>
             )}
@@ -347,12 +406,19 @@ export default function Strategies(props) {
             <section>
               <ul className="list-group">
                 {signals.map((signal) => (
-                  <li
-                    key={signal}
-                    className="list-group-item"
-                    onClick={() => addSignalToStrategy(signal)}
-                  >
-                    {signal}
+                  <li key={signal} className="list-group-item signal-list-item">
+                    <div
+                      onClick={() => addSignalToStrategy(signal)}
+                      className="signal"
+                    >
+                      {signal}
+                    </div>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleShowDeleteSignalConfirm(signal)}
+                    >
+                      Delete
+                    </button>
                   </li>
                 ))}
               </ul>
