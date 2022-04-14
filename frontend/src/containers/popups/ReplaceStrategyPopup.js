@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function ReplaceStrategyPopup(props){
+export default function ReplaceStrategyPopup(props) {
   const { strategies, strategyToDelete, handleSelectedReplacementStrategy } =
     props;
   const [isChecked, setIsChecked] = useState();
@@ -19,24 +19,29 @@ export default function ReplaceStrategyPopup(props){
   }
 
   return (
-    <section>
-      <ul className="list-group">
-        {strategyList.map((strategy) => (
-          <ul
-            key={strategy.id}
-            className="list-group-item replace-strategy-list-item"
-          >
-            <div>{strategy.strategyName}</div>
-            <div>
-              <input
-                type="checkbox"
-                onChange={() => handleChange(strategy)}
-                checked={isChecked === strategy.id}
-              />
-            </div>
-          </ul>
-        ))}
-      </ul>
-    </section>
+    <div>
+      <section>
+        <p>To replace this strategy on orders, select your replacement below</p>
+      </section>
+      <section>
+        <ul className="list-group">
+          {strategyList.map((strategy) => (
+            <ul
+              key={strategy.id}
+              className="list-group-item replace-strategy-list-item"
+            >
+              <div>{strategy.strategyName}</div>
+              <div>
+                <input
+                  type="checkbox"
+                  onChange={() => handleChange(strategy)}
+                  checked={isChecked === strategy.id}
+                />
+              </div>
+            </ul>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
-};
+}
