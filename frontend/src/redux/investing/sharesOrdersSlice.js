@@ -4,6 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { deleteInvestingAccount } from "./investingAccountsSlice";
+import { deleteStrategy } from "./strategiesSlice";
 import { fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
@@ -124,6 +125,20 @@ export const sharesOrdersSlice = createSlice({
       .addCase(deleteInvestingAccount.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      });
+    builder
+      .addCase(deleteStrategy.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(deleteStrategy.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const orders = action.payload.orders.filter(
+          (order) => order.type === "ORDER#SHARES#"
+        );
+        sharesAdapter.upsertMany(state, orders);
+      })
+      .addCase(deleteStrategy.rejected, (state, action) => {
+        state.status = "failed";
       });
   },
 });

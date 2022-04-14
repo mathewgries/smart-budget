@@ -17,9 +17,10 @@ import StrategyNew from "./StrategyNew";
 import SignalNew from "./SignalNew";
 import AlertPopup from "../../popups/AlertPopup";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
+import ReplaceStrategyPopup from "../../popups/ReplaceStrategyPopup";
 import DropDownLoader from "../../loadingContainers/DropDownLoader";
 
-const AlertMessage = () => {
+const AlertPopupMessage = () => {
   return (
     <div>
       <p>The strategy already contains that signal!</p>
@@ -27,7 +28,7 @@ const AlertMessage = () => {
   );
 };
 
-const StrategyConfirmMessage = () => {
+const DeleteStrategyConfirmMessage = () => {
   return (
     <div>
       <p>You are about to delete a strategy!</p>
@@ -62,16 +63,20 @@ export default function Strategies(props) {
   const activeSignals = useSelector((state) => selectActiveSignals(state));
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
-  const [showAlert, setShowAlert] = useState(false);
-  const [showStrategyDeleteConfirm, setShowStrategyDeleteConfirm] =
+  const [showAlertPopup, setShowAlertPopup] = useState(false);
+  const [showDeleteStrategyConfirm, setShowDeleteStrategyConfirm] =
     useState(false);
+  const [stagedStrategyToDelete, setStagedStrategyToDelete] = useState();
+  const [selectedReplacementStrategy, setSelectedReplacementStrategy] =
+    useState();
   const [showRemoveSignalConfirm, setShowRemoveSignalConfirm] = useState(false);
   const [stagedSignalToRemove, setStagedSignalToRemove] = useState();
-  const [strategyDelete, setStrategyDelete] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const orders = useSelector(selectAllSharesOrders)
     .concat(useSelector(selectAllOptionsOrders))
     .concat(useSelector(selectAllVerticalSpreadsOrders));
+
+  console.log(selectedReplacementStrategy);
 
   useEffect(() => {
     function validateStatus() {
@@ -89,8 +94,8 @@ export default function Strategies(props) {
     }
   }, [strategiesStatus, signalsStatus, isLoading]);
 
-  function handleAlertCancel() {
-    setShowAlert(!showAlert);
+  function handleAlertPopupCancel() {
+    setShowAlertPopup(false);
   }
 
   function handleStrategyToggle(strategy) {
@@ -99,7 +104,7 @@ export default function Strategies(props) {
 
   async function addSignalToStrategy(signal) {
     if (activeSignals.includes(signal)) {
-      setShowAlert(true);
+      setShowAlertPopup(true);
       return;
     } else {
       const updatedSignals = [...activeStrategy.signals, signal];
@@ -144,32 +149,48 @@ export default function Strategies(props) {
     }
   }
 
+  // REPLACE STRATEGY ON DELETE
+  function handleSelectedReplacementStrategy(strategy) {
+    setSelectedReplacementStrategy(strategy);
+  }
+
   // DELETE STRATEGY
   function handleShowStrategyConfirm(strategy) {
-    setShowStrategyDeleteConfirm(true);
-    setStrategyDelete(strategy);
+    setShowDeleteStrategyConfirm(true);
+    setStagedStrategyToDelete(strategy);
   }
 
   function handleStrategyCancel() {
-    setShowStrategyDeleteConfirm(!showStrategyDeleteConfirm);
+    setSelectedReplacementStrategy();
+    setStagedStrategyToDelete();
+    setShowDeleteStrategyConfirm(!showDeleteStrategyConfirm);
   }
 
   async function handleStrategyConfirm() {
-    setShowStrategyDeleteConfirm(false);
-    await onStrategyDelete(strategyDelete);
+    setShowDeleteStrategyConfirm(false);
+    await onStrategyDelete(stagedStrategyToDelete);
   }
 
   async function onStrategyDelete(strategy) {
     try {
       const orders = setOrdersByStrategyId(strategy.id);
       await dispatch(deleteStrategy({ strategy, orders })).unwrap();
+      setSelectedReplacementStrategy();
+      setStagedStrategyToDelete();
     } catch (e) {
       onError(e);
     }
   }
 
   function setOrdersByStrategyId(id) {
-    return orders.filter((order) => order.strategyId === id);
+    return orders
+      .filter((order) => order.strategyId === id)
+      .map((order) => ({
+        ...order,
+        strategyId: selectedReplacementStrategy
+          ? selectedReplacementStrategy.id
+          : null,
+      }));
   }
 
   return (
@@ -177,23 +198,30 @@ export default function Strategies(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <section>
-            {showAlert && (
+            {showAlertPopup && (
               <section className="confirmation-popup-section">
-                <AlertPopup onCancel={handleAlertCancel}>
-                  <AlertMessage />
+                <AlertPopup onCancel={handleAlertPopupCancel}>
+                  <AlertPopupMessage />
                 </AlertPopup>
               </section>
             )}
           </section>
 
           <section>
-            {showStrategyDeleteConfirm && (
+            {showDeleteStrategyConfirm && (
               <section className="confirmation-popup-section">
                 <ConfirmationPopup
                   onCancel={handleStrategyCancel}
                   onConfirm={handleStrategyConfirm}
                 >
-                  <StrategyConfirmMessage />
+                  <DeleteStrategyConfirmMessage />
+                  <ReplaceStrategyPopup
+                    strategies={strategies}
+                    strategyToDelete={stagedStrategyToDelete}
+                    handleSelectedReplacementStrategy={
+                      handleSelectedReplacementStrategy
+                    }
+                  ></ReplaceStrategyPopup>
                 </ConfirmationPopup>
               </section>
             )}

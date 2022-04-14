@@ -167,7 +167,7 @@ caption {
   position: relative;
   z-index: 2;
   top: 20%;
-  width: 50%;
+  width: 80%;
   height: 40%;
   margin: 0 auto;
 }
@@ -189,6 +189,7 @@ caption {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
+	margin-top: 20px;
 }
 
 .categories-dropdown-section {
@@ -239,6 +240,12 @@ caption {
 
 .strategy-signal-list {
 	margin-bottom: 10px;
+}
+
+.replace-strategy-list-item{
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
 }
 
 @media (max-width: 400px) {

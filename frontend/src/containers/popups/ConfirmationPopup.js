@@ -14,7 +14,7 @@ export default function ConfirmationPopup(props) {
     <div className="confirmation-popup-wrapper">
       <div className="confirmation-popup">
         <div className="confirm-popup-info-wrapper">{props.children}</div>
-        <div className="confirm-popup-btn-wrapper">
+        <div className="confirm-popup-btn-wrapper form-group">
           <button className="btn btn-secondary" onClick={handleCancel}>
             Cancel
           </button>

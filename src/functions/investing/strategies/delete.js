@@ -31,7 +31,7 @@ export const main = handler(async (event) => {
 					strategyId = :strategyId, 
 					modifyDate = :modifyDate`,
 				ExpressionAttributeValues: {
-					":strategyId": null,
+					":strategyId": order.strategyId,
 					":modifyDate": Date.now(),
 				},
 			},
