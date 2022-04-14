@@ -24,6 +24,7 @@ export const main = handler(async (event) => {
             closePrice = :closePrice,
             tradeSide = :tradeSide,
             profitLoss = :profitLoss,
+						commissions = :commissions,
 						strategyId = :strategyId,
           	modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
@@ -35,6 +36,7 @@ export const main = handler(async (event) => {
             ":closePrice": order.closePrice,
             ":tradeSide": order.tradeSide,
             ":profitLoss": order.profitLoss,
+            ":commissions": order.commissions,
             ":strategyId": order.strategyId,
             ":modifyDate": Date.now(),
           },

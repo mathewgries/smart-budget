@@ -47,6 +47,7 @@ export default function OptionsOrderNew(props) {
     closeTheta: "0.00",
     openImpliedVolatility: "0.00",
     closeImpliedVolatility: "0.00",
+    commissions: "0.00",
   });
 
   useEffect(() => {
@@ -96,7 +97,8 @@ export default function OptionsOrderNew(props) {
       );
       const newAccountBalance = addOrderHandler(
         profitLoss,
-        account.accountBalance
+        account.accountBalance,
+        fields.commissions
       );
       await handleSaveNewOrder(newAccountBalance, profitLoss);
     } catch (e) {
@@ -108,28 +110,10 @@ export default function OptionsOrderNew(props) {
     await dispatch(
       saveNewOptionsOrder({
         order: {
-          ticker: fields.ticker,
+					...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
-          orderSize: fields.orderSize,
-          openPrice: fields.openPrice,
-          closePrice: fields.closePrice,
-          openUnderlyingPrice: fields.openUnderlyingPrice,
-          closeUnderlyingPrice: fields.closeUnderlyingPrice,
-          strikePrice: fields.strikePrice,
-          contractType: fields.contractType,
-          tradeSide: fields.tradeSide,
           contractExpirationDate: Date.parse(fields.contractExpirationDate),
-          openDelta: fields.openDelta,
-          closeDelta: fields.closeDelta,
-          openGamma: fields.openGamma,
-          closeGamma: fields.closeGamma,
-          openVega: fields.openVega,
-          closeVega: fields.closeVega,
-          openTheta: fields.openTheta,
-          closeTheta: fields.closeTheta,
-          openImpliedVolatility: fields.openImpliedVolatility,
-          closeImpliedVolatility: fields.closeImpliedVolatility,
           profitLoss: profitLoss,
           strategyId: activeStrategy ? activeStrategy.id : null,
         },
@@ -170,6 +154,14 @@ export default function OptionsOrderNew(props) {
                     value={fields.ticker}
                     onChange={handleOnChange}
                     data-lpignore="true"
+                  />
+                </div>
+                <div>
+                  <CurrencyInput
+                    inputName={"commissions"}
+                    inputLabel={"Commissions"}
+                    inputValue={fields.commissions}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
                 <div className="form-group">

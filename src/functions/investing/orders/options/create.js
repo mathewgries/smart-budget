@@ -44,6 +44,7 @@ export const main = handler(async (event) => {
             openImpliedVolatility: order.openImpliedVolatility,
             closeImpliedVolatility: order.closeImpliedVolatility,
             profitLoss: order.profitLoss,
+						commissions: order.commissions,
             strategyId: order.strategyId,
             createDate: Date.now(),
             modifyDate: Date.now(),

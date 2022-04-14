@@ -38,6 +38,7 @@ export default function SharesOrderEdit(props) {
     openPrice: order.openPrice,
     closePrice: order.closePrice,
     tradeSide: order.tradeSide,
+    commissions: order.commissions,
   });
 
   useEffect(() => {
@@ -92,6 +93,8 @@ export default function SharesOrderEdit(props) {
       const newAccountBalance = updateOrderHandler(
         order.profitLoss,
         newPL,
+        order.commissions,
+        fields.commissions,
         account.accountBalance
       );
       await handleUpdateOrder(newAccountBalance, newPL);
@@ -151,6 +154,14 @@ export default function SharesOrderEdit(props) {
                     value={fields.ticker}
                     onChange={handleOnChange}
                     data-lpignore="true"
+                  />
+                </div>
+                <div>
+                  <CurrencyInput
+                    inputName={"commissions"}
+                    inputLabel={"Commissions"}
+                    inputValue={fields.commissions}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
                 <div className="form-group">

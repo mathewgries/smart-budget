@@ -31,6 +31,7 @@ export default function SharesOrderNew(props) {
     openPrice: "0.00",
     closePrice: "0.00",
     tradeSide: "",
+    commissions: "0.00",
   });
 
   useEffect(() => {
@@ -80,7 +81,8 @@ export default function SharesOrderNew(props) {
       );
       const newAccountBalance = addOrderHandler(
         profitLoss,
-        account.accountBalance
+        account.accountBalance,
+        fields.commissions
       );
       await handleSaveNewOrder(newAccountBalance, profitLoss);
     } catch (e) {
@@ -92,13 +94,9 @@ export default function SharesOrderNew(props) {
     await dispatch(
       saveNewSharesOrder({
         order: {
-          ticker: fields.ticker,
+          ...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
-          orderSize: fields.orderSize,
-          openPrice: fields.openPrice,
-          closePrice: fields.closePrice,
-          tradeSide: fields.tradeSide,
           profitLoss: profitLoss,
           strategyId: activeStrategy ? activeStrategy.id : null,
         },
@@ -142,6 +140,14 @@ export default function SharesOrderNew(props) {
                     value={fields.ticker}
                     onChange={handleOnChange}
                     data-lpignore="true"
+                  />
+                </div>
+                <div>
+                  <CurrencyInput
+                    inputName={"commissions"}
+                    inputLabel={"Commissions"}
+                    inputValue={fields.commissions}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
                 <div className="form-group">

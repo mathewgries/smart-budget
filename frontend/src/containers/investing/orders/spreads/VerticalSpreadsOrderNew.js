@@ -48,6 +48,7 @@ export default function VerticalSpreadsOrderNew(props) {
     closeTheta: "0.00",
     openImpliedVolatility: "0.00",
     closeImpliedVolatility: "0.00",
+    commissions: "0.00",
   });
 
   useEffect(() => {
@@ -101,7 +102,8 @@ export default function VerticalSpreadsOrderNew(props) {
       );
       const newAccountBalance = addOrderHandler(
         profitLoss,
-        account.accountBalance
+        account.accountBalance,
+        fields.commissions
       );
       await handleSaveNewOrder(newAccountBalance, profitLoss);
     } catch (e) {
@@ -113,29 +115,10 @@ export default function VerticalSpreadsOrderNew(props) {
     await dispatch(
       saveNewVerticalSpreadsOrder({
         order: {
-          ticker: fields.ticker,
+          ...fields,
           openDate: Date.parse(fields.openDate),
           closeDate: Date.parse(fields.closeDate),
-          orderSize: fields.orderSize,
-          openPrice: fields.openPrice,
-          closePrice: fields.closePrice,
-          openUnderlyingPrice: fields.openUnderlyingPrice,
-          closeUnderlyingPrice: fields.closeUnderlyingPrice,
-          strikeUpperLegPrice: fields.strikeUpperLegPrice,
-          strikeLowerLegPrice: fields.strikeLowerLegPrice,
-          contractType: fields.contractType,
-          tradeSide: fields.tradeSide,
           spreadExpirationDate: Date.parse(fields.spreadExpirationDate),
-          openDelta: fields.openDelta,
-          closeDelta: fields.closeDelta,
-          openGamma: fields.openGamma,
-          closeGamma: fields.closeGamma,
-          openVega: fields.openVega,
-          closeVega: fields.closeVega,
-          openTheta: fields.openTheta,
-          closeTheta: fields.closeTheta,
-          openImpliedVolatility: fields.openImpliedVolatility,
-          closeImpliedVolatility: fields.closeImpliedVolatility,
           profitLoss: profitLoss,
           strategyId: activeStrategy ? activeStrategy.id : null,
         },
@@ -176,6 +159,14 @@ export default function VerticalSpreadsOrderNew(props) {
                     value={fields.ticker}
                     onChange={handleOnChange}
                     data-lpignore="true"
+                  />
+                </div>
+                <div>
+                  <CurrencyInput
+                    inputName={"commissions"}
+                    inputLabel={"Commissions"}
+                    inputValue={fields.commissions}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
                 <div className="form-group">

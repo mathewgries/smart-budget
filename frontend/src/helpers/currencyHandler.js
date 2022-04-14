@@ -62,24 +62,29 @@ export function deleteTransactionHandler(
   }
 }
 
-export function addOrderHandler(profitLoss, accountBalance) {
+export function addOrderHandler(profitLoss, accountBalance, commissions) {
   return (
-    (dollarsToCents(accountBalance) + dollarsToCents(profitLoss)) /
+    (dollarsToCents(accountBalance) +
+      dollarsToCents(profitLoss) -
+      dollarsToCents(commissions)) /
     100
   ).toFixed(2);
 }
 
-export function updateOrderHandler(orignalPL, newPL, accountBalance) {
-  const origPLCon = dollarsToCents(orignalPL);
-  const newPLCon = dollarsToCents(newPL);
-  const acctBalCon = dollarsToCents(accountBalance);
-
-  if (origPLCon === newPLCon) {
-    return accountBalance;
-  } else {
-    const revertBlanace = acctBalCon - origPLCon;
-    return ((revertBlanace + newPLCon) / 100).toFixed(2);
-  }
+export function updateOrderHandler(
+  orignalPL,
+  newPL,
+  orignalComm,
+  newComm,
+  accountBalance
+) {
+  const revertBalance = (
+    (dollarsToCents(accountBalance) -
+      dollarsToCents(orignalPL) +
+      dollarsToCents(orignalComm)) /
+    100
+  ).toFixed(2);
+  return addOrderHandler(newPL, revertBalance, newComm);
 }
 
 export function deleteOrderHandler(profitLoss, accountBalance) {

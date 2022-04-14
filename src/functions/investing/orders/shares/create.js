@@ -28,6 +28,7 @@ export const main = handler(async (event) => {
             closePrice: order.closePrice,
             tradeSide: order.tradeSide,
             profitLoss: order.profitLoss,
+            commissions: order.commissions,
             strategyId: order.strategyId,
             createDate: Date.now(),
             modifyDate: Date.now(),
