@@ -40,6 +40,7 @@ export const main = handler(async (event) => {
             openImpliedVolatility = :openImpliedVolatility,
             closeImpliedVolatility = :closeImpliedVolatility,
             profitLoss = :profitLoss,
+						commissions = :commissions,
             strategyId = :strategyId,
           	modifyDate = :modifyDate`,
           ExpressionAttributeValues: {
@@ -67,6 +68,7 @@ export const main = handler(async (event) => {
             ":openImpliedVolatility": order.openImpliedVolatility || null,
             ":closeImpliedVolatility": order.closeImpliedVolatility || null,
             ":profitLoss": order.profitLoss,
+            ":commissions": order.commissions,
             ":strategyId": order.strategyId,
             ":modifyDate": Date.now(),
           },

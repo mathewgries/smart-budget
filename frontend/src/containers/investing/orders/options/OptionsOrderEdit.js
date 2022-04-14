@@ -44,16 +44,17 @@ export default function OptionsOrderEdit(props) {
     contractType: order.contractType,
     tradeSide: order.tradeSide,
     contractExpirationDate: inputDateFormat(order.contractExpirationDate),
-    openDelta: order.openDelta || "0.00",
-    closeDelta: order.closeDelta || "0.00",
-    openGamma: order.openGamma || "0.00",
-    closeGamma: order.closeGamma || "0.00",
-    openVega: order.openVega || "0.00",
-    closeVega: order.closeVega || "0.00",
-    openTheta: order.openTheta || "0.00",
-    closeTheta: order.closeTheta || "0.00",
-    openImpliedVolatility: order.openImpliedVolatility || "0.00",
-    closeImpliedVolatility: order.closeImpliedVolatility || "0.00",
+    openDelta: order.openDelta,
+    closeDelta: order.closeDelta,
+    openGamma: order.openGamma,
+    closeGamma: order.closeGamma,
+    openVega: order.openVega,
+    closeVega: order.closeVega,
+    openTheta: order.openTheta,
+    closeTheta: order.closeTheta,
+    openImpliedVolatility: order.openImpliedVolatility,
+    closeImpliedVolatility: order.closeImpliedVolatility,
+    commissions: order.commissions,
   });
 
   useEffect(() => {
@@ -108,6 +109,8 @@ export default function OptionsOrderEdit(props) {
       const newAccountBalance = updateOrderHandler(
         order.profitLoss,
         newPL,
+        order.commissions,
+        fields.commissions,
         account.accountBalance
       );
       await handleUpdateOrder(newAccountBalance, newPL);
@@ -165,6 +168,14 @@ export default function OptionsOrderEdit(props) {
                     value={fields.ticker}
                     onChange={handleOnChange}
                     data-lpignore="true"
+                  />
+                </div>
+                <div>
+                  <CurrencyInput
+                    inputName={"commissions"}
+                    inputLabel={"Commissions"}
+                    inputValue={fields.commissions}
+                    inputChangeHandler={handleCurrencyInput}
                   />
                 </div>
                 <div className="form-group">
