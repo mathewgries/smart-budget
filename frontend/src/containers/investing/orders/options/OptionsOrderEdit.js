@@ -95,7 +95,6 @@ export default function OptionsOrderEdit(props) {
   function validateOpenAndCloseDates() {
     const open = new Date(fields.openDate).getTime();
     const close = new Date(fields.closeDate).getTime();
-    console.log({ open, close });
     return open > close;
   }
 
