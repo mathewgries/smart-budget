@@ -4,6 +4,8 @@ import {
   selectAllSignals,
   updateSignals,
 } from "../../../redux/investing/signalsSlice";
+import AlertPopup from "../../popups/AlertPopup";
+import { SignalExistsAlertPopupMessage } from "./strategyPopupMessages";
 import { onError } from "../../../lib/errorLib";
 
 export default function StrategyNew(props) {
@@ -11,6 +13,7 @@ export default function StrategyNew(props) {
   const signals = useSelector((state) => selectAllSignals(state));
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
+  const [showAlertPopup, setShowAlertPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [signal, setSignal] = useState("");
 
@@ -30,8 +33,17 @@ export default function StrategyNew(props) {
     }
   }, [strategiesStatus, signalsStatus, isLoading]);
 
+  function handleAlertPopupCancel() {
+    setShowAlertPopup(false);
+  }
+
   async function handleSaveSignal(e) {
     e.preventDefault();
+    if (validateSignalName()) {
+      setShowAlertPopup(true);
+      setSignal("");
+      return;
+    }
     try {
       await dispatch(updateSignals({ signals: [...signals, signal] })).unwrap();
       setSignal("");
@@ -40,8 +52,28 @@ export default function StrategyNew(props) {
     }
   }
 
+  function validateSignalName() {
+    const signalsConverted = signals.map((signal) =>
+      signal.toLowerCase().replace(/\s/g, "")
+    );
+    if (signalsConverted.includes(signal.toLowerCase().replace(/\s/g, ""))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   return (
     <div>
+      <section>
+        {showAlertPopup && (
+          <section className="confirmation-popup-section">
+            <AlertPopup onCancel={handleAlertPopupCancel}>
+              <SignalExistsAlertPopupMessage />
+            </AlertPopup>
+          </section>
+        )}
+      </section>
       <form onSubmit={handleSaveSignal} className="categories-form">
         <div className="form-group categories-form">
           <input

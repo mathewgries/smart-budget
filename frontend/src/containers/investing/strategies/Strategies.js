@@ -23,7 +23,7 @@ import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import ReplaceStrategyPopup from "../../popups/ReplaceStrategyPopup";
 import DropDownLoader from "../../loadingContainers/DropDownLoader";
 import {
-  SignalAlertPopupMessage,
+  SignalInStrategyAlertPopupMessage,
   DeleteStrategyConfirmMessage,
   SignalRemoveConfirmMessage,
   SignalDeleteConfirmMessage,
@@ -215,7 +215,7 @@ export default function Strategies(props) {
             {showAlertPopup && (
               <section className="confirmation-popup-section">
                 <AlertPopup onCancel={handleAlertPopupCancel}>
-                  <SignalAlertPopupMessage />
+                  <SignalInStrategyAlertPopupMessage />
                 </AlertPopup>
               </section>
             )}

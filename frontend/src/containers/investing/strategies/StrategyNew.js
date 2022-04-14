@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { onError } from "../../../lib/errorLib";
 import { saveStrategy } from "../../../redux/investing/strategiesSlice";
 import AlertPopup from "../../popups/AlertPopup";
-import { StrategyAlertPopupMessage } from "./strategyPopupMessages";
+import { StrategyNameExistsAlertPopupMessage } from "./strategyPopupMessages";
 
 export default function StrategyNew(props) {
   const { strategies } = props;
@@ -69,7 +69,7 @@ export default function StrategyNew(props) {
         {showAlertPopup && (
           <section className="confirmation-popup-section">
             <AlertPopup onCancel={handleAlertPopupCancel}>
-              <StrategyAlertPopupMessage />
+              <StrategyNameExistsAlertPopupMessage />
             </AlertPopup>
           </section>
         )}
