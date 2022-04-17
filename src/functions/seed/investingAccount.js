@@ -1,5 +1,12 @@
 import * as uuid from "uuid";
-import { selectTicker, randomDate, setOpenDate, setCloseDate, setExpirationDate } from "./helpers";
+import {
+  selectTicker,
+  randomDate,
+  setOpenDate,
+  setCloseDate,
+	setExpirationDate,
+  optionsProfitLossHandler,
+} from "./helpers";
 
 export const investingAccount = (table, userId, strategies) => {
   let items = [];
@@ -50,17 +57,24 @@ export const investingAccount = (table, userId, strategies) => {
     });
   }
 
-  for (let i = 0; i < 1; i++) {
+
+  for (let i = 0; i < 50; i++) {
     const orderId = uuid.v1();
     const type = "ORDER#OPTIONS#";
     const contractType = Math.floor(Math.random() * 2) === 0 ? "CALL" : "PUT";
     const tradeSide = Math.floor(Math.random() * 2) === 0 ? "LONG" : "SHORT";
     const ticker = selectTicker(contractType, tradeSide);
-    const openDate = setOpenDate()
-    const closeDate = setCloseDate(openDate)
-		const expirationDate = setExpirationDate(closeDate)
+    const openDate = setOpenDate();
+    const closeDate = setCloseDate(openDate);
+    const expirationDate = setExpirationDate(closeDate);
     const orderSize = Math.floor(Math.random() * 4) + 1;
-    
+    const profitLoss = optionsProfitLossHandler(
+      orderSize,
+      ticker.openCost,
+      ticker.closeCost,
+      tradeSide
+    );
+    const strategy = strategies[Math.floor(Math.random() * strategies.length)]
 
     items.push({
       Put: {
@@ -93,9 +107,9 @@ export const investingAccount = (table, userId, strategies) => {
           closeTheta: "0.00",
           openImpliedVolatility: "0.00",
           closeImpliedVolatility: "0.00",
-          profitLoss: order.profitLoss,
+          profitLoss: profitLoss,
           commissions: "1.30",
-          strategyId: order.strategyId,
+          strategyId: strategy.id,
           createDate: Date.now(),
           modifyDate: Date.now(),
         },

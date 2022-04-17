@@ -26,10 +26,10 @@ export function setOpenDate() {
 }
 
 export function setCloseDate(openDate) {
-  const dayOfWeek = openDate.getDay();
+  const dayOfWeek = new Date(openDate).getDay();
   let resultDate;
   if (dayOfWeek === 5) {
-    resultDate = openDate;
+    resultDate = new Date(openDate);
   } else {
     resultDate = randomDate(new Date(openDate), new Date());
     const resultDay = resultDate.getDay();
@@ -44,26 +44,28 @@ export function setCloseDate(openDate) {
 }
 
 export function setExpirationDate(closeDate) {
-	const closeDay = closeDate.getDay()
-	let resultDate = closeDate;
-	if (closeDay !== 5) {
-		const diff = 5 - closeDay
-		resultDate.setDate(closeDate.getDate() + diff);
-	}
-	return Date.parse(resultDate);
+	const date = new Date(closeDate)
+  const closeDay = new Date(date).getDay();
+  let resultDate = new Date(closeDate);
+  if (closeDay !== 5) {
+    const diff = 5 - closeDay;
+    resultDate.setDate(date.getDate() + (diff + closeDay));
+  }
+  return Date.parse(resultDate);
 }
-
 
 export function selectTicker(contractType, tradeSide) {
   const selectedTicker = tickers[Math.floor(Math.random() * tickers.length)];
+  const openSharePrice =
+    Math.random() * (selectedTicker.underHigh - selectedTicker.underLow + 1) +
+    selectedTicker.underLow;
+  const closeSharePrice =
+    Math.random() * (selectedTicker.underHigh - selectedTicker.underLow + 1) +
+    selectedTicker.underLow;
   return {
-    ticker: selectTicker.ticker,
-    openSharePrice:
-      Math.random() * (selectedTicker.underHigh - selectedTicker.underLow + 1) +
-      selectedTicker.underLow,
-    closeSharePrice:
-      Math.random() * (selectedTicker.underHigh - selectedTicker.underLow + 1) +
-      selectedTicker.underLow,
+    ticker: selectedTicker.ticker,
+    openSharePrice,
+    closeSharePrice,
     openCost: setOpenCost(
       contractType,
       tradeSide,
@@ -159,4 +161,31 @@ export function setCloseCost(
       }
     }
   }
+}
+
+function dollarsToCents(amount) {
+  return Number.parseFloat(amount) * 100;
+}
+
+export function optionsProfitLossHandler(
+  orderSize,
+  openContractPrice,
+  closeContractPrice,
+  tradeSide
+) {
+  return calculateProfitLoss(
+    orderSize,
+    openContractPrice,
+    closeContractPrice,
+    tradeSide
+  ).toFixed(2);
+}
+
+function calculateProfitLoss(orderSize, openPrice, closePrice, tradeSide) {
+  const openCost = dollarsToCents(openPrice) * orderSize;
+  const closeCost = dollarsToCents(closePrice) * orderSize;
+
+  return tradeSide === "LONG"
+    ? closeCost - openCost
+    : (closeCost - openCost) * -1;
 }

@@ -23,7 +23,7 @@ export const spendingAccount = (table, userId, categories) => {
     },
   });
 
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 50; i++) {
     const transactionId = uuid.v1();
     const type = "TRANS#SPENDING#";
     const transAmmount = (Math.random() * 100).toFixed(2);
