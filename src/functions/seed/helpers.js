@@ -44,7 +44,7 @@ export function setCloseDate(openDate) {
 }
 
 export function setExpirationDate(closeDate) {
-	const date = new Date(closeDate)
+  const date = new Date(closeDate);
   const closeDay = new Date(date).getDay();
   let resultDate = new Date(closeDate);
   if (closeDay !== 5) {
@@ -54,7 +54,11 @@ export function setExpirationDate(closeDate) {
   return Date.parse(resultDate);
 }
 
-export function selectTicker(contractType, tradeSide) {
+function dollarsToCents(amount) {
+  return Number.parseFloat(amount) * 100;
+}
+
+export function selectOptionsTicker(contractType, tradeSide) {
   const selectedTicker = tickers[Math.floor(Math.random() * tickers.length)];
   const openSharePrice =
     Math.random() * (selectedTicker.underHigh - selectedTicker.underLow + 1) +
@@ -64,15 +68,15 @@ export function selectTicker(contractType, tradeSide) {
     selectedTicker.underLow;
   return {
     ticker: selectedTicker.ticker,
-    openSharePrice,
-    closeSharePrice,
-    openCost: setOpenCost(
+    openSharePrice: openSharePrice.toFixed(2),
+    closeSharePrice: closeSharePrice.toFixed(2),
+    openCost: setOptionsOpenCost(
       contractType,
       tradeSide,
       openSharePrice,
       closeSharePrice
     ),
-    closeCost: setCloseCost(
+    closeCost: setOptionsCloseCost(
       contractType,
       tradeSide,
       openSharePrice,
@@ -81,90 +85,118 @@ export function selectTicker(contractType, tradeSide) {
   };
 }
 
-export function setOpenCost(
+export function setOptionsOpenCost(
   contractType,
   tradeSide,
   openSharePrice,
   closeSharePrice
 ) {
-  const premLow = 1.1;
-  const premHigh = 8.9;
-  const premMid = premHigh - (premHigh - premLow) / 2;
+  const premLow = 11;
+  const premHigh = 89;
+  const premMid = dollarsToCents(premHigh - (premHigh - premLow) / 2);
+  let result;
 
   if (contractType === "CALL") {
     if (tradeSide === "LONG") {
       if (openSharePrice < closeSharePrice) {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       } else {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       }
     } else if (tradeSide === "SHORT") {
       if (openSharePrice > closeSharePrice) {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       } else {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       }
     }
   } else if (contractType === "PUT") {
     if (tradeSide === "LONG") {
       if (openSharePrice > closeSharePrice) {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       } else {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       }
     } else if (tradeSide === "SHORT") {
       if (openSharePrice < closeSharePrice) {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       } else {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       }
     }
   }
+  return (result / 100).toFixed(2);
 }
 
-export function setCloseCost(
+export function setOptionsCloseCost(
   contractType,
   tradeSide,
   openSharePrice,
   closeSharePrice
 ) {
-  const premLow = 1.1;
-  const premHigh = 8.9;
-  const premMid = premHigh - (premHigh - premLow) / 2;
+  const premLow = 11;
+  const premHigh = 89;
+  const premMid = dollarsToCents(premHigh - (premHigh - premLow) / 2);
+  let result;
 
   if (contractType === "CALL") {
     if (tradeSide === "LONG") {
       if (openSharePrice < closeSharePrice) {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       } else {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       }
     } else if (tradeSide === "SHORT") {
       if (openSharePrice > closeSharePrice) {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       } else {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       }
     }
   } else if (contractType === "PUT") {
     if (tradeSide === "LONG") {
       if (openSharePrice > closeSharePrice) {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       } else {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       }
     } else if (tradeSide === "SHORT") {
       if (openSharePrice < closeSharePrice) {
-        return Math.random() * (premHigh - premMid + 1) + premMid;
+        result = Math.random() * (premHigh - premMid + 1) + premMid;
       } else {
-        return Math.random() * (premMid - premLow + 1) + premLow;
+        result = Math.random() * (premMid - premLow + 1) + premLow;
       }
     }
   }
+  return (result / 100).toFixed(2);
 }
 
-function dollarsToCents(amount) {
-  return Number.parseFloat(amount) * 100;
+export function selectSharesTicker() {
+  const selectedTicker = tickers[Math.floor(Math.random() * tickers.length)];
+  const openSharePrice =
+    Math.random() * (selectedTicker.underHigh - selectedTicker.underLow + 1) +
+    selectedTicker.underLow;
+  const closeSharePrice =
+    Math.random() * (selectedTicker.underHigh - selectedTicker.underLow + 1) +
+    selectedTicker.underLow;
+  return {
+    ticker: selectedTicker.ticker,
+    openSharePrice: openSharePrice.toFixed(2),
+    closeSharePrice: closeSharePrice.toFixed(2),
+  };
+}
+
+export function setSpreadLegs(underLyingOpen, contractType) {
+  return {
+    lowerLeg:
+      contractType === "CALL"
+        ? dollarsToCents(underLyingOpen).toFixed(0)
+        : dollarsToCents(underLyingOpen - 5).toFixed(0),
+    upperLeg:
+      contractType === "CALL"
+        ? dollarsToCents(underLyingOpen + 5).toFixed(0)
+        : dollarsToCents(underLyingOpen).toFixed(0),
+  };
 }
 
 export function optionsProfitLossHandler(
@@ -173,11 +205,24 @@ export function optionsProfitLossHandler(
   closeContractPrice,
   tradeSide
 ) {
-  return calculateProfitLoss(
+  const result = calculateProfitLoss(
     orderSize,
     openContractPrice,
     closeContractPrice,
     tradeSide
+  );
+  return result.toFixed(2);
+}
+
+export function sharesProfitLossHandler(
+  orderSize,
+  openSharePrice,
+  closeSharePrice,
+  tradeSide
+) {
+  return (
+    calculateProfitLoss(orderSize, openSharePrice, closeSharePrice, tradeSide) /
+    100
   ).toFixed(2);
 }
 

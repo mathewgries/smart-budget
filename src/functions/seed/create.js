@@ -33,7 +33,7 @@ export const main = handler(async (event) => {
     let params;
     const startIndex = i * 25;
     const endIndex = startIndex + 25;
-
+		
     if (i === loopCount - 1) {
       params = { TransactItems: items.slice(startIndex) };
     } else {
