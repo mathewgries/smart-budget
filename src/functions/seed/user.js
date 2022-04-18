@@ -1,27 +1,20 @@
 import * as uuid from "uuid";
-import handler from "../../util/handler";
-import dynamoDb from "../../util/dynamodb";
-import { defaultCategories } from "../spending/categories/defaultCategories";
 import { defaultSignals } from "../investing/signals/defaultSignals";
+import { defaultCategories } from "../spending/categories/defaultCategories";
 import { defaultStrategies } from "../investing/strategies/defaultStrategies";
 
-export const main = handler(async (event) => {
-  const data = JSON.parse(event.body);
-  const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-
+export const buildUserDefaults = (table, user) => {
   let items = [];
-  let itemsLength = 0;
-  let loopCount = 0;
 
   items.push({
     Put: {
-      TableName: process.env.TABLE_NAME,
+      TableName: table,
       Item: {
-        PK: `USER#${userId}`,
+        PK: `USER#${user.id}`,
         SK: `USER#INFO`,
-        username: data.email || null,
-        email: data.email || null,
-        dateOfBirth: data.dateOfBirth || null,
+        username: user.email || null,
+        email: user.email || null,
+        dateOfBirth: user.dateOfBirth || null,
         type: "USER#INFO",
         createDate: Date.now(),
         modifyDate: Date.now(),
@@ -31,9 +24,9 @@ export const main = handler(async (event) => {
 
   items.push({
     Put: {
-      TableName: process.env.TABLE_NAME,
+      TableName: table,
       Item: {
-        PK: `USER#${userId}`,
+        PK: `USER#${user.id}`,
         SK: `SIGNALS#`,
         type: "SIGNALS#",
         signalList: defaultSignals,
@@ -47,9 +40,9 @@ export const main = handler(async (event) => {
     const categoryId = uuid.v1();
     items.push({
       Put: {
-        TableName: process.env.TABLE_NAME,
+        TableName: table,
         Item: {
-          PK: `USER#${userId}`,
+          PK: `USER#${user.id}`,
           SK: `CATEGORY#${categoryId}`,
           id: categoryId,
           type: "CATEGORY#",
@@ -66,9 +59,9 @@ export const main = handler(async (event) => {
     const strategyId = uuid.v1();
     items.push({
       Put: {
-        TableName: process.env.TABLE_NAME,
+        TableName: table,
         Item: {
-          PK: `USER#${userId}`,
+          PK: `USER#${user.id}`,
           SK: `STRATEGY#${strategyId}`,
           id: strategyId,
           type: "STRATEGY#",
@@ -81,20 +74,5 @@ export const main = handler(async (event) => {
     });
   }
 
-  itemsLength = items.length;
-  loopCount = Math.ceil(itemsLength / 25);
-  for (let i = 0; i < loopCount; i++) {
-    let params;
-    const startIndex = i * 25;
-    const endIndex = startIndex + 25;
-
-    if (i === loopCount - 1) {
-      params = { TransactItems: items.slice(startIndex) };
-    } else {
-      params = { TransactItems: items.slice(startIndex, endIndex) };
-    }
-    await dynamoDb.transactWrite(params);
-  }
-
-  return items;
-});
+	return items
+};

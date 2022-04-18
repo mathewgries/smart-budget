@@ -1,4 +1,4 @@
-export const categories = {
+export const defaultCategories = {
   food: ["groceries", "fast food", "coffee", "take out"],
   income: ["primary", "secondary"],
   bills: [

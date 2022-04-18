@@ -40,6 +40,7 @@ import VerticalSpreadsOrderEdit from "./containers/investing/orders/spreads/Vert
 import Strategies from "./containers/investing/strategies/Strategies";
 
 import NotFound from "./containers/NotFound";
+import SeedData from "./seed/SeedData"
 
 export default function Routes() {
   return (
@@ -55,6 +56,10 @@ export default function Routes() {
       <UnauthenticatedRoute exact path="/signup">
         <Signup />
       </UnauthenticatedRoute>
+
+			<AuthenticatedRoute exact path="/seed-data">
+        <SeedData />
+      </AuthenticatedRoute>
 
       {/* SPENDING ACCOUNTS */}
       <AuthenticatedRoute exact path="/spending">
