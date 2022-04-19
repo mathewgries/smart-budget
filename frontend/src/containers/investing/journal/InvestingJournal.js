@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { dollarsToCents } from "../../../helpers/currencyHandler";
 import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
 import {
   selectSharesOrdersByAccounGSI,
@@ -17,7 +18,7 @@ import {
 import { Link } from "react-router-dom";
 import InvestingBalance from "./InvestingBalance";
 import GrowthRate from "./GrowthRate";
-import SharesOrdersTable from "../orders/shares/SharesOrdersTable"
+import SharesOrdersTable from "../orders/shares/SharesOrdersTable";
 import OptionsOrdersTable from "../orders/options/OptionsOrderTable";
 import VerticalSpreadsTable from "../orders/spreads/VerticalSpreadsTable";
 
@@ -64,7 +65,15 @@ export default function InvestingJournal(props) {
   }
 
   function handlePLCalculate() {
-    return sharesPL + optionsPL + vertSpreadsPL;
+    const result = sharesPL + optionsPL + vertSpreadsPL;
+    return result;
+  }
+
+  function handlePLPercent() {
+    const balance = Number.parseFloat(account.accountBalance.replace(",", ""));
+    const diff = balance - handlePLCalculate();
+    const result = ((balance - diff) / diff) * 100;
+    return result;
   }
 
   return (
@@ -79,18 +88,13 @@ export default function InvestingJournal(props) {
           </div>
           <div>
             <GrowthRate
-              growthRate={`P/L$: ${handlePLCalculate()}`}
+              growthRate={`P/L$: ${handlePLCalculate().toFixed(2)}`}
               isLoading={isLoading}
             />
           </div>
           <div>
             <GrowthRate
-              growthRate={`P/L%: ${(
-                ((account.accountBalance -
-                  (account.accountBalance - handlePLCalculate())) /
-                  (account.accountBalance - handlePLCalculate())) *
-                100
-              ).toFixed(2)}`}
+              growthRate={`P/L%: ${handlePLPercent().toFixed(2)}`}
               isLoading={isLoading}
             />
           </div>

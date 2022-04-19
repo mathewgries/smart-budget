@@ -60,7 +60,7 @@ export const investingAccount = (table, userId, strategies) => {
     });
   }
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 15; i++) {
     const orderId = uuid.v1();
     const type = "ORDER#OPTIONS#";
     const contractType = Math.floor(Math.random() * 2) === 0 ? "CALL" : "PUT";
@@ -69,7 +69,7 @@ export const investingAccount = (table, userId, strategies) => {
     const openDate = setOpenDate();
     const closeDate = setCloseDate(openDate);
     const expirationDate = setExpirationDate(closeDate);
-    const orderSize = Math.floor(Math.random() * 4) + 1;
+    const orderSize = Math.floor(Math.random() * 1) + 1;
     const profitLoss = optionsProfitLossHandler(
       orderSize,
       ticker.openCost,
@@ -119,14 +119,14 @@ export const investingAccount = (table, userId, strategies) => {
     });
   }
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 15; i++) {
     const orderId = uuid.v1();
     const type = "ORDER#SHARES#";
     const tradeSide = Math.floor(Math.random() * 2) === 0 ? "LONG" : "SHORT";
     const ticker = selectSharesTicker();
     const openDate = setOpenDate();
     const closeDate = setCloseDate(openDate);
-    const orderSize = Math.floor(Math.random() * 50) + 1;
+    const orderSize = Math.floor(Math.random() * 10) + 1;
     const profitLoss = sharesProfitLossHandler(
       orderSize,
       ticker.openSharePrice,
@@ -161,7 +161,7 @@ export const investingAccount = (table, userId, strategies) => {
     });
   }
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 15; i++) {
     const orderId = uuid.v1();
     const type = "ORDER#VERTSPREADS#";
     const contractType = Math.floor(Math.random() * 2) === 0 ? "CALL" : "PUT";
@@ -170,7 +170,7 @@ export const investingAccount = (table, userId, strategies) => {
     const openDate = setOpenDate();
     const closeDate = setCloseDate(openDate);
     const expirationDate = setExpirationDate(closeDate);
-    const orderSize = Math.floor(Math.random() * 4) + 1;
+    const orderSize = Math.floor(Math.random() * 1) + 1;
     const spreadLegs = setSpreadLegs(ticker.openSharePrice, contractType);
     const profitLoss = optionsProfitLossHandler(
       orderSize,
