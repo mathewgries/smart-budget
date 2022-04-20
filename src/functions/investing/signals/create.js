@@ -1,19 +1,19 @@
 import * as uuid from "uuid";
-import handler from "../../../util/handler"
+import handler from "../../../util/handler";
 import dynamoDb from "../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-	const signalId = uuid.v1();
-	const type = "SIGNALS#"; 
+  const signalId = uuid.v1();
+  const type = "SIGNALS#";
 
   const params = {
     TableName: process.env.TABLE_NAME,
     Item: {
       PK: `USER#${userId}`,
       SK: `${type}`,
-			type: type,
-			signalList: [],
+      type: type,
+      signals: [],
       createDate: Date.now(),
       modifyDate: Date.now(),
     },

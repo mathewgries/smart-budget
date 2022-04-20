@@ -5,7 +5,7 @@ import "./LoaderButton.css";
 export default function LoadingSpinner({ className = "", text }) {
   return (
     <div className={`loading-spinner ${className}`}>
-        <BsArrowRepeat className="spinning" /> {text ? ' ' + text : null}
+      <BsArrowRepeat className="spinning" /> {text ? " " + text : null}
     </div>
   );
 }

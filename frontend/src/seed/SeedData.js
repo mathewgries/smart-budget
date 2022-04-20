@@ -1,15 +1,15 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { API } from "aws-amplify";
 import { amplifyClient } from "../api/amplifyClient";
 import { onError } from "../lib/errorLib";
-import LoadingSpinner from "../components/LoadingSpinner"
+import LoadingSpinner from "../components/LoadingSpinner";
 
 export default function SeedData(props) {
-	const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
   async function runSeed() {
     try {
-			setIsLoading(true)
+      setIsLoading(true);
       const user = await amplifyClient.auth.currentUserInfo();
 
       await API.post("smartbudget", "/seed_data", {
@@ -23,7 +23,7 @@ export default function SeedData(props) {
     } catch (e) {
       onError(e);
     }
-		setIsLoading(false)
+    setIsLoading(false);
   }
 
   return (
@@ -31,7 +31,7 @@ export default function SeedData(props) {
       <div className="page-wrapper">
         <div>
           <button className="btn btn-primary" onClick={runSeed}>
-						{isLoading ? <LoadingSpinner/> : "Run Seed"}
+            {isLoading ? <LoadingSpinner /> : "Run Seed"}
           </button>
         </div>
       </div>

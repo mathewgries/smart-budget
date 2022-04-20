@@ -23,5 +23,4 @@ export const main = handler(async (event) => {
   };
 
   return await dynamodb.update(params);
-
 });

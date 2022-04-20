@@ -9,9 +9,9 @@ export const defaultCategories = {
     "mortgage",
     "car payment",
     "car insurance",
-		"internet",
-		"cable",
-		"waste disposal",
-		"phone"
+    "internet",
+    "cable",
+    "waste disposal",
+    "phone",
   ],
 };

@@ -1,12 +1,17 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  createEntityAdapter,
+} from "@reduxjs/toolkit";
 import { amplifyClient } from "../../api/amplifyClient";
 import { fetchAllData } from "../users/usersSlice";
 
-const initialState = {
-  items: [],
+const signalsAdapter = createEntityAdapter();
+
+const initialState = signalsAdapter.getInitialState({
   status: "idle",
   error: null,
-};
+});
 
 export const updateSignals = createAsyncThunk(
   "signals/updateSignals",
@@ -32,7 +37,7 @@ export const signalsSlice = createSlice({
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
         const signals = action.payload.find((item) => item.type === "SIGNALS#");
-        state.items = signals.signalList;
+        signalsAdapter.upsertMany(state, signals.signals);
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -44,7 +49,7 @@ export const signalsSlice = createSlice({
       .addCase(updateSignals.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { signals } = action.payload;
-        state.items = signals;
+        signalsAdapter.setAll(state, signals)
       })
       .addCase(updateSignals.rejected, (state, action) => {
         state.status = "failed";
@@ -55,4 +60,8 @@ export const signalsSlice = createSlice({
 
 export default signalsSlice.reducer;
 
-export const selectAllSignals = (state) => state.signals.items;
+export const {
+  selectAll: selectAllSignals,
+  selectById: selectSignalById,
+  selectIds: selectSignalIds,
+} = signalsAdapter.getSelectors((state) => state.signals);

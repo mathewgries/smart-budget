@@ -27,18 +27,18 @@ export function inputDateFormat(date) {
 }
 
 export function dateToString(date) {
-	//{M}M/{D}D/YYYY
+  //{M}M/{D}D/YYYY
   const convDate = new Date(date);
   const year = convDate.getUTCFullYear().toString();
   let month = (convDate.getUTCMonth() + 1).toString();
   let day = convDate.getUTCDate().toString();
 
-	if(day.length === 1){
-		day = "0" + day
-	}
-	if(month.length === 1){
-		month = "0" + month
-	}
+  if (day.length === 1) {
+    day = "0" + day;
+  }
+  if (month.length === 1) {
+    month = "0" + month;
+  }
 
   return `${month}/${day}/${year}`;
 }

@@ -22,6 +22,10 @@ export const buildUserDefaults = (table, user) => {
     },
   });
 
+  const signals = defaultSignals.map((signal) => ({
+    id: uuid.v1(),
+    name: signal,
+  }));
   items.push({
     Put: {
       TableName: table,
@@ -29,7 +33,7 @@ export const buildUserDefaults = (table, user) => {
         PK: `USER#${user.id}`,
         SK: `SIGNALS#`,
         type: "SIGNALS#",
-        signalList: defaultSignals,
+        signals: signals,
         createDate: Date.now(),
         modifyDate: Date.now(),
       },
@@ -57,6 +61,9 @@ export const buildUserDefaults = (table, user) => {
 
   for (const prop in defaultStrategies) {
     const strategyId = uuid.v1();
+    const signalIds = signals
+      .filter((signal) => defaultStrategies[prop].includes(signal.name))
+      .map((signal) => signal.id);
     items.push({
       Put: {
         TableName: table,
@@ -66,7 +73,7 @@ export const buildUserDefaults = (table, user) => {
           id: strategyId,
           type: "STRATEGY#",
           strategyName: prop,
-          signals: defaultStrategies[prop],
+          signals: signalIds,
           createDate: Date.now(),
           modifyDate: Date.now(),
         },
@@ -74,5 +81,5 @@ export const buildUserDefaults = (table, user) => {
     });
   }
 
-	return items
+  return items;
 };

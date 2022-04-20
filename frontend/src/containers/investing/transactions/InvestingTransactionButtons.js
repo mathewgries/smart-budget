@@ -52,7 +52,7 @@ export default function InvestingTransactionButtons(props) {
           {isLoading ? <LoadingSpinner /> : "Delete"}
         </button>
       </div>
-			
+
       {showConfrim && (
         <section className="confirmation-popup-section">
           <ConfirmationPopup onCancel={handleCancel} onConfirm={handleConfirm}>

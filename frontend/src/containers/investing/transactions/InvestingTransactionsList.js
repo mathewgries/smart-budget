@@ -21,7 +21,7 @@ export default function InvestingTransactionsList(props) {
           <TransactionCardLoader
             status={status}
             text={"Add new transactions..."}
-						path={`/investing/transactions/new/${account.id}`}
+            path={`/investing/transactions/new/${account.id}`}
           />
         )}
       </div>

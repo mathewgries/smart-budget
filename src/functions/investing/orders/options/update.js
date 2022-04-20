@@ -67,7 +67,7 @@ export const main = handler(async (event) => {
             ":openImpliedVolatility": order.openImpliedVolatility,
             ":closeImpliedVolatility": order.closeImpliedVolatility,
             ":profitLoss": order.profitLoss,
-						":commissions": order.commissions,
+            ":commissions": order.commissions,
             ":strategyId": order.strategyId,
             ":modifyDate": Date.now(),
           },

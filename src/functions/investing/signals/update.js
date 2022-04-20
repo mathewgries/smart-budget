@@ -18,9 +18,9 @@ export const main = handler(async (event) => {
         SK: "SIGNALS#",
       },
       UpdateExpression:
-        "SET signalList = :signalList, modifyDate = :modifyDate",
+        "SET signals = :signals, modifyDate = :modifyDate",
       ExpressionAttributeValues: {
-        ":signalList": signals,
+        ":signals": signals,
         ":modifyDate": Date.now(),
       },
     },

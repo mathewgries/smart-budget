@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import * as uuid from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllSignals,
@@ -45,7 +46,11 @@ export default function StrategyNew(props) {
       return;
     }
     try {
-      await dispatch(updateSignals({ signals: [...signals, signal] })).unwrap();
+      await dispatch(
+        updateSignals({
+          signals: [...signals, { id: uuid.v1(), name: signal }],
+        })
+      ).unwrap();
       setSignal("");
     } catch (e) {
       onError(e);
@@ -53,10 +58,11 @@ export default function StrategyNew(props) {
   }
 
   function validateSignalName() {
-    const signalsConverted = signals.map((signal) =>
-      signal.toLowerCase().replace(/\s/g, "")
-    );
-    if (signalsConverted.includes(signal.toLowerCase().replace(/\s/g, ""))) {
+		const signalNames = signals.map((signal) => signal.name.toLowerCase().replace(/\s/g, ""))
+    // const signalsConverted = signals.map((signal) =>
+    //   signal.toLowerCase().replace(/\s/g, "")
+    // );
+    if (signalNames.includes(signal.toLowerCase().replace(/\s/g, ""))) {
       return true;
     } else {
       return false;

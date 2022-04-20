@@ -132,7 +132,9 @@ export const optionsOrdersSlice = createSlice({
       })
       .addCase(deleteStrategy.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const orders = action.payload.orders.filter((order) => order.type === "ORDER#OPTIONS#");
+        const orders = action.payload.orders.filter(
+          (order) => order.type === "ORDER#OPTIONS#"
+        );
         optionsAdapter.upsertMany(state, orders);
       })
       .addCase(deleteStrategy.rejected, (state, action) => {
