@@ -7,6 +7,7 @@ import {
 } from "../../../../redux/investing/sharesOrdersSlice";
 import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
 import { selectStrategyById } from "../../../../redux/investing/strategiesSlice";
+import { selectAllSignals } from "../../../../redux/investing/signalsSlice";
 import {
   getPLPercent,
   deleteOrderHandler,
@@ -34,9 +35,13 @@ export default function SharesOrder(props) {
   const account = useSelector((state) =>
     selectInvestingAccountByGSI(state, order.GSI1_PK)
   );
-	const strategy = useSelector((state) =>
-	selectStrategyById(state, order.strategyId)
-);
+  const strategy = useSelector((state) =>
+    selectStrategyById(state, order.strategyId)
+  );
+  const signals = useSelector((state) => {
+    const allSignals = selectAllSignals(state);
+    return allSignals.filter((signal) => strategy.signals.includes(signal.id));
+  });
   const [isDelete, setIsDelete] = useState(false);
   const [showConfrim, setShowConfirm] = useState(false);
 
@@ -136,7 +141,7 @@ export default function SharesOrder(props) {
             </table>
           </section>
 
-					{strategy && (
+          {strategy && (
             <section>
               <table className="table table-bordered table-sm">
                 <thead className="thead-light">
@@ -153,7 +158,7 @@ export default function SharesOrder(props) {
             </section>
           )}
 
-          {strategy && strategy.signals.length > 0 && (
+          {strategy && signals.length > 0 && (
             <section>
               <table className="table table-bordered table-sm">
                 <thead className="thead-light">
@@ -162,9 +167,9 @@ export default function SharesOrder(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {strategy.signals.map((signal) => (
-                    <tr key={signal}>
-                      <td>{signal}</td>
+                  {signals.map((signal) => (
+                    <tr key={signal.id}>
+                      <td>{signal.name}</td>
                     </tr>
                   ))}
                 </tbody>

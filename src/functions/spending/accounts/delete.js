@@ -1,11 +1,11 @@
-import handler from "../../../util/handler"
-import dynamoDb from "../../../util/dynamodb"
+import handler from "../../../util/handler";
+import dynamoDb from "../../../util/dynamodb";
 
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
   const { account, transactions } = data;
-	
+
   let items = [];
   let itemsLength = 0;
   let loopCount = 0;

@@ -4,7 +4,7 @@ import dynamoDb from "../../../util/dynamodb";
 export const main = handler(async (event) => {
   const data = JSON.parse(event.body);
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
-	const {transaction, account } = data
+  const { transaction, account } = data;
 
   const params = {
     TransactItems: [
@@ -29,7 +29,7 @@ export const main = handler(async (event) => {
             ":transactionDate": transaction.transactionDate,
             ":transactionType": transaction.transactionType,
             ":categoryName": transaction.categoryName,
-						":categoryId": transaction.categoryId,
+            ":categoryId": transaction.categoryId,
             ":subcategory": transaction.subcategory,
             ":transactionNote": transaction.transactionNote,
             ":modifyDate": Date.now(),

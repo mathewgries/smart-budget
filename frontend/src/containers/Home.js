@@ -34,13 +34,13 @@ export default function Home() {
         return;
       }
 
-			function validateStatus() {
-				return (
-					usersStatus === "pending" ||
-					spendingAccountStatus === "pending" ||
-					investingAccountStatus === "pending"
-				);
-			}
+      function validateStatus() {
+        return (
+          usersStatus === "pending" ||
+          spendingAccountStatus === "pending" ||
+          investingAccountStatus === "pending"
+        );
+      }
 
       if (validateStatus() && !isLoading) {
         setIsLoading(true);
@@ -60,7 +60,7 @@ export default function Home() {
     onLoad();
   }, [
     isAuthenticated,
-		isLoading,
+    isLoading,
     usersStatus,
     spendingAccountStatus,
     investingAccountStatus,

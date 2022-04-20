@@ -7,6 +7,7 @@ import {
 } from "../../../../redux/investing/verticalSpreadsOrdersSlice";
 import { selectInvestingAccountByGSI } from "../../../../redux/investing/investingAccountsSlice";
 import { selectStrategyById } from "../../../../redux/investing/strategiesSlice";
+import { selectAllSignals } from "../../../../redux/investing/signalsSlice";
 import {
   getPLPercent,
   deleteOrderHandler,
@@ -40,6 +41,10 @@ export default function VerticalSpreadsOrder(props) {
   const strategy = useSelector((state) =>
     selectStrategyById(state, order.strategyId)
   );
+  const signals = useSelector((state) => {
+    const allSignals = selectAllSignals(state);
+    return allSignals.filter((signal) => strategy.signals.includes(signal.id));
+  });
   const [isDelete, setIsDelete] = useState(false);
   const [showConfrim, setShowConfirm] = useState(false);
 
@@ -160,7 +165,7 @@ export default function VerticalSpreadsOrder(props) {
             </section>
           )}
 
-          {strategy && strategy.signals.length > 0 && (
+          {strategy && signals.length > 0 && (
             <section>
               <table className="table table-bordered table-sm">
                 <thead className="thead-light">
@@ -169,9 +174,9 @@ export default function VerticalSpreadsOrder(props) {
                   </tr>
                 </thead>
                 <tbody>
-                  {strategy.signals.map((signal) => (
-                    <tr key={signal}>
-                      <td>{signal}</td>
+                  {signals.map((signal) => (
+                    <tr key={signal.id}>
+                      <td>{signal.name}</td>
                     </tr>
                   ))}
                 </tbody>

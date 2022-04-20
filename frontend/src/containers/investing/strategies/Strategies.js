@@ -32,11 +32,15 @@ import {
 export default function Strategies(props) {
   const dispatch = useDispatch();
   const strategies = useSelector(selectAllStrategies);
-  const signals = useSelector((state) => selectAllSignals(state));
+  const signals = useSelector(selectAllSignals);
   const activeStrategy = useSelector((state) => selectActiveStrategy(state));
-  const activeSignals = useSelector((state) => selectActiveSignals(state));
+  const activeSignals = useSelector((state) => {
+    const strategySignals = selectActiveSignals(state);
+    return signals.filter((signal) => strategySignals.includes(signal.id));
+  });
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
+
   const [showAlertPopup, setShowAlertPopup] = useState(false);
   const [showDeleteSignalConfirm, setShowDeleteSignalConfirm] = useState(false);
   const [stagedSignalToDelete, setStagedSignalToDelete] = useState();
@@ -76,12 +80,13 @@ export default function Strategies(props) {
     dispatch(activeStrategyUpdated(strategy.id));
   }
 
-  async function addSignalToStrategy(signal) {
-    if (activeSignals.includes(signal)) {
+  async function addSignalToStrategy(signalId) {
+    const activeSignalsIds = activeSignals.map((signal) => signal.id);
+    if (activeSignalsIds.includes(signalId)) {
       setShowAlertPopup(true);
       return;
     } else {
-      const updatedSignals = [...activeStrategy.signals, signal];
+      const updatedSignals = [...activeStrategy.signals, signalId];
       await handleUpdateStrategy(updatedSignals);
     }
   }
@@ -102,9 +107,9 @@ export default function Strategies(props) {
   }
 
   async function removeSignalFromStrategy() {
-    const updatedSignals = activeSignals.filter(
-      (signal) => signal !== stagedSignalToRemove
-    );
+    const updatedSignals = activeSignals
+      .filter((signal) => signal.id !== stagedSignalToRemove)
+      .map((signal) => signal.id);
     await handleUpdateStrategy(updatedSignals);
   }
 
@@ -127,11 +132,13 @@ export default function Strategies(props) {
     try {
       await dispatch(
         updateSignals({
-          signals: signals.filter((signal) => signal !== stagedSignalToDelete),
+          signals: signals.filter(
+            (signal) => signal.id !== stagedSignalToDelete.id
+          ),
           strategies: setStrategiesOnSignalDelete(),
         })
       ).unwrap();
-			setStagedSignalToDelete()
+      setStagedSignalToDelete();
     } catch (e) {
       onError(e);
     }
@@ -139,11 +146,11 @@ export default function Strategies(props) {
 
   function setStrategiesOnSignalDelete() {
     return strategies
-      .filter((strategy) => strategy.signals.includes(stagedSignalToDelete))
+      .filter((strategy) => strategy.signals.includes(stagedSignalToDelete.id))
       .map((strategy) => ({
         ...strategy,
         signals: strategy.signals.filter(
-          (signal) => signal !== stagedSignalToDelete
+          (signal) => signal !== stagedSignalToDelete.id
         ),
       }));
   }
@@ -276,7 +283,7 @@ export default function Strategies(props) {
           </section>
 
           <section>
-            <StrategyNew strategies={strategies}/>
+            <StrategyNew strategies={strategies} />
           </section>
 
           {(isLoading || !strategies[0]) && (
@@ -365,16 +372,16 @@ export default function Strategies(props) {
                     aria-labelledby="dropdownMenuButton"
                   >
                     {activeSignals.map((signal) => (
-                      <div key={signal} className="category-list-item">
+                      <div key={signal.id} className="category-list-item">
                         <div className="dropdown-item">
-                          <div>{signal}</div>
+                          <div>{signal.name}</div>
                         </div>
                         <div className="category-btn-container">
                           <div>
                             <button
                               className="btn btn-danger btn-sm"
                               onClick={() =>
-                                handleShowRemoveSignalConfirm(signal)
+                                handleShowRemoveSignalConfirm(signal.id)
                               }
                               disabled={isLoading}
                             >
@@ -406,12 +413,15 @@ export default function Strategies(props) {
             <section>
               <ul className="list-group">
                 {signals.map((signal) => (
-                  <li key={signal} className="list-group-item signal-list-item">
+                  <li
+                    key={signal.id}
+                    className="list-group-item signal-list-item"
+                  >
                     <div
-                      onClick={() => addSignalToStrategy(signal)}
+                      onClick={() => addSignalToStrategy(signal.id)}
                       className="signal"
                     >
-                      {signal}
+                      {signal.name}
                     </div>
                     <button
                       className="btn btn-danger"

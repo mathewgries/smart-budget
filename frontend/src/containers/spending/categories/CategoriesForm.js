@@ -41,11 +41,11 @@ export default function CategoriesForm(props) {
   }
 
   function validateSubcategoryForm() {
-		if(!activeCategory && !validateCategoryForm()){
-			return false
-		}else if(fields.subcategory.length > 0 && !validateCategoryForm()){
-			return true
-		}
+    if (!activeCategory && !validateCategoryForm()) {
+      return false;
+    } else if (fields.subcategory.length > 0 && !validateCategoryForm()) {
+      return true;
+    }
   }
 
   function handleCancel() {

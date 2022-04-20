@@ -38,7 +38,7 @@ export default function StrategyNew(props) {
     e.preventDefault();
     if (validateStrategyName()) {
       setShowAlertPopup(true);
-			setStrategy("")
+      setStrategy("");
       return;
     }
 

@@ -10,7 +10,7 @@ export const StrategyNameExistsAlertPopupMessage = () => {
   return (
     <div>
       <p>A similar strategy name already exists!</p>
-			<p>Please choose a different name</p>
+      <p>Please choose a different name</p>
     </div>
   );
 };
@@ -19,7 +19,7 @@ export const SignalExistsAlertPopupMessage = () => {
   return (
     <div>
       <p>A similar signal name already exists!</p>
-			<p>Please choose a different name</p>
+      <p>Please choose a different name</p>
     </div>
   );
 };
