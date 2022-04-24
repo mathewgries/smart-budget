@@ -42,7 +42,6 @@ export default function StrategyEdit(props) {
         })
       ).unwrap();
 			props.toggleStrategyEdit()
-      setStrategy("");
     } catch (e) {
       onError(e);
     }
@@ -58,8 +57,8 @@ export default function StrategyEdit(props) {
             value={strategy}
             type="text"
             onChange={(e) => setStrategy(e.target.value)}
+						data-lpignore="true"
             disabled={isLoading}
-            placeholder="Add new strategy..."
           />
         </div>
         <div className="form-group">

@@ -10,6 +10,8 @@ import {
   deleteSubcategory,
 } from "../../../redux/spending/categoriesSlice";
 import { selectAllSpendingTransactions } from "../../../redux/spending/spendingTransactionsSlice";
+import CategoryEdit from "./CategoryEdit";
+import SubcategoryEdit from "./SubcategoryEdit";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import DropDownLoader from "../../loadingContainers/DropDownLoader";
 import { onError } from "../../../lib/errorLib";
@@ -50,9 +52,12 @@ export default function CategoriesSelector(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [showCategoryConfrim, setShowCategoryConfirm] = useState(false);
   const [stagedCategoryForDelete, setStagedCategoryForDelete] = useState();
+  const [editCategory, setEditCategory] = useState(false);
+
   const [showSubcategoryConfrim, setShowSubcategoryConfirm] = useState(false);
   const [stagedSubcategoryForDelete, setStagedSubcategoryForDelete] =
     useState();
+  const [editSubcategory, setEditSubcategory] = useState(false);
 
   useEffect(() => {
     if (activeCategory) {
@@ -71,6 +76,14 @@ export default function CategoriesSelector(props) {
       setIsLoading(false);
     }
   }, [transactionStatus, categoryStatus, isLoading]);
+
+  function toggleCategoryEdit() {
+    setEditCategory(!editCategory);
+  }
+
+  function toggleSubcategoryEdit() {
+    setEditSubcategory(!editSubcategory);
+  }
 
   function handleCategoryToggle(category) {
     dispatch(activeCategoryUpdated(category.id));
@@ -209,45 +222,72 @@ export default function CategoriesSelector(props) {
 
       {!isLoading && categories && categories[0] && (
         <section>
-          <div className="categories-dropdown-section">
-            <div className="dropdown form-group">
-              <button
-                className="btn dropdown-toggle"
-                type="input"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                {activeCategory.categoryName}
-              </button>
-              <div
-                className="dropdown-menu"
-                aria-labelledby="dropdownMenuButton"
-              >
-                {categories.map((category) => (
-                  <div key={category.id} className="category-list-item">
-                    <div
-                      className="dropdown-item"
-                      onClick={() => handleCategoryToggle(category)}
-                    >
-                      <div>{category.categoryName}</div>
-                    </div>
-                    <div className="category-btn-container">
-                      <div>
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleShowCategoryConfirm(category)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+          {editCategory && (
+            <div className="strategy-edit-wrapper">
+              <div>
+                <CategoryEdit toggleCategoryEdit={toggleCategoryEdit} />
+              </div>
+              <div className="strategy-edit-cancel-btn">
+                <button
+                  className="btn btn-primary"
+                  onClick={toggleCategoryEdit}
+                >
+                  Cancel
+                </button>
               </div>
             </div>
-          </div>
+          )}
+
+          {!editCategory && (
+            <div className="categories-dropdown-section">
+              <div className="dropdown form-group strategy-dropdown">
+                <button
+                  className="btn dropdown-toggle"
+                  type="input"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  disabled={isLoading}
+                >
+                  {activeCategory.categoryName}
+                </button>
+                <div>
+                  <button
+                    className="btn btn-primary"
+                    onClick={toggleCategoryEdit}
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div
+                  className="dropdown-menu"
+                  aria-labelledby="dropdownMenuButton"
+                >
+                  {categories.map((category) => (
+                    <div key={category.id} className="category-list-item">
+                      <div
+                        className="dropdown-item"
+                        onClick={() => handleCategoryToggle(category)}
+                      >
+                        <div>{category.categoryName}</div>
+                      </div>
+                      <div className="category-btn-container">
+                        <div>
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => handleShowCategoryConfirm(category)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         </section>
       )}
 
@@ -274,49 +314,78 @@ export default function CategoriesSelector(props) {
 
       {!isLoading && categories && subcategories && subcategories.length > 0 && (
         <section>
-          <div className="categories-dropdown-section">
-            <div className="dropdown form-group">
-              <button
-                className="btn dropdown-toggle"
-                type="button"
-                id="dropdownMenuButton"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                {activeSubcategory.name}
-              </button>
-              <div
-                className="dropdown-menu"
-                aria-labelledby="dropdownMenuButton"
-              >
+          {editSubcategory && (
+            <div className="strategy-edit-wrapper">
+              <div>
+                <SubcategoryEdit
+                  toggleSubcategoryEdit={toggleSubcategoryEdit}
+                />
+              </div>
+              <div className="strategy-edit-cancel-btn">
+                <button
+                  className="btn btn-primary"
+                  onClick={toggleSubcategoryEdit}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!editSubcategory && (
+            <div className="categories-dropdown-section">
+              <div className="dropdown form-group strategy-dropdown">
+                <button
+                  className="btn dropdown-toggle"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  disabled={isLoading}
+                >
+                  {activeSubcategory.name}
+                </button>
                 <div>
-                  {subcategories.map((subcategory) => (
-                    <div key={subcategory.id} className="category-list-item">
-                      <div
-                        className="dropdown-item"
-                        onClick={() => handleSubcategoryToggle(subcategory)}
-                      >
-                        <div>{subcategory.name}</div>
-                      </div>
-                      <div className="category-btn-container">
-                        <div>
-                          <button
-                            className="btn btn-danger btn-sm"
-                            onClick={() =>
-                              handleShowSubcategoryConfirm(subcategory)
-                            }
-                          >
-                            Delete
-                          </button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={toggleSubcategoryEdit}
+                  >
+                    Edit
+                  </button>
+                </div>
+                <div
+                  className="dropdown-menu"
+                  aria-labelledby="dropdownMenuButton"
+                >
+                  <div>
+                    {subcategories.map((subcategory) => (
+                      <div key={subcategory.id} className="category-list-item">
+                        <div
+                          className="dropdown-item"
+                          onClick={() => handleSubcategoryToggle(subcategory)}
+                        >
+                          <div>{subcategory.name}</div>
+                        </div>
+                        <div className="category-btn-container">
+                          <div>
+                            <button
+                              className="btn btn-danger btn-sm"
+                              onClick={() =>
+                                handleShowSubcategoryConfirm(subcategory)
+                              }
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </section>
       )}
     </div>

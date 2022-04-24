@@ -83,6 +83,7 @@ export default function StrategyNew(props) {
             type="text"
             onChange={(e) => setStrategy(e.target.value)}
             disabled={isLoading}
+						data-lpignore="true"
             placeholder="Add new strategy..."
           />
         </div>
