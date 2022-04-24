@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import * as uuid from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import {
   saveNewCategory,
@@ -65,7 +66,9 @@ export default function CategoriesForm(props) {
           category: {
             categoryName: fields.categoryName,
             subcategories:
-              fields.subcategory === "" ? [] : [fields.subcategory],
+              fields.subcategory === ""
+                ? []
+                : [{ id: uuid.v1(), name: fields.subcategory }],
           },
         })
       ).unwrap();
@@ -77,7 +80,11 @@ export default function CategoriesForm(props) {
 
   async function handleAddNewSubcategory(e) {
     e.preventDefault();
-    if (activeCategory.subcategories.includes(fields.subcategory)) {
+    if (
+      activeCategory.subcategories
+        .map((subcategories) => subcategories.name)
+        .includes(fields.subcategory)
+    ) {
       setShowConfirm(true);
       return;
     }
@@ -89,7 +96,7 @@ export default function CategoriesForm(props) {
             ...activeCategory,
             subcategories: [
               ...activeCategory.subcategories,
-              fields.subcategory,
+              { id: uuid.v1(), name: fields.subcategory },
             ],
           },
         })

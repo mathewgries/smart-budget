@@ -1,8 +1,16 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { dateToString } from "../../../helpers/dateFormat";
+import { selectCategoryById } from "../../../redux/spending/categoriesSlice";
 
 export default function SpendingTransactionCard(props) {
   const { transaction } = props;
+  const category = useSelector((state) =>
+    selectCategoryById(state, transaction.categoryId)
+  );
+  const subcategory = category.subcategories.find(
+    (subcategory) => subcategory.id === transaction.subcategoryId
+  );
 
   const displayAmount =
     transaction.transactionType === "W"
@@ -13,9 +21,9 @@ export default function SpendingTransactionCard(props) {
     <div className="spending-transaction-card-container">
       <section>
         <div>{displayAmount}</div>
-        {transaction.categoryName ? (
-          <div>{`${transaction.categoryName} ${
-            transaction.subcategory ? ":" + transaction.subcategory : ""
+        {transaction.categoryId ? (
+          <div>{`${category.categoryName}${
+            subcategory ? ": " + subcategory.name : ""
           }`}</div>
         ) : (
           "No category"

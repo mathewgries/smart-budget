@@ -1,7 +1,7 @@
 import * as uuid from "uuid";
-import { defaultSignals } from "../investing/signals/defaultSignals";
 import { defaultCategories } from "../spending/categories/defaultCategories";
 import { defaultStrategies } from "../investing/strategies/defaultStrategies";
+import { defaultSignals } from "../investing/signals/defaultSignals";
 
 export const buildUserDefaults = (table, user) => {
   let items = [];
@@ -42,6 +42,10 @@ export const buildUserDefaults = (table, user) => {
 
   for (const prop in defaultCategories) {
     const categoryId = uuid.v1();
+		const subcategories = defaultCategories[prop].map((subcategory) => ({
+			id: uuid.v1(),
+			name: subcategory
+		}))
     items.push({
       Put: {
         TableName: table,
@@ -51,7 +55,7 @@ export const buildUserDefaults = (table, user) => {
           id: categoryId,
           type: "CATEGORY#",
           categoryName: prop,
-          subcategories: defaultCategories[prop],
+          subcategories: subcategories,
           createDate: Date.now(),
           modifyDate: Date.now(),
         },

@@ -40,14 +40,12 @@ export const main = handler(async (event) => {
               SK: `TRANS#SPENDING#${transaction.id}`,
             },
             UpdateExpression: `SET 
-						categoryName = :categoryName, 
 						categoryId = :categoryId, 
-						subcategory = :subcategory, 
+						subcategoryId = :subcategoryId, 
 						modifyDate = :modifyDate`,
             ExpressionAttributeValues: {
-              ":categoryName": transaction.categoryName,
               ":categoryId": transaction.categoryId,
-              ":subcategory": transaction.subcategory,
+              ":subcategoryId": transaction.subcategoryId,
               ":modifyDate": Date.now(),
             },
           },
