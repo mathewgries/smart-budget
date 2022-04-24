@@ -48,6 +48,7 @@ export default function Strategies(props) {
   const [stagedStrategyToDelete, setStagedStrategyToDelete] = useState();
   const [selectedReplacementStrategy, setSelectedReplacementStrategy] =
     useState();
+  const [editStrategy, setEditStrategy] = useState(false);
 
   const [showAlertPopup, setShowAlertPopup] = useState(false);
   const [showDeleteSignalConfirm, setShowDeleteSignalConfirm] = useState(false);
@@ -57,7 +58,6 @@ export default function Strategies(props) {
   const [signalToUpdate, setSignalToUpdate] = useState();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [editStrategy, setEditStrategy] = useState(false);
   const orders = useSelector(selectAllSharesOrders)
     .concat(useSelector(selectAllOptionsOrders))
     .concat(useSelector(selectAllVerticalSpreadsOrders));
@@ -460,12 +460,15 @@ export default function Strategies(props) {
                     {signalToUpdate && signal.id === signalToUpdate ? (
                       <>
                         <div>
-                          <SignalEdit signalId={signalToUpdate} handleSignalToUpdate={handleSignalToUpdate}/>
+                          <SignalEdit
+                            signalId={signalToUpdate}
+                            handleSignalToUpdate={handleSignalToUpdate}
+                          />
                         </div>
                         <button
                           className="btn btn-primary form-group"
                           onClick={() => handleSignalToUpdate()}
-													disabled={isLoading}
+                          disabled={isLoading}
                         >
                           Cancel
                         </button>
@@ -481,14 +484,14 @@ export default function Strategies(props) {
                         <button
                           className="btn btn-primary"
                           onClick={() => handleSignalToUpdate(signal.id)}
-													disabled={isLoading}
+                          disabled={isLoading}
                         >
                           Edit
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => handleShowDeleteSignalConfirm(signal)}
-													disabled={isLoading}
+                          disabled={isLoading}
                         >
                           Delete
                         </button>

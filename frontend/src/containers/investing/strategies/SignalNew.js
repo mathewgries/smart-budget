@@ -86,6 +86,7 @@ export default function SignalNew(props) {
             type="text"
             onChange={(e) => setSignal(e.target.value)}
             disabled={isLoading}
+						data-lpignore="true"
             placeholder="Add new signal..."
           />
         </div>

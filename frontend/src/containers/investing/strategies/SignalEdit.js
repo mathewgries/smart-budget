@@ -93,6 +93,7 @@ export default function SignalEdit(props) {
             value={signal.name}
             type="text"
             onChange={(e) => setSignal({ ...signal, name: e.target.value })}
+						data-lpignore="true"
             disabled={isLoading}
           />
         </div>
