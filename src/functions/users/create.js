@@ -49,6 +49,10 @@ export const main = handler(async (event) => {
 
   for (const prop in defaultCategories) {
     const categoryId = uuid.v1();
+		const subcategories = defaultCategories[prop].map((subcategory) => ({
+			id: uuid.v1(),
+			name: subcategory
+		}))
     items.push({
       Put: {
         TableName: process.env.TABLE_NAME,
@@ -58,7 +62,7 @@ export const main = handler(async (event) => {
           id: categoryId,
           type: "CATEGORY#",
           categoryName: prop,
-          subcategories: defaultCategories[prop],
+          subcategories: subcategories,
           createDate: Date.now(),
           modifyDate: Date.now(),
         },

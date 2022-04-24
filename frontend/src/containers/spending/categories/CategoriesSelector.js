@@ -103,7 +103,7 @@ export default function CategoriesSelector(props) {
   }
 
   function handleSubcategoryToggle(subcategory) {
-    dispatch(activeSubcategoryUpdated(subcategory));
+    dispatch(activeSubcategoryUpdated(subcategory.id));
   }
 
   function handleShowSubcategoryConfirm(subcategory) {
@@ -124,10 +124,10 @@ export default function CategoriesSelector(props) {
     try {
       const transactions = setTransactionsOnSubcategoryDelete(
         getTransactionsByCategoryId(activeCategory.id),
-        subcategory
+        subcategory.id
       );
       const updatedSubList = activeCategory.subcategories.filter(
-        (subs) => subs !== subcategory
+        (subs) => subs.id !== subcategory.id
       );
       await dispatch(
         deleteSubcategory({
@@ -150,18 +150,17 @@ export default function CategoriesSelector(props) {
   function setTransactionsOnCategoryDelete(transactions) {
     return transactions.map((transaction) => ({
       ...transaction,
-      categoryName: "",
       categoryId: "",
-      subcategory: "",
+      subcategoryId: "",
     }));
   }
 
-  function setTransactionsOnSubcategoryDelete(transactions, subcategory) {
+  function setTransactionsOnSubcategoryDelete(transactions, subcategoryId) {
     return transactions
-      .filter((transaction) => transaction.subcategory === subcategory)
+      .filter((transaction) => transaction.subcategoryId === subcategoryId)
       .map((transaction) => ({
         ...transaction,
-        subcategory: "",
+        subcategoryId: "",
       }));
   }
 
@@ -240,7 +239,7 @@ export default function CategoriesSelector(props) {
                           className="btn btn-danger btn-sm"
                           onClick={() => handleShowCategoryConfirm(category)}
                         >
-                          Remove
+                          Delete
                         </button>
                       </div>
                     </div>
@@ -285,7 +284,7 @@ export default function CategoriesSelector(props) {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                {activeSubcategory}
+                {activeSubcategory.name}
               </button>
               <div
                 className="dropdown-menu"
@@ -293,12 +292,12 @@ export default function CategoriesSelector(props) {
               >
                 <div>
                   {subcategories.map((subcategory) => (
-                    <div key={subcategory} className="category-list-item">
+                    <div key={subcategory.id} className="category-list-item">
                       <div
                         className="dropdown-item"
                         onClick={() => handleSubcategoryToggle(subcategory)}
                       >
-                        <div>{subcategory}</div>
+                        <div>{subcategory.name}</div>
                       </div>
                       <div className="category-btn-container">
                         <div>
@@ -308,7 +307,7 @@ export default function CategoriesSelector(props) {
                               handleShowSubcategoryConfirm(subcategory)
                             }
                           >
-                            Remove
+                            Delete
                           </button>
                         </div>
                       </div>

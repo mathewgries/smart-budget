@@ -74,7 +74,10 @@ export const categoriesSlice = createSlice({
       state.activeSubcategory = subcategories[0];
     },
     activeSubcategoryUpdated(state, action) {
-      state.activeSubcategory = action.payload;
+      const id = action.payload;
+      state.activeSubcategory = state.activeCategory.subcategories.find(
+        (subcategory) => subcategory.id === id
+      );
     },
   },
   extraReducers(builder) {
