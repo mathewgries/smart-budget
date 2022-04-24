@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from "react";
-import * as uuid from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllSignals,
+  selectSignalById,
   updateSignals,
 } from "../../../redux/investing/signalsSlice";
 import AlertPopup from "../../popups/AlertPopup";
 import { SignalExistsAlertPopupMessage } from "./strategyPopupMessages";
 import { onError } from "../../../lib/errorLib";
 
-export default function SignalNew(props) {
+export default function SignalEdit(props) {
   const dispatch = useDispatch();
-  const signals = useSelector((state) => selectAllSignals(state));
+  const signals = useSelector(selectAllSignals);
   const strategiesStatus = useSelector((state) => state.strategies.status);
   const signalsStatus = useSelector((state) => state.signals.status);
   const [showAlertPopup, setShowAlertPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [signal, setSignal] = useState("");
+  const [signal, setSignal] = useState(
+    useSelector((state) => selectSignalById(state, props.signalId))
+  );
 
   useEffect(() => {
     function validateStatus() {
@@ -38,28 +40,34 @@ export default function SignalNew(props) {
     setShowAlertPopup(false);
   }
 
-  async function handleSaveSignal(e) {
+  async function handleUpdateSignal(e) {
     e.preventDefault();
     if (validateSignalName()) {
       setShowAlertPopup(true);
-      setSignal("");
       return;
     }
+
+    const newSignals = signals.map((item) =>
+      item.id === signal.id ? signal : item
+    );
+
     try {
+      props.handleSignalToUpdate();
       await dispatch(
         updateSignals({
-          signals: [...signals, { id: uuid.v1(), name: signal }],
+          signals: newSignals,
         })
       ).unwrap();
-      setSignal("");
     } catch (e) {
       onError(e);
     }
   }
 
   function validateSignalName() {
-		const signalNames = signals.map((signal) => signal.name.toLowerCase().replace(/\s/g, ""))
-    if (signalNames.includes(signal.toLowerCase().replace(/\s/g, ""))) {
+    const signalNames = signals.map((signal) =>
+      signal.name.toLowerCase().replace(/\s/g, "")
+    );
+    if (signalNames.includes(signal.name.toLowerCase().replace(/\s/g, ""))) {
       return true;
     } else {
       return false;
@@ -77,21 +85,20 @@ export default function SignalNew(props) {
           </section>
         )}
       </section>
-      <form onSubmit={handleSaveSignal} className="categories-form">
-        <div className="form-group categories-form">
+      <form onSubmit={handleUpdateSignal} className="categories-form">
+        <div className="form-group">
           <input
             className="form-control"
             name="signal"
-            value={signal}
+            value={signal.name}
             type="text"
-            onChange={(e) => setSignal(e.target.value)}
+            onChange={(e) => setSignal({ ...signal, name: e.target.value })}
             disabled={isLoading}
-            placeholder="Add new signal..."
           />
         </div>
         <div className="form-group">
           <button className="btn btn-primary" disabled={isLoading}>
-            Add
+            Save
           </button>
         </div>
       </form>
