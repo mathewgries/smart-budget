@@ -15,7 +15,7 @@ import SubcategoryEdit from "./SubcategoryEdit";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import DropDownLoader from "../../loadingContainers/DropDownLoader";
 import { onError } from "../../../lib/errorLib";
-import "./categories.css"
+import "./categories.css";
 
 const CategoryConfirmMessage = () => {
   return (
@@ -210,7 +210,7 @@ export default function CategoriesSelector(props) {
       <section>
         <div>
           <header>
-            <h5>Categories</h5>
+            <h4>Categories</h4>
           </header>
         </div>
       </section>
@@ -229,10 +229,7 @@ export default function CategoriesSelector(props) {
                 <CategoryEdit toggleCategoryEdit={toggleCategoryEdit} />
               </div>
               <div>
-                <button
-                  className="btn btn-primary"
-                  onClick={toggleCategoryEdit}
-                >
+                <button className="btn btn-delete" onClick={toggleCategoryEdit}>
                   Cancel
                 </button>
               </div>
@@ -255,7 +252,12 @@ export default function CategoriesSelector(props) {
                 </button>
                 <div>
                   <button
-                    className="btn btn-add-new"
+                    style={{
+                      borderTop: "none",
+                      borderRight: "none",
+                      borderBottom: "none",
+                    }}
+                    className="btn btn-edit category-edit-btn"
                     onClick={toggleCategoryEdit}
                   >
                     Edit
@@ -276,7 +278,7 @@ export default function CategoriesSelector(props) {
                       <div className="category-btn-container">
                         <div>
                           <button
-                            className="btn btn-danger btn-sm"
+                            className="btn btn-delete btn-sm"
                             onClick={() => handleShowCategoryConfirm(category)}
                           >
                             Delete
@@ -324,7 +326,7 @@ export default function CategoriesSelector(props) {
               </div>
               <div>
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-delete"
                   onClick={toggleSubcategoryEdit}
                 >
                   Cancel
@@ -349,7 +351,12 @@ export default function CategoriesSelector(props) {
                 </button>
                 <div>
                   <button
-                    className="btn btn-add-new"
+                    style={{
+                      borderTop: "none",
+                      borderRight: "none",
+                      borderBottom: "none",
+                    }}
+                    className="btn btn-edit category-edit-btn"
                     onClick={toggleSubcategoryEdit}
                   >
                     Edit
@@ -371,7 +378,7 @@ export default function CategoriesSelector(props) {
                         <div className="category-btn-container">
                           <div>
                             <button
-                              className="btn btn-danger btn-sm"
+                              className="btn btn-delete btn-sm"
                               onClick={() =>
                                 handleShowSubcategoryConfirm(subcategory)
                               }

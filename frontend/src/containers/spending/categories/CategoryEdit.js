@@ -63,7 +63,7 @@ export default function CategoryEdit(props) {
         </div>
         <div className="form-group">
           <button
-            className="btn btn-primary"
+            className="btn btn-add-new"
             onClick={handleUpdateCategory}
             disabled={isLoading}
           >

@@ -9,7 +9,7 @@ import {
 import AlertPopup from "../../popups/AlertPopup";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import { onError } from "../../../lib/errorLib";
-import "./categories.css"
+import "./categories.css";
 
 const AlertMessage = () => {
   return (
@@ -119,65 +119,61 @@ export default function CategoriesForm(props) {
           </section>
         )}
       </section>
-      <section>
-        <div>
-          <div className="categories-form">
-            <div className="form-group categories-form">
-              <input
-                className="form-control"
-                name="categoryName"
-                value={fields.categoryName}
-                onChange={handleOnChange}
-                placeholder="Add new category..."
-                disabled={isLoading}
-              />
-            </div>
-            <div className="form-group">
-              <button
-                className={`btn ${
-                  !validateCategoryForm() || isLoading
-                    ? "btn-secondary"
-                    : "btn-primary"
-                }`}
-                disabled={!validateCategoryForm() || isLoading}
-                onClick={handleAddNewCategory}
-              >
-                {isLoading ? <LoadingSpinner /> : "Add"}
-              </button>
+      <div className="categories-form-wrapper">
+        <section>
+          <div>
+            <div className="categories-form">
+              <div className="form-group categories-form">
+                <input
+                  className="form-control"
+                  name="categoryName"
+                  value={fields.categoryName}
+                  onChange={handleOnChange}
+                  placeholder="Add new category..."
+                  disabled={isLoading}
+                  data-lpignore="true"
+                />
+              </div>
+              <div className="form-group">
+                <button
+                  className="btn btn-add-new"
+                  disabled={!validateCategoryForm() || isLoading}
+                  onClick={handleAddNewCategory}
+                >
+                  {isLoading ? <LoadingSpinner /> : "Add"}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <div>
-          <div className="categories-form">
-            <div className="form-group categories-form">
-              <input
-                className="form-control"
-                name="subcategory"
-                value={fields.subcategory}
-                onChange={handleOnChange}
-                placeholder="Add new subcategory..."
-                disabled={isLoading}
-              />
-            </div>
-            <div className="form-group">
-              <button
-                className={`btn ${
-                  !validateSubcategoryForm() || isLoading
-                    ? "btn-secondary"
-                    : "btn-primary"
-                }`}
-                disabled={!validateSubcategoryForm() || isLoading}
-                onClick={handleAddNewSubcategory}
-              >
-                {isLoading ? <LoadingSpinner /> : "Add"}
-              </button>
+        <section>
+          <div>
+            <div className="categories-form">
+              <div className="form-group categories-form">
+                <input
+                  className="form-control"
+                  name="subcategory"
+                  value={fields.subcategory}
+                  onChange={handleOnChange}
+                  placeholder="Add new subcategory..."
+                  disabled={isLoading}
+                  data-lpignore="true"
+                />
+              </div>
+              <div className="form-group">
+                <button
+                  className="btn btn-add-new"
+                  disabled={!validateSubcategoryForm() || isLoading}
+                  onClick={handleAddNewSubcategory}
+                >
+                  {isLoading ? <LoadingSpinner /> : "Add"}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   );
 }

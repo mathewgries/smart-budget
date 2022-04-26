@@ -137,7 +137,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .btn-edit {
   background-color: #e0fbfc;
-  border: 2px solid #e0fbfc;
+  border: 2px solid #3d5a80;
   color: #3d5a80;
 }
 

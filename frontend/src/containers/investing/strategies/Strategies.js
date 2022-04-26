@@ -319,7 +319,7 @@ export default function Strategies(props) {
                   </div>
                   <div>
                     <button
-                      className="btn btn-primary"
+                      className="btn btn-delete"
                       onClick={toggleStrategyEdit}
                     >
                       Cancel
@@ -344,7 +344,7 @@ export default function Strategies(props) {
                     </button>
                     <div>
                       <button
-                        className="btn btn-add-new"
+                        className="btn btn-edit strategy-edit-btn"
                         onClick={toggleStrategyEdit}
                       >
                         Edit
@@ -365,13 +365,13 @@ export default function Strategies(props) {
                           <div className="category-btn-container">
                             <div>
                               <button
-                                className="btn btn-danger btn-sm"
+                                className="btn btn-delete btn-sm"
                                 onClick={() =>
                                   handleShowStrategyConfirm(strategy)
                                 }
                                 disabled={isLoading}
                               >
-                                Remove
+                                Delete
                               </button>
                             </div>
                           </div>
@@ -420,7 +420,7 @@ export default function Strategies(props) {
                         <div className="category-btn-container">
                           <div>
                             <button
-                              className="btn btn-danger btn-sm"
+                              className="btn btn-delete btn-sm"
                               onClick={() =>
                                 handleShowRemoveSignalConfirm(signal.id)
                               }
@@ -467,7 +467,7 @@ export default function Strategies(props) {
                           />
                         </div>
                         <button
-                          className="btn btn-primary form-group"
+                          className="btn btn-delete form-group"
                           onClick={() => handleSignalToUpdate()}
                           disabled={isLoading}
                         >
@@ -483,14 +483,14 @@ export default function Strategies(props) {
                           {signal.name}
                         </div>
                         <button
-                          className="btn btn-add-new"
+                          className="btn btn-edit"
                           onClick={() => handleSignalToUpdate(signal.id)}
                           disabled={isLoading}
                         >
                           Edit
                         </button>
                         <button
-                          className="btn btn-danger"
+                          className="btn btn-delete"
                           onClick={() => handleShowDeleteSignalConfirm(signal)}
                           disabled={isLoading}
                         >

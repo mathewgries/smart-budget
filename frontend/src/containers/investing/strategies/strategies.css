@@ -50,3 +50,7 @@
   flex-flow: row nowrap;
   justify-content: space-between;
 }
+
+.strategy-edit-btn {
+  border-radius: 0;
+}
