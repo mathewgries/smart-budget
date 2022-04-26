@@ -1,33 +1,46 @@
-.home-list-section {
-  width: 100%;
-}
-
 .home-lander-wrapper {
   padding: 80px 0;
   text-align: center;
 }
 
+.home-list-wrapper {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
 .home-list-header-wrapper {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
+  gap: 15px;
+}
+
+.home-list-header {
+  padding: 7px 0;
 }
 
 @media (max-width: 600px) {
-  .home-account-list-section {
-    width: 100%;
+	.home-account-section {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .home-list-header-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
   }
 }
 
 @media (min-width: 601px) {
-  .home-account-list-section {
-    width: 60%;
+  .home-account-section {
+    width: 480px;
+    margin: 0 auto;
   }
+}
 
-	.home-list-header-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    gap: 5px;
-    margin-bottom: 5px;
+@media (min-width: 1000px) {
+  .home-account-section {
+    width: 800px;
+    margin: 0 auto;
   }
 }

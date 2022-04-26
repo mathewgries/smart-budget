@@ -7,6 +7,7 @@ import {
   selectActiveSubcategory,
 } from "../../../redux/spending/categoriesSlice";
 import { selectSpendingAccountById } from "../../../redux/spending/spendingAccountsSlice";
+import { Link } from "react-router-dom";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
@@ -14,7 +15,7 @@ import CategoriesSelector from "../categories/CategoriesSelector";
 import CategoriesForm from "../categories/CategoriesForm";
 import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "./spendingTransactions.css"
+import "./spendingTransactions.css";
 
 export default function SpendingTransactionNew(props) {
   const { id } = useParams();
@@ -111,22 +112,35 @@ export default function SpendingTransactionNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header>
-                <h5>Add Spending Transaction</h5>
+            <section className="spending-transaction-header-wrapper">
+              <header className="spending-transaction-header">
+                <Link to={`/spending/accounts/${id}`}>
+                  <h4>Add Spending Transaction</h4>
+                </Link>
               </header>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-add-new form-control"
-                  disabled={!validateForm() || isLoading || isSaving}
-                >
-                  {isLoading || isSaving ? (
-                    <LoadingSpinner text={"Saving"} />
-                  ) : (
-                    "Save"
-                  )}
-                </button>
+              <div className="spending-transaction-form-button-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new"
+                    disabled={!validateForm() || isLoading || isSaving}
+                  >
+                    {isLoading || isSaving ? (
+                      <LoadingSpinner text={"Saving"} />
+                    ) : (
+                      "Save"
+                    )}
+                  </button>
+                </div>
+                <div>
+                  <Link
+                    to={`/spending/accounts/${id}`}
+                    className="btn btn-delete"
+                    style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Cancel
+                  </Link>
+                </div>
               </div>
             </section>
 

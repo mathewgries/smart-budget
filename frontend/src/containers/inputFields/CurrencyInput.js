@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./inputFields.css"
 
 export default function CurrencyInput(props) {
   const { inputLabel, inputName, inputValue, inputChangeHandler, isDisabled } =

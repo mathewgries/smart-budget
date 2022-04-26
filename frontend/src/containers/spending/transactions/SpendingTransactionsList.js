@@ -8,8 +8,8 @@ export default function SpendingTransactionsList(props) {
   const { status, account, transactions } = props;
 
   return (
-    <div className="transaction-list-container">
-      <div className="page-list-wrapper">
+    <div className="spending-transaction-list-container">
+      <div>
         {transactions.length > 0 && status !== "pending" ? (
           transactions.map((transaction) => (
             <div key={transaction.id}>

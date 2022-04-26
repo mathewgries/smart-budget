@@ -11,7 +11,7 @@ export default function InvestingTransactionCard(props) {
       : transaction.transactionAmount;
 
   return (
-    <div className="spending-transaction-card-container">
+    <div className="investing-transaction-card-container">
       <section>
         <div>{displayAmount}</div>
       </section>

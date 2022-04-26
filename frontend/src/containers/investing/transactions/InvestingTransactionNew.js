@@ -3,11 +3,12 @@ import { useHistory, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewInvestingTransaction } from "../../../redux/investing/investingTransactionsSlice";
 import { selectInvestingAccountById } from "../../../redux/investing/investingAccountsSlice";
+import { Link } from "react-router-dom";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { addTransactionHandler } from "../../../helpers/currencyHandler";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import "./investingTransactions.css"
+import "./investingTransactions.css";
 
 export default function InvestingTransactionNew(props) {
   const { id } = useParams();
@@ -84,18 +85,30 @@ export default function InvestingTransactionNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header>
-                <h5>Add Investing Transaction</h5>
+            <section className="investing-transaction-header-wrapper">
+              <header className="investing-transaction-header">
+                <Link to={`/investing/accounts/${id}`}>
+                  <h4>Add Investing Transaction</h4>
+                </Link>
               </header>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-add-new form-control"
-                  disabled={!validateForm()}
-                >
-                  Save
-                </button>
+              <div className="investing-transaction-form-button-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new"
+                    disabled={!validateForm()}
+                  >
+                    Save
+                  </button>
+                </div>
+								<div>
+                  <Link
+                    to={`/investing/accounts/${id}`}
+                    className="btn btn-delete"
+                  >
+                    Cancel
+                  </Link>
+                </div>
               </div>
             </section>
 

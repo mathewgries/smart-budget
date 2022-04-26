@@ -46,7 +46,7 @@ export default function InvestingTransactionButtons(props) {
 
       <div>
         <button
-          className="btn btn-danger"
+          className="btn btn-delete"
           onClick={() => setShowConfirm(!showConfrim)}
           disabled={isLoading}
         >

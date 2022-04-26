@@ -5,9 +5,10 @@ import {
   selectSpendingAccountById,
   updateSpendingAccount,
 } from "../../../redux/spending/spendingAccountsSlice";
+import { Link } from "react-router-dom";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import "./spendingAccounts.css"
+import "./spendingAccounts.css";
 
 export default function SpendingAccountEdit(props) {
   const { id } = useParams();
@@ -59,17 +60,29 @@ export default function SpendingAccountEdit(props) {
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
             <section className="form-header">
-              <header>
-                <h5>Edit Spending Account</h5>
+              <header className="spending-account-header">
+                <Link to={`/spending/accounts/${id}`}>
+                  <h4>Edit Spending Account</h4>
+                </Link>
               </header>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-primary form-control"
-                  disabled={!validateForm()}
-                >
-                  Update
-                </button>
+              <div className="spending-account-form-button-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new"
+                    disabled={!validateForm()}
+                  >
+                    Save
+                  </button>
+                </div>
+                <div>
+                  <Link
+                    to={`/spending/accounts/${id}`}
+                    className="btn btn-delete"
+                  >
+                    Cancel
+                  </Link>
+                </div>
               </div>
             </section>
 

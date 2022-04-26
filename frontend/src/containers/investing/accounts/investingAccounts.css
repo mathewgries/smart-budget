@@ -1,4 +1,4 @@
-.account-card-container {
+.investing-account-card-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -10,15 +10,44 @@
   border-radius: 10px;
 }
 
-.account-card-container:active {
+.investing-account-card-container:active {
   background-color: #e0fbfc;
   color: #3d5a80;
   border: 2px solid #98c1d9;
 }
 
+.investing-account-header-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 15px;
+}
+
+.investing-account-header {
+  padding: 7px 0;
+}
+
+.investing-account-form-button-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
 @media (max-width: 600px) {
-  .account-card-container,
-  .accounts-list-section {
+	.investing-account-wrapper,
+  .investing-accounts-wrapper {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+	.investing-account-header-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
+
+  .investing-account-card-container,
+  .investing-accounts-list-wrapper {
     width: 100%;
   }
 
@@ -29,24 +58,28 @@
     gap: 5px;
     margin-bottom: 5px;
   }
-
-  .account-list-header-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    gap: 5px;
-    margin-bottom: 5px;
-  }
 }
 
 @media (min-width: 601px) {
-  .account-wrapper {
+  .investing-account-wrapper {
     display: flex;
-    flex-direction: row;
+    flex-flow: column nowrap;
     justify-content: flex-start;
   }
 
-  .account-card-container {
+	.investing-account-wrapper,
+  .investing-accounts-wrapper {
+    width: 480px;
+    margin: 0 auto;
+  }
+
+	.investing-account-detail {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
+
+  .investing-account-card-container {
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
@@ -56,14 +89,14 @@
     margin-right: 10px;
   }
 
-  .account-list-container {
+	.investing-account-card-balance {
+    text-align: right;
+  }
+
+  .investing-account-list-container {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
-  }
-
-  .accounts-list-section {
-    width: 60%;
   }
 
   .account-btn-wrapper {
@@ -71,7 +104,25 @@
     margin-bottom: 5px;
   }
 
-  .transaction-list-section {
+  .investing-transaction-list-section {
     width: 400px;
   }
+}
+
+@media (min-width: 1000px) {
+  .investing-account-wrapper,
+  .investing-accounts-wrapper {
+		width: 800px;
+    margin: 0 auto;
+  }
+
+  .investing-account-detail {
+    display: flex;
+    flex-flow: row nowrap;
+		justify-content: flex-start;
+  }
+
+	.investing-transaction-list-section{
+		width: 640px;
+	}
 }

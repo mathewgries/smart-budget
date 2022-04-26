@@ -12,7 +12,7 @@ import SpendingAccountCard from "./SpendingAccountCard";
 import SpendingTransactionsList from "../transactions/SpendingTransactionsList";
 import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
-import "./spendingAccounts.css"
+import "./spendingAccounts.css";
 
 const ConfirmMessage = () => {
   return (
@@ -85,70 +85,77 @@ export default function SpendingAccount() {
           )}
         </section>
 
-        <section>
-          <header>
-            <h3>Spending Account</h3>
-          </header>
-        </section>
-
-        <div className="account-wrapper">
-          <section>
-            <header>
-              <h6>Account</h6>
+        <div className="spending-account-wrapper">
+          <section className="spending-account-header-wrapper">
+            <header className="spending-account-header">
+              <Link to="/spending">
+                <h4>Spending Account</h4>
+              </Link>
             </header>
-
-            {isLoading ? (
-              <div>
-                <AccountCardLoader status={status} />
-              </div>
-            ) : (
-              <div>
-                <SpendingAccountCard account={account} />
-              </div>
-            )}
-
-            <div className="account-btn-section">
-              <div className="account-btn-wrapper">
-                <Link
-                  to={`/spending/transactions/new/${id}`}
-                  className="btn btn-success form-control"
-                >
-                  Add Transaction
-                </Link>
-              </div>
-
-              <div className="account-btn-wrapper">
-                <Link
-                  to={`/spending/accounts/edit/${id}`}
-                  className="btn btn-primary form-control"
-                >
-                  Edit Account
-                </Link>
-              </div>
-
-              <div className="account-btn-wrapper">
-                <button
-                  className="btn btn-danger form-control"
-                  onClick={() => setShowConfirm(!showConfrim)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
           </section>
 
-          <section className="transaction-list-section">
+          <section className="spending-account-detail">
             <div>
               <header>
-                <h6>Transactions</h6>
+                <h6>Account</h6>
               </header>
+
+              {isLoading ? (
+                <div>
+                  <AccountCardLoader status={status} />
+                </div>
+              ) : (
+                <div>
+                  <SpendingAccountCard account={account} />
+                </div>
+              )}
+
+              <div className="account-btn-section">
+                <div className="account-btn-wrapper">
+                  <Link
+                    to={`/spending/transactions/new/${id}`}
+                    className="btn btn-add-new form-control"
+                    style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Add Transaction
+                  </Link>
+                </div>
+
+                <div className="account-btn-wrapper">
+                  <Link
+                    to={`/spending/accounts/edit/${id}`}
+                    className="btn btn-edit form-control"
+                    style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Edit Account
+                  </Link>
+                </div>
+
+                <div className="account-btn-wrapper">
+                  <button
+                    className="btn btn-delete form-control"
+                    onClick={() => setShowConfirm(!showConfrim)}
+                    disabled={isLoading}
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </div>
             </div>
-            <div>
-              <SpendingTransactionsList
-                account={account}
-                transactions={transactions}
-                status={status}
-              />
+
+            <div className="spending-transaction-list-section">
+              <div>
+                <header>
+                  <h6>Transactions</h6>
+                </header>
+              </div>
+              <div>
+                <SpendingTransactionsList
+                  account={account}
+                  transactions={transactions}
+                  status={status}
+                />
+              </div>
             </div>
           </section>
         </div>

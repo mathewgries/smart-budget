@@ -30,7 +30,7 @@ export default function SeedData(props) {
     <div className="page-container">
       <div className="page-wrapper">
         <div>
-          <button className="btn btn-primary" onClick={runSeed}>
+          <button className="btn btn-add-new" onClick={runSeed}>
             {isLoading ? <LoadingSpinner /> : "Run Seed"}
           </button>
         </div>

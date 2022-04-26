@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addNewInvestingAccount } from "../../../redux/investing/investingAccountsSlice";
+import { Link } from "react-router-dom";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
-import "./investingAccounts.css"
+import "./investingAccounts.css";
 
 export default function InvestingAccountNew() {
   const history = useHistory();
@@ -53,17 +54,26 @@ export default function InvestingAccountNew() {
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
             <section className="form-header">
-              <header>
-                <h5>Add Investing Account</h5>
+              <header className="investing-account-header">
+                <Link to="/investing">
+                  <h4>Add Investing Account</h4>
+                </Link>
               </header>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-add-new form-control"
-                  disabled={!validateForm()}
-                >
-                  Save
-                </button>
+              <div className="investing-account-form-button-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new"
+                    disabled={!validateForm()}
+                  >
+                    Save
+                  </button>
+                </div>
+								<div>
+                  <Link to="/investing" className="btn btn-delete">
+                    Cancel
+                  </Link>
+                </div>
               </div>
             </section>
 

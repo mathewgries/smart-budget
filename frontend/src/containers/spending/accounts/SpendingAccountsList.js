@@ -8,7 +8,7 @@ export default function SpendingAccountsList(props) {
   const { status, accounts } = props;
 
   return (
-    <div className="account-list-container">
+    <div className="spending-account-list-container">
       {accounts.length > 0 && status !== "pending" ? (
         accounts.map((account) => (
           <div key={account.id} className="">

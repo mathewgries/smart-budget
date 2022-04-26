@@ -46,7 +46,7 @@ export default function SpendingTransactionButtons(props) {
 
       <div>
         <button
-          className="btn btn-danger"
+          className="btn btn-delete"
           onClick={() => setShowConfirm(!showConfrim)}
           disabled={isLoading}
         >

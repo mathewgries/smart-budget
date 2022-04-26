@@ -12,7 +12,8 @@ import { Link } from "react-router-dom";
 import InvestingTransactionCard from "./InvestingTransactionCard";
 import InvestingTransactionButtons from "./InvestingTransactionButtons";
 import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
-import "./investingTransactions.css"
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./investingTransactions.css";
 
 export default function InvestingTransaction(props) {
   const { id } = useParams();
@@ -72,15 +73,22 @@ export default function InvestingTransaction(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
-        <section>
-          <header>
-            <Link to={`/investing/accounts/${account.id}`}>
-              <h3>Investing Account</h3>
-            </Link>
-          </header>
-        </section>
+        <section className="investing-transaction-wrapper">
+          <div className="investing-transaction-header-wrapper">
+            <header className="investing-transaction-header">
+              <Link to={`/investing/accounts/${account.id}`}>
+                <h4>Investing Account</h4>
+              </Link>
+            </header>
+            <div>
+              <InvestingTransactionButtons
+                transactionId={transaction.id}
+                onDelete={onDelete}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
 
-        <section className="transaction-wrapper">
           <div>
             <header>
               <h6>Transaction Detail</h6>
@@ -95,21 +103,15 @@ export default function InvestingTransaction(props) {
             )}
           </div>
 
-          <div>
-            <InvestingTransactionButtons
-              transactionId={transaction.id}
-              onDelete={onDelete}
-              isLoading={isLoading}
-            />
-          </div>
-
           <div className="transaction-note-section">
             <div className="transaction-note-header">
               <header>
                 <h6>Note:</h6>
               </header>
             </div>
-            <div>{transaction.transactionNote}</div>
+            <div>
+              {isLoading ? <LoadingSpinner /> : transaction.transactionNote}
+            </div>
           </div>
         </section>
       </div>

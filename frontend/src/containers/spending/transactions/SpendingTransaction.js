@@ -13,7 +13,7 @@ import SpendingTransactionCard from "./SpendingTransactionCard";
 import SpendingTransactionButtons from "./SpendingTransactionButtons";
 import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "./spendingTransactions.css"
+import "./spendingTransactions.css";
 
 export default function SpendingTransaction(props) {
   const { id } = useParams();
@@ -73,15 +73,22 @@ export default function SpendingTransaction(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
-        <section>
-          <header>
-            <Link to={`/spending/accounts/${account.id}`}>
-              <h3>Spending Account</h3>
-            </Link>
-          </header>
-        </section>
+        <section className="spending-transaction-wrapper">
+          <div className="spending-transaction-header-wrapper">
+            <header className="spending-transaction-header">
+              <Link to={`/spending/accounts/${account.id}`}>
+                <h4>Spending Transaction</h4>
+              </Link>
+            </header>
+            <div>
+              <SpendingTransactionButtons
+                transactionId={transaction.id}
+                onDelete={onDelete}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
 
-        <section className="transaction-wrapper">
           <div>
             <header>
               <h6>Transaction Detail</h6>
@@ -94,14 +101,6 @@ export default function SpendingTransaction(props) {
             ) : (
               <SpendingTransactionCard transaction={transaction} />
             )}
-          </div>
-
-          <div>
-            <SpendingTransactionButtons
-              transactionId={transaction.id}
-              onDelete={onDelete}
-              isLoading={isLoading}
-            />
           </div>
 
           <div className="transaction-note-section">

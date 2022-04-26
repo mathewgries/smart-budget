@@ -15,7 +15,7 @@ import InvestingAccountCard from "./InvestingAccountCard";
 import InvestingTransactionsList from "../transactions/InvestingTransactionsList";
 import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
-import "./investingAccounts.css"
+import "./investingAccounts.css";
 
 const ConfirmMessage = () => {
   return (
@@ -104,79 +104,87 @@ export default function InvestingAccount() {
           )}
         </section>
 
-        <section>
-          <header>
-            <h3>Investing Account</h3>
-          </header>
-        </section>
-
-        <div className="account-wrapper">
-          <section>
-            <header>
-              <h6>Account</h6>
+        <div className="investing-account-wrapper">
+          <section className="investing-account-header-wrapper">
+            <header className="investing-account-header">
+              <Link to="/investing">
+                <h4>Investing Account</h4>
+              </Link>
             </header>
-
-            {isLoading ? (
-              <div>
-                <AccountCardLoader status={status} />
-              </div>
-            ) : (
-              <div>
-                <InvestingAccountCard account={account} />
-              </div>
-            )}
-
-            <div className="account-btn-section">
-              <div className="account-btn-wrapper">
-                <Link
-                  to={`/investing/journal/${id}`}
-                  className="btn btn-info form-control"
-                >
-                  Journal
-                </Link>
-              </div>
-
-              <div className="account-btn-wrapper">
-                <Link
-                  to={`/investing/transactions/new/${id}`}
-                  className="btn btn-success form-control"
-                >
-                  Add Transaction
-                </Link>
-              </div>
-
-              <div className="account-btn-wrapper">
-                <Link
-                  to={`/investing/accounts/edit/${id}`}
-                  className="btn btn-primary form-control"
-                >
-                  Edit Account
-                </Link>
-              </div>
-
-              <div className="account-btn-wrapper">
-                <button
-                  className="btn btn-danger form-control"
-                  onClick={() => setShowConfirm(!showConfrim)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
           </section>
 
-          <section className="transaction-list-section">
+          <section className="investing-account-detail">
             <div>
               <header>
-                <h6>Transactions</h6>
+                <h6>Account</h6>
               </header>
+
+              {isLoading ? (
+                <div>
+                  <AccountCardLoader status={status} />
+                </div>
+              ) : (
+                <div>
+                  <InvestingAccountCard account={account} />
+                </div>
+              )}
+
+              <div className="account-btn-section">
+                <div className="account-btn-wrapper">
+                  <Link
+                    to={`/investing/journal/${id}`}
+                    className="btn btn-info form-control"
+										style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Journal
+                  </Link>
+                </div>
+
+                <div className="account-btn-wrapper">
+                  <Link
+                    to={`/investing/transactions/new/${id}`}
+                    className="btn btn-add-new form-control"
+										style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Add Transaction
+                  </Link>
+                </div>
+
+                <div className="account-btn-wrapper">
+                  <Link
+                    to={`/investing/accounts/edit/${id}`}
+                    className="btn btn-edit form-control"
+										style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Edit Account
+                  </Link>
+                </div>
+
+                <div className="account-btn-wrapper">
+                  <button
+                    className="btn b btn-delete form-control"
+                    onClick={() => setShowConfirm(!showConfrim)}
+										disabled={isLoading}
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </div>
             </div>
-            <div>
-              <InvestingTransactionsList
-                account={account}
-                transactions={transactions}
-                status={status}
-              />
+
+            <div className="investing-transaction-list-section">
+              <div>
+                <header>
+                  <h6>Transactions</h6>
+                </header>
+              </div>
+              <div>
+                <InvestingTransactionsList
+                  account={account}
+                  transactions={transactions}
+                  status={status}
+                />
+              </div>
             </div>
           </section>
         </div>

@@ -33,7 +33,7 @@ export const investingAccount = (table, userId, strategies) => {
     },
   });
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 10; i++) {
     const transactionId = uuid.v1();
     const type = "TRANS#INVESTING#";
     const transAmmount = (Math.random() * 100).toFixed(2);
@@ -60,7 +60,7 @@ export const investingAccount = (table, userId, strategies) => {
     });
   }
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 5; i++) {
     const orderId = uuid.v1();
     const type = "ORDER#OPTIONS#";
     const contractType = Math.floor(Math.random() * 2) === 0 ? "CALL" : "PUT";
@@ -119,7 +119,7 @@ export const investingAccount = (table, userId, strategies) => {
     });
   }
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 5; i++) {
     const orderId = uuid.v1();
     const type = "ORDER#SHARES#";
     const tradeSide = Math.floor(Math.random() * 2) === 0 ? "LONG" : "SHORT";
@@ -161,7 +161,7 @@ export const investingAccount = (table, userId, strategies) => {
     });
   }
 
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 5; i++) {
     const orderId = uuid.v1();
     const type = "ORDER#VERTSPREADS#";
     const contractType = Math.floor(Math.random() * 2) === 0 ? "CALL" : "PUT";

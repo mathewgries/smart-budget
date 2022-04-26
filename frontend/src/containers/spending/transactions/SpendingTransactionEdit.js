@@ -12,6 +12,7 @@ import {
   selectActiveSubcategory,
 } from "../../../redux/spending/categoriesSlice";
 import { selectSpendingAccountByGSI } from "../../../redux/spending/spendingAccountsSlice";
+import { Link } from "react-router-dom";
 import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { updateTransactionHelper } from "../../../helpers/currencyHandler";
@@ -19,7 +20,7 @@ import CategoriesSelector from "../categories/CategoriesSelector";
 import CategoriesForm from "../categories/CategoriesForm";
 import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "./spendingTransactions.css"
+import "./spendingTransactions.css";
 
 export default function SpendingTransactionEdit(props) {
   const { id } = useParams();
@@ -130,17 +131,30 @@ export default function SpendingTransactionEdit(props) {
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
             <section className="form-header">
-              <header>
-                <h5>Edit Spending Transaction</h5>
+              <header className="spending-transaction-header">
+                <Link to={`/spending/transactions/${id}`}>
+                  <h4>Edit Spending Transaction</h4>
+                </Link>
               </header>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-add-new form-control"
-                  disabled={!validateForm() || isLoading}
-                >
-                  {isLoading ? <LoadingSpinner text={"Updating"} /> : "Update"}
-                </button>
+              <div className="spending-transaction-form-button-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new form-control"
+                    disabled={!validateForm() || isLoading}
+                  >
+                    {isLoading ? <LoadingSpinner text={"Loading"} /> : "Save"}
+                  </button>
+                </div>
+                <div>
+                  <Link
+                    to={`/spending/transactions/${id}`}
+                    className="btn btn-delete"
+                    style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Cancel
+                  </Link>
+                </div>
               </div>
             </section>
 

@@ -86,25 +86,25 @@ export default function Home() {
   function renderAccounts() {
     return (
       <div className="page-wrapper">
-        <section className="home-account-list-section">
-          <div>
+        <section className="home-account-section">
+          <div className="home-list-section">
             <div className="home-list-header-wrapper">
-              <header>
+              <header className="home-list-header">
                 <Link to="/spending">
-                  <h5>Spending Accounts</h5>
+                  <h4>Spending Accounts</h4>
                 </Link>
               </header>
               <div className="form-group">
                 <button
                   disabled={isLoading}
-									className="btn btn-add-new"
+                  className="btn btn-add-new"
                   onClick={() => handleRedirect("/spending/accounts/new")}
                 >
                   {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
                 </button>
               </div>
             </div>
-            <div className="home-list-section">
+            <div className="home-list-wrapper">
               <SpendingAccountsList
                 status={spendingAccountStatus}
                 accounts={spendingAccounts}
@@ -112,24 +112,24 @@ export default function Home() {
             </div>
           </div>
 
-          <div>
+          <div className="home-list-section">
             <div className="home-list-header-wrapper">
-              <header>
+              <header className="home-list-header">
                 <Link to="/investing">
-                  <h5>Investing Accounts</h5>
+                  <h4>Investing Accounts</h4>
                 </Link>
               </header>
               <div className="form-group">
                 <button
                   disabled={isLoading}
-									className="btn btn-add-new"
+                  className="btn btn-add-new"
                   onClick={() => handleRedirect("/investing/accounts/new")}
                 >
                   {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
                 </button>
               </div>
             </div>
-            <div className="home-list-section">
+            <div className="home-list-wrapper">
               <InvestingAccountsList
                 status={investingAccountStatus}
                 accounts={investingAccounts}

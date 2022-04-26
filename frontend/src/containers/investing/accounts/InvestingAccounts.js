@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAllInvestingAccounts } from "../../../redux/investing/investingAccountsSlice";
+import { Link } from "react-router-dom";
 import InvestingAccountsList from "./InvestingAccountsList";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "./investingAccounts.css"
+import "./investingAccounts.css";
 
 export default function InvestingAccounts(props) {
   const history = useHistory();
@@ -33,22 +34,26 @@ export default function InvestingAccounts(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
-        <div className="page-list-wrapper">
-          <div className="account-list-header-wrapper">
-            <header>
-              <h5>Investing Accounts</h5>
+        <div className="investing-accounts-wrapper">
+          <section className="investing-account-header-wrapper">
+            <header className="investing-account-header">
+              <Link to="/">
+                <h4>Investing Accounts</h4>
+              </Link>
             </header>
-            <button
-              disabled={isLoading}
-              className={`btn ${isLoading ? "btn-secondary" : "btn-primary"}`}
-              onClick={() => handleRedirect("/investing/accounts/new")}
-            >
-              {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
-            </button>
-          </div>
-          <div className="accounts-list-section">
+            <div className="form-group">
+              <button
+                disabled={isLoading}
+                className="btn btn-add-new"
+                onClick={() => handleRedirect("/investing/accounts/new")}
+              >
+                {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
+              </button>
+            </div>
+          </section>
+          <section className="investing-accounts-list-wrapper">
             <InvestingAccountsList status={status} accounts={accounts} />
-          </div>
+          </section>
         </div>
       </div>
     </div>

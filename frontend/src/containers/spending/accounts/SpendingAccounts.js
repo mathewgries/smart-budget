@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectAllSpendingAcounts } from "../../../redux/spending/spendingAccountsSlice";
+import { Link } from "react-router-dom";
 import SpendingAccountsList from "./SpendingAccountsList";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "./spendingAccounts.css"
+import "./spendingAccounts.css";
 
 export default function SpendingAccounts(props) {
   const history = useHistory();
@@ -33,24 +34,26 @@ export default function SpendingAccounts(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
-        <div className="page-list-wrapper">
-          <div className="account-list-header-wrapper">
-            <header className="">
-              <h5>Spending Accounts</h5>
+        <div className="spending-accounts-wrapper">
+          <section className="spending-account-header-wrapper">
+            <header className="spending-account-header">
+              <Link to="/">
+                <h4>Spending Accounts</h4>
+              </Link>
             </header>
             <div className="form-group">
               <button
                 disabled={isLoading}
-                className={`btn ${isLoading ? "btn-secondary" : "btn-primary"}`}
+                className="btn btn-add-new"
                 onClick={() => handleRedirect("/spending/accounts/new")}
               >
                 {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
               </button>
             </div>
-          </div>
-          <div className="accounts-list-section">
+          </section>
+          <section className="spending-accounts-list-wrapper">
             <SpendingAccountsList status={status} accounts={accounts} />
-          </div>
+          </section>
         </div>
       </div>
     </div>
