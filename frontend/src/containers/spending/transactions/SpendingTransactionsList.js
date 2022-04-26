@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import SpendingTransactionCard from "./SpendingTransactionCard";
 import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
+import "./spendingTransactions.css"
 
 export default function SpendingTransactionsList(props) {
   const { status, account, transactions } = props;
@@ -11,7 +12,7 @@ export default function SpendingTransactionsList(props) {
       <div className="page-list-wrapper">
         {transactions.length > 0 && status !== "pending" ? (
           transactions.map((transaction) => (
-            <div key={transaction.id} className="transaction-list-item-wrapper">
+            <div key={transaction.id}>
               <Link to={`/spending/transactions/${transaction.id}`}>
                 <SpendingTransactionCard transaction={transaction} />
               </Link>

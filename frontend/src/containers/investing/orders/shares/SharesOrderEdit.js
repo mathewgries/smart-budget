@@ -19,6 +19,7 @@ import {
 } from "../../../../helpers/currencyHandler";
 import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
+import "../orders.css"
 
 export default function SharesOrderEdit(props) {
   const { id } = useParams();
@@ -134,14 +135,14 @@ export default function SharesOrderEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>Edit Share Order</h5>
               </header>
               <div className="form-group">
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-add-new"
                   disabled={validateForm()}
                 >
                   Update
@@ -149,7 +150,7 @@ export default function SharesOrderEdit(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group-left">
                 <div className="form-group">
                   <label htmlFor="ticker">Ticker</label>
@@ -218,7 +219,7 @@ export default function SharesOrderEdit(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div className="order-form-greek-group-wrapper">
                   <div className="order-form-greek-header">

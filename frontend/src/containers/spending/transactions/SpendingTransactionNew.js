@@ -14,6 +14,7 @@ import CategoriesSelector from "../categories/CategoriesSelector";
 import CategoriesForm from "../categories/CategoriesForm";
 import CurrencyInput from "../../inputFields/CurrencyInput";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./spendingTransactions.css"
 
 export default function SpendingTransactionNew(props) {
   const { id } = useParams();
@@ -110,14 +111,14 @@ export default function SpendingTransactionNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>Add Spending Transaction</h5>
               </header>
               <div className="form-group">
                 <button
                   type="submit"
-                  className="btn btn-primary form-control"
+                  className="btn btn-add-new form-control"
                   disabled={!validateForm() || isLoading || isSaving}
                 >
                   {isLoading || isSaving ? (
@@ -129,7 +130,7 @@ export default function SpendingTransactionNew(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div>
                 <CurrencyInput
                   inputName={"transactionAmount"}

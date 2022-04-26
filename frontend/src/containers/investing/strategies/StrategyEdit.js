@@ -5,6 +5,7 @@ import {
   updateStrategy,
   selectActiveStrategy,
 } from "../../../redux/investing/strategiesSlice";
+import "./strategies.css"
 
 export default function StrategyEdit(props) {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ export default function StrategyEdit(props) {
           />
         </div>
         <div className="form-group">
-          <button className="btn btn-primary" disabled={isLoading}>
+          <button className="btn btn-add-new" disabled={isLoading}>
             Save
           </button>
         </div>

@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addNewInvestingAccount } from "../../../redux/investing/investingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
+import "./investingAccounts.css"
 
 export default function InvestingAccountNew() {
   const history = useHistory();
@@ -51,14 +52,14 @@ export default function InvestingAccountNew() {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>Add Investing Account</h5>
               </header>
               <div className="form-group">
                 <button
                   type="submit"
-                  className="btn btn-primary form-control"
+                  className="btn btn-add-new form-control"
                   disabled={!validateForm()}
                 >
                   Save
@@ -66,7 +67,7 @@ export default function InvestingAccountNew() {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="form-group">
                 <label>Account Name</label>
                 <input

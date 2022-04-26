@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./popups.css"
 
 export default function ReplaceStrategyPopup(props) {
   const { strategies, strategyToDelete, handleSelectedReplacementStrategy } =

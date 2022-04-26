@@ -7,6 +7,7 @@ import {
 } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
+import "./spendingAccounts.css"
 
 export default function SpendingAccountEdit(props) {
   const { id } = useParams();
@@ -57,7 +58,7 @@ export default function SpendingAccountEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>Edit Spending Account</h5>
               </header>
@@ -72,7 +73,7 @@ export default function SpendingAccountEdit(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="form-group">
                 <label>Account Name</label>
                 <input

@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import "../orders.css"
 
 export default function VerticalSpreadsTable(props) {
   const history = useHistory();

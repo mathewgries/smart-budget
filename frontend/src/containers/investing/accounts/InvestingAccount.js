@@ -15,6 +15,7 @@ import InvestingAccountCard from "./InvestingAccountCard";
 import InvestingTransactionsList from "../transactions/InvestingTransactionsList";
 import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
+import "./investingAccounts.css"
 
 const ConfirmMessage = () => {
   return (
@@ -110,7 +111,7 @@ export default function InvestingAccount() {
         </section>
 
         <div className="account-wrapper">
-          <section className="account-card-section">
+          <section>
             <header>
               <h6>Account</h6>
             </header>

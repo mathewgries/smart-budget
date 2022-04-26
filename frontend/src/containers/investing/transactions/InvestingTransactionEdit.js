@@ -10,6 +10,7 @@ import { onError } from "../../../lib/errorLib";
 import { inputDateFormat } from "../../../helpers/dateFormat";
 import { updateTransactionHelper } from "../../../helpers/currencyHandler";
 import CurrencyInput from "../../inputFields/CurrencyInput";
+import "./investingTransactions.css"
 
 export default function InvestingTransactionEdit(props) {
   const { id } = useParams();
@@ -92,14 +93,14 @@ export default function InvestingTransactionEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>Edit Investing Transaction</h5>
               </header>
               <div className="form-group">
                 <button
                   type="submit"
-                  className="btn btn-primary form-control"
+                  className="btn btn-add-new form-control"
                   disabled={!validateForm()}
                 >
                   Update
@@ -107,7 +108,7 @@ export default function InvestingTransactionEdit(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div>
                 <CurrencyInput
                   inputName={"transactionAmount"}

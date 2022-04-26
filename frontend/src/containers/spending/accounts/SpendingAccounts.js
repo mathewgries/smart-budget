@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { selectAllSpendingAcounts } from "../../../redux/spending/spendingAccountsSlice";
 import SpendingAccountsList from "./SpendingAccountsList";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./spendingAccounts.css"
 
 export default function SpendingAccounts(props) {
   const history = useHistory();
@@ -34,7 +35,7 @@ export default function SpendingAccounts(props) {
       <div className="page-wrapper">
         <div className="page-list-wrapper">
           <div className="account-list-header-wrapper">
-            <header className="spending-accounts-list-header">
+            <header className="">
               <h5>Spending Accounts</h5>
             </header>
             <div className="form-group">
@@ -47,7 +48,7 @@ export default function SpendingAccounts(props) {
               </button>
             </div>
           </div>
-          <div className="spending-accounts-list-section">
+          <div className="accounts-list-section">
             <SpendingAccountsList status={status} accounts={accounts} />
           </div>
         </div>

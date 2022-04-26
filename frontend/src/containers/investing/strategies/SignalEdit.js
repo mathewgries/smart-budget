@@ -8,6 +8,7 @@ import {
 import AlertPopup from "../../popups/AlertPopup";
 import { SignalExistsAlertPopupMessage } from "./strategyPopupMessages";
 import { onError } from "../../../lib/errorLib";
+import "./strategies.css"
 
 export default function SignalEdit(props) {
   const dispatch = useDispatch();
@@ -98,7 +99,7 @@ export default function SignalEdit(props) {
           />
         </div>
         <div className="form-group">
-          <button className="btn btn-primary" disabled={isLoading}>
+          <button className="btn btn-add-new" disabled={isLoading}>
             Save
           </button>
         </div>

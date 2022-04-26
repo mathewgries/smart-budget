@@ -15,6 +15,7 @@ import {
 } from "../../../../helpers/currencyHandler";
 import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
+import "../orders.css"
 
 export default function OptionsOrderNew(props) {
   const { id } = useParams();
@@ -134,14 +135,14 @@ export default function OptionsOrderNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>New Option Order</h5>
               </header>
               <div className="form-group">
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-add-new"
                   disabled={validateForm()}
                 >
                   Save
@@ -149,7 +150,7 @@ export default function OptionsOrderNew(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div className="form-group">
                   <label htmlFor="ticker">Ticker</label>
@@ -222,7 +223,7 @@ export default function OptionsOrderNew(props) {
               <StrategyListGroup />
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div>
                   <CurrencyInput
@@ -257,7 +258,7 @@ export default function OptionsOrderNew(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div className="form-group">
                   <label htmlFor="strikePrice">Strike Price</label>
@@ -336,7 +337,7 @@ export default function OptionsOrderNew(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div className="order-form-greek-group-wrapper">
                   <div className="order-form-greek-header">

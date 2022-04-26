@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addNewSpendingAccount } from "../../../redux/spending/spendingAccountsSlice";
 import { onError } from "../../../lib/errorLib";
 import CurrencyInput from "../../inputFields/CurrencyInput";
+import "./spendingAccounts.css"
 
 export default function SpendingAccountNew() {
   const history = useHistory();
@@ -51,7 +52,7 @@ export default function SpendingAccountNew() {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>Add Spending Account</h5>
               </header>
@@ -66,7 +67,7 @@ export default function SpendingAccountNew() {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="form-group">
                 <label>Account Name</label>
                 <input

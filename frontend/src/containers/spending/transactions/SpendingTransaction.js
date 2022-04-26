@@ -13,6 +13,7 @@ import SpendingTransactionCard from "./SpendingTransactionCard";
 import SpendingTransactionButtons from "./SpendingTransactionButtons";
 import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./spendingTransactions.css"
 
 export default function SpendingTransaction(props) {
   const { id } = useParams();
@@ -87,7 +88,7 @@ export default function SpendingTransaction(props) {
             </header>
           </div>
 
-          <div className="transaction-info-section">
+          <div>
             {isLoading ? (
               <TransactionCardLoader status={status} />
             ) : (
@@ -95,7 +96,7 @@ export default function SpendingTransaction(props) {
             )}
           </div>
 
-          <div className="transaction-btn-wrapper">
+          <div>
             <SpendingTransactionButtons
               transactionId={transaction.id}
               onDelete={onDelete}

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { selectAllInvestingAccounts } from "../../../redux/investing/investingAccountsSlice";
 import InvestingAccountsList from "./InvestingAccountsList";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./investingAccounts.css"
 
 export default function InvestingAccounts(props) {
   const history = useHistory();
@@ -34,7 +35,7 @@ export default function InvestingAccounts(props) {
       <div className="page-wrapper">
         <div className="page-list-wrapper">
           <div className="account-list-header-wrapper">
-            <header className="account-list-header">
+            <header>
               <h5>Investing Accounts</h5>
             </header>
             <button

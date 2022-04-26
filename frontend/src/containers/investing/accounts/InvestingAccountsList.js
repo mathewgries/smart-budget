@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import InvestingAccountCard from "./InvestingAccountCard";
 import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
+import "./investingAccounts.css"
 
 export default function InvestingAccountsList(props) {
   const { status, accounts } = props;
@@ -10,7 +11,7 @@ export default function InvestingAccountsList(props) {
     <div className="account-list-container">
       {accounts.length > 0 && status !== "pending" ? (
         accounts.map((account) => (
-          <div key={account.id} className="account-list-item-wrapper">
+          <div key={account.id}>
             <Link to={`/investing/accounts/${account.id}`}>
               <InvestingAccountCard account={account} />
             </Link>

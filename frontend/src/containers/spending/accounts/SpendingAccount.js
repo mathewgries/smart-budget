@@ -12,6 +12,7 @@ import SpendingAccountCard from "./SpendingAccountCard";
 import SpendingTransactionsList from "../transactions/SpendingTransactionsList";
 import AccountCardLoader from "../../loadingContainers/AccountCardLoader";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
+import "./spendingAccounts.css"
 
 const ConfirmMessage = () => {
   return (
@@ -91,7 +92,7 @@ export default function SpendingAccount() {
         </section>
 
         <div className="account-wrapper">
-          <section className="account-card-section">
+          <section>
             <header>
               <h6>Account</h6>
             </header>

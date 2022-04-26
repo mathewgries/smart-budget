@@ -1,5 +1,6 @@
 import React from "react";
 import { dateToString } from "../../../helpers/dateFormat";
+import "./investingTransactions.css"
 
 export default function InvestingTransactionCard(props) {
   const { transaction } = props;

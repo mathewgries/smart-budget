@@ -1,0 +1,95 @@
+caption {
+  caption-side: top;
+}
+
+.order-page-wrapper table {
+  text-align: center;
+}
+
+.order-type-accordian-title,
+.order-page-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.orders-btn-group {
+  display: flex;
+  flex-direction: row nowrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.order-form-section {
+  background-color: #3d5a80;
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+  margin-bottom: 10px;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.order-form-row-group,
+.order-form-greek-group {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.order-form-row-group-left {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.order-form-greek-header {
+  border-bottom: 1px solid lightgray;
+}
+
+.order-form-greek-header {
+  text-align: center;
+}
+
+.order-accordian-section {
+  margin-bottom: 10px;
+}
+
+.order-type-accordian-title,
+.order-type-accordian {
+  background-color: #3d5a80;
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+}
+
+.order-signal-list-item {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  color: #293241;
+}
+
+.order-type-accordian-title span {
+  color: #ee6c4d;
+}
+
+@media (max-width: 600px) {
+  .order-type-accordian-title,
+  .order-type-accordian,
+  .orders-table-container,
+  .orders-table-wrapper,
+  .orders-table {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .orders-table thead {
+    font-size: 2vw;
+  }
+
+  .orders-table {
+    text-align: center;
+    font-size: 2.5vw;
+  }
+}

@@ -4,6 +4,7 @@ import { onError } from "../../../lib/errorLib";
 import { saveStrategy } from "../../../redux/investing/strategiesSlice";
 import AlertPopup from "../../popups/AlertPopup";
 import { StrategyNameExistsAlertPopupMessage } from "./strategyPopupMessages";
+import "./strategies.css"
 
 export default function StrategyNew(props) {
   const { strategies } = props;
@@ -88,7 +89,7 @@ export default function StrategyNew(props) {
           />
         </div>
         <div className="form-group">
-          <button className="btn btn-primary" disabled={isLoading}>
+          <button className="btn btn-add-new" disabled={isLoading}>
             Add
           </button>
         </div>

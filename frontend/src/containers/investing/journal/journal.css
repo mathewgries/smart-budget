@@ -1,0 +1,58 @@
+.order-type-dropdown-content,
+.order-type-dropdown-content div,
+.order-type-dropdown-content a {
+  width: 100%;
+}
+
+.investing-journal-account-performance-wrapper {
+  margin-bottom: 10px;
+}
+
+.investing-journal-account-performance-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.order-accordian-section {
+  margin-bottom: 10px;
+}
+
+.order-type-accordian-title,
+.order-type-dropdown-content,
+.order-type-dropdown-content div,
+.order-type-accordian {
+  background-color: #3d5a80;
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+}
+
+.order-type-dropdown-content div:hover,
+.view-selection {
+  background-color: lightgray;
+}
+
+.order-type-dropdown-content a,
+.order-type-dropdown-content {
+  display: block;
+  padding: 5px;
+}
+
+@media (max-width: 600px) {
+	.order-type-accordian,
+  .order-type-accordian-title,
+  .journal-table-section {
+    width: 100%;
+  }
+	
+  .component-container {
+    height: 50px;
+  }
+
+  .component-wrapper {
+    border-radius: 5px;
+    height: 100%;
+    padding: 5px;
+    width: 31vw;
+  }
+}

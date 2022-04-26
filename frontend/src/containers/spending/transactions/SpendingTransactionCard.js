@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { dateToString } from "../../../helpers/dateFormat";
 import { selectCategoryById } from "../../../redux/spending/categoriesSlice";
+import "./spendingTransactions.css"
 
 export default function SpendingTransactionCard(props) {
   const { transaction } = props;

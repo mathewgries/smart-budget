@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import InvestingTransactionCard from "./InvestingTransactionCard";
 import InvestingTransactionButtons from "./InvestingTransactionButtons";
 import TransactionCardLoader from "../../loadingContainers/TransactionCardLoader";
+import "./investingTransactions.css"
 
 export default function InvestingTransaction(props) {
   const { id } = useParams();
@@ -86,7 +87,7 @@ export default function InvestingTransaction(props) {
             </header>
           </div>
 
-          <div className="transaction-info-section">
+          <div>
             {isLoading ? (
               <TransactionCardLoader status={status} />
             ) : (
@@ -94,7 +95,7 @@ export default function InvestingTransaction(props) {
             )}
           </div>
 
-          <div className="transaction-btn-wrapper">
+          <div>
             <InvestingTransactionButtons
               transactionId={transaction.id}
               onDelete={onDelete}

@@ -16,6 +16,7 @@ import { dateToString } from "../../../../helpers/dateFormat";
 import { onError } from "../../../../lib/errorLib";
 import { Link } from "react-router-dom";
 import ConfirmationPopup from "../../../popups/ConfirmationPopup";
+import "../orders.css"
 
 const ConfirmMessage = () => {
   return (
@@ -106,7 +107,7 @@ export default function OptionsOrder(props) {
               <div className="form-group">
                 <Link
                   to={`/investing/orders/options/edit/${id}`}
-                  className="btn btn-primary"
+                  className="btn btn-add-new"
                 >
                   Edit
                 </Link>
@@ -122,7 +123,7 @@ export default function OptionsOrder(props) {
             </div>
           </section>
 
-          <section className="option-order-ticker-section">
+          <section>
             <table className="table table-bordered table-sm">
               <thead className="thead-light">
                 <tr>
@@ -181,7 +182,7 @@ export default function OptionsOrder(props) {
             </section>
           )}
 
-          <section className="option-order-ticker-section">
+          <section>
             <table className="table table-bordered table-sm">
               <thead className="thead-light">
                 <tr>

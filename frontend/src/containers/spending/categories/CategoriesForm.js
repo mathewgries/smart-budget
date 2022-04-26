@@ -9,6 +9,7 @@ import {
 import AlertPopup from "../../popups/AlertPopup";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import { onError } from "../../../lib/errorLib";
+import "./categories.css"
 
 const AlertMessage = () => {
   return (

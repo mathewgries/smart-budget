@@ -1,0 +1,52 @@
+.categories-form {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 5px;
+}
+
+.categories-form-input {
+  flex-grow: 10;
+}
+
+.strategy-dropdown,
+.strategy-edit-wrapper,
+.order-type-accordian-title,
+.signal-list-item,
+.order-page-header,
+.category-list-item,
+.investing-journal-account-performance-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.categories-dropdown-section {
+  background-color: whitesmoke;
+}
+
+.categories-dropdown-section button {
+  width: 100%;
+  text-align: left;
+}
+
+.categories-dropdown-section .dropdown-menu {
+  width: 100%;
+}
+
+.category-btn-container {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2px;
+}
+
+.signal-list-item .signal {
+  flex-grow: 1;
+}
+
+.strategy-edit-form {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}

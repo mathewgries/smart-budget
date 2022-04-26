@@ -20,6 +20,7 @@ import GrowthRate from "./GrowthRate";
 import SharesOrdersTable from "../orders/shares/SharesOrdersTable";
 import OptionsOrdersTable from "../orders/options/OptionsOrderTable";
 import VerticalSpreadsTable from "../orders/spreads/VerticalSpreadsTable";
+import "./journal.css"
 
 export default function InvestingJournal(props) {
   const { id } = useParams();
@@ -101,7 +102,7 @@ export default function InvestingJournal(props) {
 
         <section className="order-accordian-section">
           <div className="order-type-accordian">
-            <div className="order-type-accordian-item">
+            <div>
               <div
                 className="order-type-accordian-title"
                 onClick={() => setOpenOrderSelect(!openOrderSelect)}
@@ -134,7 +135,7 @@ export default function InvestingJournal(props) {
 
         <section>
           <div className="order-type-accordian">
-            <div className="order-type-accordian-item">
+            <div>
               <div
                 className="order-type-accordian-title"
                 onClick={() => setOpenViewSelect(!openViewSelect)}

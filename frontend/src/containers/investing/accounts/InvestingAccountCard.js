@@ -1,4 +1,5 @@
 import React from "react";
+import "./investingAccounts.css"
 
 export default function InvestingAccountCard(props) {
   const { account } = props;

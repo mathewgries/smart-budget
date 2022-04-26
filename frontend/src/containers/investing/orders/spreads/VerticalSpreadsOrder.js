@@ -16,6 +16,7 @@ import { dateToString } from "../../../../helpers/dateFormat";
 import { onError } from "../../../../lib/errorLib";
 import { Link } from "react-router-dom";
 import ConfirmationPopup from "../../../popups/ConfirmationPopup";
+import "../orders.css"
 
 const ConfirmMessage = () => {
   return (
@@ -109,7 +110,7 @@ export default function VerticalSpreadsOrder(props) {
               <div className="form-group">
                 <Link
                   to={`/investing/orders/spreads/vertical/edit/${id}`}
-                  className="btn btn-primary"
+                  className="btn btn-add-new"
                 >
                   Edit
                 </Link>
@@ -125,7 +126,7 @@ export default function VerticalSpreadsOrder(props) {
             </div>
           </section>
 
-          <section className="option-order-ticker-section">
+          <section>
             <table className="table table-bordered table-sm">
               <thead className="thead-light">
                 <tr>
@@ -184,7 +185,7 @@ export default function VerticalSpreadsOrder(props) {
             </section>
           )}
 
-          <section className="option-order-ticker-section">
+          <section>
             <table className="table table-bordered table-sm">
               <thead className="thead-light">
                 <tr>

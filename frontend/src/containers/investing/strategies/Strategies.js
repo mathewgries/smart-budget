@@ -30,6 +30,7 @@ import {
   SignalRemoveConfirmMessage,
   SignalDeleteConfirmMessage,
 } from "./strategyPopupMessages";
+import "./strategies.css"
 
 export default function Strategies(props) {
   const dispatch = useDispatch();
@@ -316,7 +317,7 @@ export default function Strategies(props) {
                   <div>
                     <StrategyEdit toggleStrategyEdit={toggleStrategyEdit} />
                   </div>
-                  <div className="strategy-edit-cancel-btn">
+                  <div>
                     <button
                       className="btn btn-primary"
                       onClick={toggleStrategyEdit}
@@ -343,7 +344,7 @@ export default function Strategies(props) {
                     </button>
                     <div>
                       <button
-                        className="btn btn-primary"
+                        className="btn btn-add-new"
                         onClick={toggleStrategyEdit}
                       >
                         Edit
@@ -482,7 +483,7 @@ export default function Strategies(props) {
                           {signal.name}
                         </div>
                         <button
-                          className="btn btn-primary"
+                          className="btn btn-add-new"
                           onClick={() => handleSignalToUpdate(signal.id)}
                           disabled={isLoading}
                         >

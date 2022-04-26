@@ -6,6 +6,7 @@ import {
   activeStrategyUpdated,
   activeStrategyRemoved,
 } from "../../../redux/investing/strategiesSlice";
+import "./orders.css"
 
 function StrategyListItem(props) {
   const { strategy } = props;
@@ -38,7 +39,7 @@ function StrategyListItem(props) {
       <div>{strategy.strategyName}</div>
       <div>
         <div
-          className={`btn ${isActive ? "btn-danger" : "btn-success"}`}
+          className={`btn ${isActive ? "btn-danger" : "btn-add-new"}`}
           onClick={handleActiveToggle}
         >
           {isActive ? "Remove" : "Add"}

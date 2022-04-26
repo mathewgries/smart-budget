@@ -10,7 +10,7 @@ import SpendingAccountsList from "./spending/accounts/SpendingAccountsList";
 import InvestingAccountsList from "./investing/accounts/InvestingAccountsList";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { onError } from "../lib/errorLib";
-import "./style.css";
+import "./home.css";
 
 export default function Home() {
   const history = useHistory();
@@ -75,7 +75,7 @@ export default function Home() {
   function renderLander() {
     return (
       <div className="page-wrapper">
-        <div className="lander-wrapper">
+        <div className="home-lander-wrapper">
           <h1>Smart Budget</h1>
           <p className="text-muted">Control your money habits</p>
         </div>
@@ -87,9 +87,9 @@ export default function Home() {
     return (
       <div className="page-wrapper">
         <section className="home-account-list-section">
-          <div className="page-list-wrapper">
+          <div>
             <div className="home-list-header-wrapper">
-              <header className="home-list-header">
+              <header>
                 <Link to="/spending">
                   <h5>Spending Accounts</h5>
                 </Link>
@@ -97,9 +97,7 @@ export default function Home() {
               <div className="form-group">
                 <button
                   disabled={isLoading}
-                  className={`btn ${
-                    isLoading ? "btn-secondary" : "btn-primary"
-                  }`}
+									className="btn btn-add-new"
                   onClick={() => handleRedirect("/spending/accounts/new")}
                 >
                   {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}
@@ -114,9 +112,9 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="page-list-wrapper">
+          <div>
             <div className="home-list-header-wrapper">
-              <header className="home-list-header">
+              <header>
                 <Link to="/investing">
                   <h5>Investing Accounts</h5>
                 </Link>
@@ -124,9 +122,7 @@ export default function Home() {
               <div className="form-group">
                 <button
                   disabled={isLoading}
-                  className={`btn ${
-                    isLoading ? "btn-secondary" : "btn-primary"
-                  }`}
+									className="btn btn-add-new"
                   onClick={() => handleRedirect("/investing/accounts/new")}
                 >
                   {isLoading ? <LoadingSpinner text={"loading"} /> : "Add"}

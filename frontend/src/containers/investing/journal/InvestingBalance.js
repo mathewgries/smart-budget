@@ -1,5 +1,6 @@
 import React from "react";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./journal.css";
 
 export default function InvestingBalance(props) {
   const { accountBalance, isLoading } = props;
@@ -8,7 +9,7 @@ export default function InvestingBalance(props) {
     <div className="component-container">
       <div className="component-wrapper">
         {!isLoading ? (
-          <div className="investing-balance-wrapper">
+          <div>
             <div>Balance</div>
             <div>{accountBalance}</div>
           </div>

@@ -1,0 +1,51 @@
+.transaction-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.spending-transaction-card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.spending-transaction-card-container,
+.transaction-note-section,
+.transaction-card-btn-container {
+  margin-bottom: 10px;
+}
+
+.spending-transaction-card-container,
+.transaction-note-section {
+  background-color: #3d5a80;
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+}
+
+.spending-transaction-card-container,
+.transaction-note-section {
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.transaction-note-header h6 {
+  border-bottom: 1px solid lightgray;
+}
+
+.transaction-card-btn-container {
+  display: flex;
+  flex-direction: row nowrap;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.transaction-list-container {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .spending-transaction-card-container {
+    width: 100%;
+  }
+}

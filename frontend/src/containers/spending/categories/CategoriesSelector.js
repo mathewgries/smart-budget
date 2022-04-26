@@ -15,6 +15,7 @@ import SubcategoryEdit from "./SubcategoryEdit";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import DropDownLoader from "../../loadingContainers/DropDownLoader";
 import { onError } from "../../../lib/errorLib";
+import "./categories.css"
 
 const CategoryConfirmMessage = () => {
   return (
@@ -178,7 +179,7 @@ export default function CategoriesSelector(props) {
   }
 
   return (
-    <div className="categories-wrapper">
+    <div>
       <section>
         <div>
           {showCategoryConfrim && (
@@ -223,11 +224,11 @@ export default function CategoriesSelector(props) {
       {!isLoading && categories && categories[0] && (
         <section>
           {editCategory && (
-            <div className="strategy-edit-wrapper">
+            <div className="category-edit-wrapper">
               <div>
                 <CategoryEdit toggleCategoryEdit={toggleCategoryEdit} />
               </div>
-              <div className="strategy-edit-cancel-btn">
+              <div>
                 <button
                   className="btn btn-primary"
                   onClick={toggleCategoryEdit}
@@ -240,7 +241,7 @@ export default function CategoriesSelector(props) {
 
           {!editCategory && (
             <div className="categories-dropdown-section">
-              <div className="dropdown form-group strategy-dropdown">
+              <div className="dropdown form-group category-dropdown">
                 <button
                   className="btn dropdown-toggle"
                   type="input"
@@ -254,7 +255,7 @@ export default function CategoriesSelector(props) {
                 </button>
                 <div>
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-add-new"
                     onClick={toggleCategoryEdit}
                   >
                     Edit
@@ -315,13 +316,13 @@ export default function CategoriesSelector(props) {
       {!isLoading && categories && subcategories && subcategories.length > 0 && (
         <section>
           {editSubcategory && (
-            <div className="strategy-edit-wrapper">
+            <div className="category-edit-wrapper">
               <div>
                 <SubcategoryEdit
                   toggleSubcategoryEdit={toggleSubcategoryEdit}
                 />
               </div>
-              <div className="strategy-edit-cancel-btn">
+              <div>
                 <button
                   className="btn btn-primary"
                   onClick={toggleSubcategoryEdit}
@@ -334,7 +335,7 @@ export default function CategoriesSelector(props) {
 
           {!editSubcategory && (
             <div className="categories-dropdown-section">
-              <div className="dropdown form-group strategy-dropdown">
+              <div className="dropdown form-group category-dropdown">
                 <button
                   className="btn dropdown-toggle"
                   type="button"
@@ -348,7 +349,7 @@ export default function CategoriesSelector(props) {
                 </button>
                 <div>
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-add-new"
                     onClick={toggleSubcategoryEdit}
                   >
                     Edit

@@ -6,6 +6,7 @@ import {
   selectActiveCategory,
   selectActiveSubcategory,
 } from "../../../redux/spending/categoriesSlice";
+import "./categories.css"
 
 export default function SubcategoryEdit(props) {
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ export default function SubcategoryEdit(props) {
 
   return (
     <div>
-      <div className="strategy-edit-form">
+      <div className="category-edit-form">
         <div className="form-group">
           <input
             className="form-control"

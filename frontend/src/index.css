@@ -1,9 +1,10 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  background-color: #293241;
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -17,6 +18,15 @@ select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #e0fbfc;
 }
 
 a,
@@ -57,6 +67,85 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   width: 100%;
 }
 
+.form-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-header {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.form-section {
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #3d5a80;
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+}
+
+.btn-add-new {
+  background-color: #ee6c4d;
+  color: #e0fbfc;
+  border: 2px solid #e0fbfc;
+}
+
+.btn-add-new:active {
+  background-color: #e0fbfc;
+  color: #ee6c4d;
+  border: 2px solid #ee6c4d;
+}
+
+.confirmation-popup-section {
+  display: hidden;
+  position: fixed;
+  z-index: 1;
+  margin: 0 auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.confirmation-popup-wrapper {
+  position: relative;
+  z-index: 2;
+  top: 20%;
+  width: 80%;
+  height: 40%;
+  margin: 0 auto;
+}
+
+.confirmation-popup {
+  background-color: whitesmoke;
+  padding: 50px;
+  border-radius: 15px;
+  -webkit-box-shadow: 0 15px 15px -6px #777;
+  -moz-box-shadow: 0 15px 15px -6px #777;
+  box-shadow: 0 15px 15px -6px #777;
+}
+
+.confirm-popup-info-wrapper {
+  text-align: center;
+}
+
+.confirm-popup-btn-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+@media (max-width: 400px) {
+  .btn {
+    font-size: 3.25vw;
+    font-weight: bold;
+  }
+}
+
 @media (max-width: 600px) {
   .page-wrapper {
     width: 95%;
@@ -68,5 +157,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   .page-wrapper {
     width: 85%;
     margin: 0 auto;
+  }
+
+	.form-wrapper {
+    width: 400px;
   }
 }

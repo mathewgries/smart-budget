@@ -14,7 +14,6 @@ import { useAppContext } from "../../lib/contextLib";
 import { useFormFields } from "../../lib/hooksLib";
 import Form from "react-bootstrap/Form";
 import LoaderButton from "../../components/LoaderButton";
-import "./style.css";
 
 export default function Signup() {
   const dispatch = useDispatch();

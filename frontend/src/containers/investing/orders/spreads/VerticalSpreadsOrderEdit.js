@@ -19,6 +19,7 @@ import {
 } from "../../../../helpers/currencyHandler";
 import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
+import "../orders.css"
 
 export default function VerticalSpreadsOrderEdit(props) {
   const { id } = useParams();
@@ -155,14 +156,14 @@ export default function VerticalSpreadsOrderEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="order-form-header">
+            <section className="form-header">
               <header>
                 <h5>Edit Vertical Spread Order</h5>
               </header>
               <div className="form-group">
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-add-new"
                   disabled={validateForm()}
                 >
                   Update
@@ -170,7 +171,7 @@ export default function VerticalSpreadsOrderEdit(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div className="form-group">
                   <label htmlFor="ticker">Ticker</label>
@@ -206,7 +207,7 @@ export default function VerticalSpreadsOrderEdit(props) {
                 </div>
               </div>
               <div>
-                <span style={{ fontSize: "12px", color: "red" }}>
+                <span style={{ fontSize: "12px", color: "coral" }}>
                   {validateOpenAndCloseDates() &&
                     "Open must be less than or equal to close"}
                 </span>
@@ -243,7 +244,7 @@ export default function VerticalSpreadsOrderEdit(props) {
               <StrategyListGroup />
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div>
                   <CurrencyInput
@@ -278,7 +279,7 @@ export default function VerticalSpreadsOrderEdit(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div className="order-form-greek-group-wrapper">
                   <div className="order-form-greek-header">
@@ -376,7 +377,7 @@ export default function VerticalSpreadsOrderEdit(props) {
               </div>
             </section>
 
-            <section className="order-form-section">
+            <section className="form-section">
               <div className="order-form-row-group">
                 <div className="order-form-greek-group-wrapper">
                   <div className="order-form-greek-header">

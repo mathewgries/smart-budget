@@ -1,5 +1,6 @@
 import React from "react";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./journal.css"
 
 export default function GrowthRate(props) {
   const { growthRate, isLoading } = props;
@@ -8,7 +9,7 @@ export default function GrowthRate(props) {
     <div className="component-container">
       <div className="component-wrapper">
         {!isLoading ? (
-          <div className="growth-rate-wrapper">{growthRate}</div>
+          <div>{growthRate}</div>
         ) : (
           <div>
             <LoadingSpinner />

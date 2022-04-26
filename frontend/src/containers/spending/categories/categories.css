@@ -1,0 +1,50 @@
+.categories-form {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 5px;
+}
+
+.categories-form-input {
+  flex-grow: 10;
+}
+
+.category-edit-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.categories-dropdown-section {
+  background-color: whitesmoke;
+}
+
+.categories-dropdown-section button {
+  width: 100%;
+  text-align: left;
+}
+
+.categories-dropdown-section .dropdown-menu {
+  width: 100%;
+}
+
+
+.category-dropdown,
+.category-list-item {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.category-btn-container {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2px;
+}
+
+.category-edit-form {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import "./spendingAccounts.css"
 
 export default function SpendingAccountCard(props) {
   const { account } = props;

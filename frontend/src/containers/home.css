@@ -1,0 +1,33 @@
+.home-list-section {
+  width: 100%;
+}
+
+.home-lander-wrapper {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.home-list-header-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+  .home-account-list-section {
+    width: 100%;
+  }
+}
+
+@media (min-width: 601px) {
+  .home-account-list-section {
+    width: 60%;
+  }
+
+	.home-list-header-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+}

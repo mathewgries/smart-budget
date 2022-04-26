@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ConfirmationPopup from "../../popups/ConfirmationPopup";
 import LoadingSpinner from "../../../components/LoadingSpinner";
+import "./investingTransactions.css"
 
 const ConfirmMessage = () => {
   return (
@@ -35,7 +36,7 @@ export default function InvestingTransactionButtons(props) {
     <div className="transaction-card-btn-container">
       <div>
         <button
-          className="btn btn-primary"
+          className="btn btn-add-new"
           onClick={handleRedirect}
           disabled={isLoading}
         >

@@ -6,7 +6,6 @@ import { useFormFields } from "../../lib/hooksLib";
 import { onError } from "../../lib/errorLib";
 import Form from "react-bootstrap/Form";
 import LoaderButton from "../../components/LoaderButton";
-import "./style.css";
 
 export default function Login() {
   const history = useHistory();

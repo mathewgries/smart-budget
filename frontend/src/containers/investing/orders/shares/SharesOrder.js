@@ -16,6 +16,7 @@ import { dateToString } from "../../../../helpers/dateFormat";
 import { onError } from "../../../../lib/errorLib";
 import { Link } from "react-router-dom";
 import ConfirmationPopup from "../../../popups/ConfirmationPopup";
+import "../orders.css"
 
 const ConfirmMessage = () => {
   return (
@@ -106,7 +107,7 @@ export default function SharesOrder(props) {
               <div className="form-group">
                 <Link
                   to={`/investing/orders/shares/edit/${id}`}
-                  className="btn btn-primary"
+                  className="btn btn-add-new"
                 >
                   Edit
                 </Link>
@@ -177,7 +178,7 @@ export default function SharesOrder(props) {
             </section>
           )}
 
-          <section className="option-order-contract-section">
+          <section>
             <table className="table table-bordered table-sm">
               <thead className="thead-light">
                 <tr>
