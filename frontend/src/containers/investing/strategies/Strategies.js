@@ -329,7 +329,7 @@ export default function Strategies(props) {
               )}
 
               {!editStrategy && (
-                <div className="categories-dropdown-section">
+                <div className="strategy-dropdown-section">
                   <div className="dropdown form-group strategy-dropdown">
                     <button
                       className="btn dropdown-toggle"
@@ -355,14 +355,14 @@ export default function Strategies(props) {
                       aria-labelledby="dropdownMenuButton"
                     >
                       {strategies.map((strategy) => (
-                        <div key={strategy.id} className="category-list-item">
+                        <div key={strategy.id} className="strategy-list-item">
                           <div
                             className="dropdown-item"
                             onClick={() => handleStrategyToggle(strategy)}
                           >
                             <div>{strategy.strategyName}</div>
                           </div>
-                          <div className="category-btn-container">
+                          <div className="strategy-btn-container">
                             <div>
                               <button
                                 className="btn btn-delete btn-sm"
@@ -395,7 +395,7 @@ export default function Strategies(props) {
 
           {!isLoading && strategies[0] && activeSignals[0] && (
             <section>
-              <div className="categories-dropdown-section">
+              <div className="strategy-dropdown-section">
                 <div className="dropdown form-group">
                   <button
                     className="btn dropdown-toggle"
@@ -413,11 +413,11 @@ export default function Strategies(props) {
                     aria-labelledby="dropdownMenuButton"
                   >
                     {activeSignals.map((signal) => (
-                      <div key={signal.id} className="category-list-item">
+                      <div key={signal.id} className="signal-list-item">
                         <div className="dropdown-item">
                           <div>{signal.name}</div>
                         </div>
-                        <div className="category-btn-container">
+                        <div className="strategy-btn-container">
                           <div>
                             <button
                               className="btn btn-delete btn-sm"

@@ -78,8 +78,8 @@ export default function SignalNew(props) {
           </section>
         )}
       </section>
-      <form onSubmit={handleSaveSignal} className="categories-form">
-        <div className="form-group categories-form">
+      <form onSubmit={handleSaveSignal} className="strategy-form">
+        <div className="form-group strategy-form">
           <input
             className="form-control"
             name="signal"

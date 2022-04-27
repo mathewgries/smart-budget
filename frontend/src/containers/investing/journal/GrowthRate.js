@@ -1,21 +1,22 @@
 import React from "react";
 import LoadingSpinner from "../../../components/LoadingSpinner";
-import "./journal.css"
+import "./journal.css";
 
 export default function GrowthRate(props) {
-  const { growthRate, isLoading } = props;
+  const { sign, growthRate, isLoading } = props;
 
   return (
     <div className="component-container">
-      <div className="component-wrapper">
-        {!isLoading ? (
+      {!isLoading ? (
+        <div>
+          <div>{sign}</div>
           <div>{growthRate}</div>
-        ) : (
-          <div>
-            <LoadingSpinner />
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div>
+          <LoadingSpinner />
+        </div>
+      )}
     </div>
   );
 }

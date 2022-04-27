@@ -86,7 +86,7 @@ export default function SignalEdit(props) {
           </section>
         )}
       </section>
-      <form onSubmit={handleUpdateSignal} className="categories-form">
+      <form onSubmit={handleUpdateSignal} className="strategy-form">
         <div className="form-group">
           <input
             className="form-control"

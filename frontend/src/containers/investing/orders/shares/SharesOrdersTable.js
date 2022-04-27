@@ -31,11 +31,11 @@ export default function SharesOrdersTable(props) {
             {orders.map((order) => (
               <tr
                 key={order.id}
-                className={
-                  Number.parseFloat(order.profitLoss) > 0
-                    ? "table-success"
-                    : "table-danger"
-                }
+                // className={
+                //   Number.parseFloat(order.profitLoss) > 0
+                //     ? "table-success"
+                //     : "table-danger"
+                // }
                 onClick={() => handleOnClick(order.id)}
               >
                 <td>{order.ticker}</td>

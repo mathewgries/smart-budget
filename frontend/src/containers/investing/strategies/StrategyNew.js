@@ -75,8 +75,8 @@ export default function StrategyNew(props) {
           </section>
         )}
       </section>
-      <form onSubmit={handleSaveStrategy} className="categories-form">
-        <div className="form-group categories-form">
+      <form onSubmit={handleSaveStrategy} className="strategy-form">
+        <div className="form-group strategy-form">
           <input
             className="form-control"
             name="strategy"

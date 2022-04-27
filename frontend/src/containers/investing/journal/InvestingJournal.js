@@ -20,7 +20,7 @@ import GrowthRate from "./GrowthRate";
 import SharesOrdersTable from "../orders/shares/SharesOrdersTable";
 import OptionsOrdersTable from "../orders/options/OptionsOrderTable";
 import VerticalSpreadsTable from "../orders/spreads/VerticalSpreadsTable";
-import "./journal.css"
+import "./journal.css";
 
 export default function InvestingJournal(props) {
   const { id } = useParams();
@@ -79,6 +79,15 @@ export default function InvestingJournal(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
+        <section>
+          <div>
+            <header>
+              <Link to={`/investing/accounts/${id}`}>
+                <h5>Account: {account.accountName}</h5>
+              </Link>
+            </header>
+          </div>
+        </section>
         <section className="investing-journal-account-performance-wrapper">
           <div>
             <InvestingBalance
@@ -88,30 +97,32 @@ export default function InvestingJournal(props) {
           </div>
           <div>
             <GrowthRate
-              growthRate={`P/L$: ${handlePLCalculate().toFixed(2)}`}
+              sign={"P/L$:"}
+              growthRate={handlePLCalculate().toFixed(2)}
               isLoading={isLoading}
             />
           </div>
           <div>
             <GrowthRate
-              growthRate={`P/L%: ${handlePLPercent().toFixed(2)}`}
+              sign={"P/L%:"}
+              growthRate={handlePLPercent().toFixed(2)}
               isLoading={isLoading}
             />
           </div>
         </section>
 
-        <section className="order-accordian-section">
-          <div className="order-type-accordian">
+        <section className="journal-accordian-section">
+          <div className="journal-accordian">
             <div>
               <div
-                className="order-type-accordian-title"
+                className="journal-accordian-title"
                 onClick={() => setOpenOrderSelect(!openOrderSelect)}
               >
                 <div>New Order</div>
                 <div>{openOrderSelect ? "-" : "+"}</div>
               </div>
               {openOrderSelect && (
-                <div className="order-type-dropdown-content">
+                <div className="journal-accordian-dropdown-content">
                   <div>
                     <Link to={`/investing/orders/shares/new/${id}`}>
                       Shares
@@ -133,41 +144,41 @@ export default function InvestingJournal(props) {
           </div>
         </section>
 
-        <section>
-          <div className="order-type-accordian">
+        <section className="journal-accordian-section">
+          <div className="journal-accordian">
             <div>
               <div
-                className="order-type-accordian-title"
+                className="journal-accordian-title"
                 onClick={() => setOpenViewSelect(!openViewSelect)}
               >
                 <div>View Select</div>
                 <div>{openViewSelect ? "-" : "+"}</div>
               </div>
               {openViewSelect && (
-                <div className="order-type-dropdown-content">
+                <div className="journal-accordian-dropdown-content">
                   <div
-                    className="view-selection"
+                    className="journal-view-selection"
                     value="all"
                     onClick={handleSelectView}
                   >
                     View All
                   </div>
                   <div
-                    className="view-selection"
+                    className="journal-view-selection"
                     value="shares"
                     onClick={handleSelectView}
                   >
                     Shares
                   </div>
                   <div
-                    className="view-selection"
+                    className="journal-view-selection"
                     value="options"
                     onClick={handleSelectView}
                   >
                     Options
                   </div>
                   <div
-                    className="view-selection"
+                    className="journal-view-selection"
                     value="vertical"
                     onClick={handleSelectView}
                   >
@@ -199,7 +210,7 @@ export default function InvestingJournal(props) {
                     </div>
                   )}
                 </div>
-                <div>
+                {/* <div>
                   {options.length > 0 && (
                     <div>
                       {selectedView === "View All" ||
@@ -218,7 +229,7 @@ export default function InvestingJournal(props) {
                       ) : null}
                     </div>
                   )}
-                </div>
+                </div> */}
               </div>
             )}
           </section>

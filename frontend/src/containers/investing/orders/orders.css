@@ -1,6 +1,14 @@
 caption {
   caption-side: top;
+	color: #e0fbfc;
 }
+
+.orders-table-container {
+	text-align: center;
+	font-size:x-small;
+}
+
+/*
 
 .order-page-wrapper table {
   text-align: center;
@@ -92,4 +100,4 @@ caption {
     text-align: center;
     font-size: 2.5vw;
   }
-}
+} */

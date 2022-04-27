@@ -7,18 +7,16 @@ export default function InvestingBalance(props) {
 
   return (
     <div className="component-container">
-      <div className="component-wrapper">
-        {!isLoading ? (
-          <div>
-            <div>Balance</div>
-            <div>{accountBalance}</div>
-          </div>
-        ) : (
-          <div>
-            <LoadingSpinner text={"Loading"} />
-          </div>
-        )}
-      </div>
+      {!isLoading ? (
+        <div>
+          <div>Balance</div>
+          <div>{accountBalance}</div>
+        </div>
+      ) : (
+        <div>
+          <LoadingSpinner text={"Loading"} />
+        </div>
+      )}
     </div>
   );
 }
