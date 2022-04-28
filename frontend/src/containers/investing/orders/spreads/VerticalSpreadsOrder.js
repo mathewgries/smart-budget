@@ -16,7 +16,7 @@ import { dateToString } from "../../../../helpers/dateFormat";
 import { onError } from "../../../../lib/errorLib";
 import { Link } from "react-router-dom";
 import ConfirmationPopup from "../../../popups/ConfirmationPopup";
-import "../orders.css"
+import "../orders.css";
 
 const ConfirmMessage = () => {
   return (
@@ -88,7 +88,7 @@ export default function VerticalSpreadsOrder(props) {
 
   return (
     <div className="page-container">
-      <div className="page-wrapper form-wrapper">
+      <div className="page-wrapper">
         <div className="order-page-wrapper">
           <section>
             {showConfrim && (
@@ -102,11 +102,13 @@ export default function VerticalSpreadsOrder(props) {
               </section>
             )}
           </section>
-          <section className="order-page-header">
-            <header>
-              <h5>Vertical Spread Order</h5>
+          <section className="page-header-wrapper">
+            <header className="page-header">
+              <Link to={`/investing/journal/${account.id}`}>
+                <h4>Vertical Spread Order</h4>
+              </Link>
             </header>
-            <div className="orders-btn-group">
+            <div className="orders-button-wrapper">
               <div className="form-group">
                 <Link
                   to={`/investing/orders/spreads/vertical/edit/${id}`}
@@ -117,7 +119,7 @@ export default function VerticalSpreadsOrder(props) {
               </div>
               <div className="form-group">
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-delete"
                   onClick={() => setShowConfirm(!showConfrim)}
                 >
                   Delete
@@ -127,8 +129,8 @@ export default function VerticalSpreadsOrder(props) {
           </section>
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Ticker</th>
                   <th>Spread</th>
@@ -151,8 +153,8 @@ export default function VerticalSpreadsOrder(props) {
 
           {strategy && (
             <section>
-              <table className="table table-bordered table-sm">
-                <thead className="thead-light">
+              <table className="table orders-table">
+                <thead>
                   <tr>
                     <th>Strategy</th>
                   </tr>
@@ -168,8 +170,8 @@ export default function VerticalSpreadsOrder(props) {
 
           {strategy && signals.length > 0 && (
             <section>
-              <table className="table table-bordered table-sm">
-                <thead className="thead-light">
+              <table className="table orders-table">
+                <thead>
                   <tr>
                     <th>Signals</th>
                   </tr>
@@ -186,8 +188,8 @@ export default function VerticalSpreadsOrder(props) {
           )}
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Qty</th>
                   <th>Open Price</th>
@@ -215,8 +217,8 @@ export default function VerticalSpreadsOrder(props) {
           </section>
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>#</th>
                   <th>Date</th>
@@ -239,8 +241,8 @@ export default function VerticalSpreadsOrder(props) {
           </section>
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Name</th>
                   <th>Open</th>

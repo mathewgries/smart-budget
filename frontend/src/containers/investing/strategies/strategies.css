@@ -16,28 +16,20 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
-	background-color: whitesmoke;
+  background-color: #e0fbfc;
 }
 
 .strategy-dropdown-section {
-  background-color: whitesmoke;
+  background-color: #e0fbfc;
 }
 
-/* 
-#293241 - gunmetal (background)
-#EE6C4D - Burnt Sienna (Action items - buttons)
-#E0FBFC - Light Cyan (Text)
-#98C1D9 - Dark Sky Blue (Not sure yet)
-#3D5A80 - Bdazzled Blue (Containers and wrappers) 
-*/
-
 .strategy-dropdown-section button {
-	width: 100%;
+  width: 100%;
   text-align: left;
 }
 
 .strategy-dropdown-section .dropdown-menu {
-	background-color: whitesmoke;
+  background-color: #e0fbfc;
   width: 100%;
 }
 

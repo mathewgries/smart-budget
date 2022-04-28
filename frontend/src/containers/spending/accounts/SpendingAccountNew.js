@@ -53,8 +53,8 @@ export default function SpendingAccountNew() {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header className="spending-account-header">
+            <section className="page-header-wrapper">
+              <header className="page-header">
                 <Link to="/spending">
                   <h4>Add Spending Account</h4>
                 </Link>

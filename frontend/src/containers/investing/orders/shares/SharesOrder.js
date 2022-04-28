@@ -16,7 +16,7 @@ import { dateToString } from "../../../../helpers/dateFormat";
 import { onError } from "../../../../lib/errorLib";
 import { Link } from "react-router-dom";
 import ConfirmationPopup from "../../../popups/ConfirmationPopup";
-import "../orders.css"
+import "../orders.css";
 
 const ConfirmMessage = () => {
   return (
@@ -99,11 +99,13 @@ export default function SharesOrder(props) {
           )}
         </section>
         <div className="order-page-wrapper">
-          <section className="order-page-header">
-            <header>
-              <h5>Share Order</h5>
+          <section className="page-header-wrapper">
+            <header className="page-header">
+              <Link to={`/investing/journal/${account.id}`}>
+                <h4>Shares Order</h4>
+              </Link>
             </header>
-            <div className="orders-btn-group">
+            <div className="orders-button-wrapper">
               <div className="form-group">
                 <Link
                   to={`/investing/orders/shares/edit/${id}`}
@@ -114,7 +116,7 @@ export default function SharesOrder(props) {
               </div>
               <div className="form-group">
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-delete"
                   onClick={() => setShowConfirm(!showConfrim)}
                 >
                   Delete
@@ -124,8 +126,8 @@ export default function SharesOrder(props) {
           </section>
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Ticker</th>
                   <th>Open Date</th>
@@ -142,45 +144,9 @@ export default function SharesOrder(props) {
             </table>
           </section>
 
-          {strategy && (
-            <section>
-              <table className="table table-bordered table-sm">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Strategy</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{strategy.strategyName}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </section>
-          )}
-
-          {strategy && signals.length > 0 && (
-            <section>
-              <table className="table table-bordered table-sm">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Signals</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {signals.map((signal) => (
-                    <tr key={signal.id}>
-                      <td>{signal.name}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-          )}
-
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Qty</th>
                   <th>Side</th>
@@ -208,6 +174,42 @@ export default function SharesOrder(props) {
               </tbody>
             </table>
           </section>
+
+          {strategy && (
+            <section>
+              <table className="table orders-table">
+                <thead>
+                  <tr>
+                    <th>Strategy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{strategy.strategyName}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          )}
+
+          {strategy && signals.length > 0 && (
+            <section>
+              <table className="table orders-table">
+                <thead>
+                  <tr>
+                    <th>Signals</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {signals.map((signal) => (
+                    <tr key={signal.id}>
+                      <td>{signal.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
         </div>
       </div>
     </div>

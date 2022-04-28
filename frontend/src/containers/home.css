@@ -8,26 +8,10 @@
   margin-bottom: 20px;
 }
 
-.home-list-header-wrapper {
-  display: flex;
-  flex-flow: row nowrap;
-  gap: 15px;
-}
-
-.home-list-header {
-  padding: 7px 0;
-}
-
 @media (max-width: 600px) {
-	.home-account-section {
+  .home-account-section {
     max-width: 480px;
     margin: 0 auto;
-  }
-
-  .home-list-header-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
   }
 }
 

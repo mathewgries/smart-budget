@@ -53,8 +53,8 @@ export default function InvestingAccountNew() {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header className="investing-account-header">
+            <section className="page-header-wrapper">
+              <header className="page-header">
                 <Link to="/investing">
                   <h4>Add Investing Account</h4>
                 </Link>
@@ -69,7 +69,7 @@ export default function InvestingAccountNew() {
                     Save
                   </button>
                 </div>
-								<div>
+                <div>
                   <Link to="/investing" className="btn btn-delete">
                     Cancel
                   </Link>

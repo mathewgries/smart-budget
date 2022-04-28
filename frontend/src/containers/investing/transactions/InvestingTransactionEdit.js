@@ -94,8 +94,8 @@ export default function InvestingTransactionEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header className="investing-transaction-header">
+            <section className="page-header-wrapper">
+              <header className="page-header">
                 <Link to={`/investing/transactions/${id}`}>
                   <h4>Edit Investing Transaction</h4>
                 </Link>
@@ -110,7 +110,7 @@ export default function InvestingTransactionEdit(props) {
                     Save
                   </button>
                 </div>
-								<div>
+                <div>
                   <Link
                     to={`/investing/transactions/${id}`}
                     className="btn btn-delete"

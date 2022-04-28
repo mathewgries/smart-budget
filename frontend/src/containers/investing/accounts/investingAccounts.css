@@ -16,16 +16,6 @@
   border: 2px solid #98c1d9;
 }
 
-.investing-account-header-wrapper {
-  display: flex;
-  flex-flow: row nowrap;
-  gap: 15px;
-}
-
-.investing-account-header {
-  padding: 7px 0;
-}
-
 .investing-account-form-button-wrapper {
   display: flex;
   flex-flow: row nowrap;
@@ -34,16 +24,10 @@
 }
 
 @media (max-width: 600px) {
-	.investing-account-wrapper,
+  .investing-account-wrapper,
   .investing-accounts-wrapper {
     max-width: 480px;
     margin: 0 auto;
-  }
-
-	.investing-account-header-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
   }
 
   .investing-account-card-container,
@@ -51,12 +35,23 @@
     width: 100%;
   }
 
-  .account-btn-section {
+  .investing-account-btn-section {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     gap: 5px;
     margin-bottom: 5px;
+  }
+
+  .investing-account-btn-wrapper {
+    width: 48%;
+    margin-bottom: 5px;
+  }
+
+  .investing-account-btn-wrapper a,
+  .investing-account-btn-wrapper button {
+    font-size: small;
+    font-weight: bold;
   }
 }
 
@@ -67,13 +62,13 @@
     justify-content: flex-start;
   }
 
-	.investing-account-wrapper,
+  .investing-account-wrapper,
   .investing-accounts-wrapper {
     width: 480px;
     margin: 0 auto;
   }
 
-	.investing-account-detail {
+  .investing-account-detail {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
@@ -89,7 +84,7 @@
     margin-right: 10px;
   }
 
-	.investing-account-card-balance {
+  .investing-account-card-balance {
     text-align: right;
   }
 
@@ -99,7 +94,7 @@
     justify-content: flex-start;
   }
 
-  .account-btn-wrapper {
+  .investing-account-btn-wrapper {
     width: 150px;
     margin-bottom: 5px;
   }
@@ -112,17 +107,17 @@
 @media (min-width: 1000px) {
   .investing-account-wrapper,
   .investing-accounts-wrapper {
-		width: 800px;
+    width: 800px;
     margin: 0 auto;
   }
 
   .investing-account-detail {
     display: flex;
     flex-flow: row nowrap;
-		justify-content: flex-start;
+    justify-content: flex-start;
   }
 
-	.investing-transaction-list-section{
-		width: 640px;
-	}
+  .investing-transaction-list-section {
+    width: 640px;
+  }
 }

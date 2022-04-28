@@ -40,7 +40,7 @@ export const SignalRemoveConfirmMessage = () => {
       <p>You are about to remove a signal from the strategy!</p>
       <p>
         If this strategy is applied to orders already, then this is
-        <span style={{ color: "red" }}> NOT RECOMMENDED </span>
+        <span style={{ color: "#ee6c4d" }}> NOT RECOMMENDED </span>
       </p>
       <p>
         If you are trying a new set up, it is recommended to create a new
@@ -57,7 +57,7 @@ export const SignalDeleteConfirmMessage = () => {
       <p>You are about to delete a signal!</p>
       <p>
         If the signal is applied to strategies in use, this is
-        <span style={{ color: "red" }}> NOT RECOMMENDED </span>
+        <span style={{ color: "#ee6c4d" }}> NOT RECOMMENDED </span>
       </p>
       <p>
         If you are trying a new set up, it is recommended to create a new

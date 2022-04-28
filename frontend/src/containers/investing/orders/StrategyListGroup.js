@@ -39,7 +39,7 @@ function StrategyListItem(props) {
       <div>{strategy.strategyName}</div>
       <div>
         <div
-          className={`btn ${isActive ? "btn-danger" : "btn-add-new"}`}
+          className={`btn ${isActive ? "btn-delete" : "btn-add-new"}`}
           onClick={handleActiveToggle}
         >
           {isActive ? "Remove" : "Add"}
@@ -54,16 +54,16 @@ export default function StrategyListGroup(props) {
   const [openStrategies, setOpenStrategies] = useState(false);
 
   return (
-    <div className="order-accordian-section">
-      <div className="order-type-accordian">
-        <div className="order-type-accordian-item">
+    <div className="strategy-accordian-section">
+      <div className="strategy-accordian">
+        <div className="strategy-accordian-item">
           <div
-            className="order-type-accordian-title"
+            className="strategy-accordian-title"
             onClick={() => setOpenStrategies(!openStrategies)}
           >
             <div>
               <div>
-                Add Strategy <span>(optional)</span>
+                Strategy <span>(optional)</span>
               </div>
             </div>
             <div>{openStrategies ? "-" : "+"}</div>

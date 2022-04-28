@@ -11,6 +11,7 @@ import {
   activeStrategyRemoved,
   activeStrategyUpdated,
 } from "../../../../redux/investing/strategiesSlice";
+import { Link } from "react-router-dom";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
@@ -19,7 +20,7 @@ import {
 } from "../../../../helpers/currencyHandler";
 import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
-import "../orders.css"
+import "../orders.css";
 
 export default function SharesOrderEdit(props) {
   const { id } = useParams();
@@ -135,18 +136,30 @@ export default function SharesOrderEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header>
-                <h5>Edit Share Order</h5>
+            <section className="page-header-wrapper">
+              <header className="page-header">
+                <Link to={`/investing/orders/shares/${id}`}>
+                  <h4>Edit Shares Order</h4>
+                </Link>
               </header>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-add-new"
-                  disabled={validateForm()}
-                >
-                  Update
-                </button>
+              <div className="orders-button-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new"
+                    disabled={validateForm()}
+                  >
+                    Update
+                  </button>
+                </div>
+                <div>
+                  <Link
+                    to={`/investing/orders/shares/${id}`}
+                    className="btn btn-delete"
+                  >
+                    Cancel
+                  </Link>
+                </div>
               </div>
             </section>
 

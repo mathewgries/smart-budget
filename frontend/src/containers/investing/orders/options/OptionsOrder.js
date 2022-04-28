@@ -16,7 +16,7 @@ import { dateToString } from "../../../../helpers/dateFormat";
 import { onError } from "../../../../lib/errorLib";
 import { Link } from "react-router-dom";
 import ConfirmationPopup from "../../../popups/ConfirmationPopup";
-import "../orders.css"
+import "../orders.css";
 
 const ConfirmMessage = () => {
   return (
@@ -85,7 +85,7 @@ export default function OptionsOrder(props) {
 
   return (
     <div className="page-container">
-      <div className="page-wrapper form-wrapper">
+      <div className="page-wrapper">
         <section>
           {showConfrim && (
             <section className="confirmation-popup-section">
@@ -99,11 +99,13 @@ export default function OptionsOrder(props) {
           )}
         </section>
         <div className="order-page-wrapper">
-          <section className="order-page-header">
-            <header>
-              <h5>Option Order</h5>
+          <section className="page-header-wrapper">
+            <header className="page-header">
+              <Link to={`/investing/journal/${account.id}`}>
+                <h4>Option Order</h4>
+              </Link>
             </header>
-            <div className="orders-btn-group">
+            <div className="orders-button-wrapper">
               <div className="form-group">
                 <Link
                   to={`/investing/orders/options/edit/${id}`}
@@ -114,7 +116,7 @@ export default function OptionsOrder(props) {
               </div>
               <div className="form-group">
                 <button
-                  className="btn btn-danger"
+                  className="btn btn-delete"
                   onClick={() => setShowConfirm(!showConfrim)}
                 >
                   Delete
@@ -124,8 +126,8 @@ export default function OptionsOrder(props) {
           </section>
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Ticker</th>
                   <th>Strike</th>
@@ -146,45 +148,9 @@ export default function OptionsOrder(props) {
             </table>
           </section>
 
-          {strategy && (
-            <section>
-              <table className="table table-bordered table-sm">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Strategy</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{strategy.strategyName}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </section>
-          )}
-
-          {strategy && signals.length > 0 && (
-            <section>
-              <table className="table table-bordered table-sm">
-                <thead className="thead-light">
-                  <tr>
-                    <th>Signals</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {signals.map((signal) => (
-                    <tr key={signal.id}>
-                      <td>{signal.name}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
-          )}
-
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Qty</th>
                   <th>Open Price</th>
@@ -212,8 +178,8 @@ export default function OptionsOrder(props) {
           </section>
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>#</th>
                   <th>Date</th>
@@ -236,8 +202,8 @@ export default function OptionsOrder(props) {
           </section>
 
           <section>
-            <table className="table table-bordered table-sm">
-              <thead className="thead-light">
+            <table className="table orders-table">
+              <thead>
                 <tr>
                   <th>Name</th>
                   <th>Open</th>
@@ -273,6 +239,42 @@ export default function OptionsOrder(props) {
               </tbody>
             </table>
           </section>
+
+          {strategy && (
+            <section>
+              <table className="table orders-table">
+                <thead>
+                  <tr>
+                    <th>Strategy</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>{strategy.strategyName}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </section>
+          )}
+
+          {strategy && signals.length > 0 && (
+            <section>
+              <table className="table orders-table">
+                <thead>
+                  <tr>
+                    <th>Signals</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {signals.map((signal) => (
+                    <tr key={signal.id}>
+                      <td>{signal.name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
         </div>
       </div>
     </div>

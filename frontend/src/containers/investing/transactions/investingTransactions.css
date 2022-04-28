@@ -3,16 +3,6 @@
   margin: 0 auto;
 }
 
-.investing-transaction-header-wrapper {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-}
-
-.investing-transaction-header {
-  padding: 7px 0;
-}
-
 .investing-transaction-card-container {
   display: flex;
   flex-direction: row;

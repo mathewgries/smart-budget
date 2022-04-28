@@ -1,21 +1,25 @@
-.component-container {
-  color: #e0fbfc;
-  border: 2px solid #98c1d9;
-  border-radius: 5px;
-  height: 50px;
-  height: 100%;
-  padding: 5px;
-  width: 31vw;
-}
-
-.investing-journal-account-performance-wrapper {
-  margin-bottom: 10px;
+.journal-page-container {
+  width: 100%;
 }
 
 .investing-journal-account-performance-wrapper {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.component-container {
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.component-wrapper {
+  display: inline-block;
+  width: 32%;
 }
 
 .journal-accordian-section {
@@ -43,26 +47,45 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
+	font-weight: bold;
 }
 
 .journal-accordian-dropdown-content div:hover,
-.journal-accordian-dropdown-content a:hover  {
-	cursor: pointer;
-	background-color: #3d5a80;
+.journal-accordian-dropdown-content a:hover {
+  cursor: pointer;
+  background-color: #3d5a80;
   color: #e0fbfc;
+	font-weight: bold;
 }
 
 .journal-accordian-dropdown-content a,
 .journal-accordian-dropdown-content div,
 .journal-accordian-dropdown-content {
-	width: 100%;
+  width: 100%;
   display: block;
 }
 
+.journal-table-section {
+  width: 100%;
+}
+
 @media (max-width: 600px) {
-  /* .order-type-accordian,
-  .order-type-accordian-title,
-  .journal-table-section {
-    width: 100%;
-  } */
+	.journal-page-container  {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 601px) {
+  .journal-page-container {
+    width: 480px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-width: 1000px) {
+  .journal-page-container  {
+    width: 800px;
+    margin: 0 auto;
+  }
 }

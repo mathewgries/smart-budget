@@ -85,8 +85,8 @@ export default function InvestingTransactionNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="investing-transaction-header-wrapper">
-              <header className="investing-transaction-header">
+            <section className="page-header-wrapper">
+              <header className="page-header">
                 <Link to={`/investing/accounts/${id}`}>
                   <h4>Add Investing Transaction</h4>
                 </Link>
@@ -101,7 +101,7 @@ export default function InvestingTransactionNew(props) {
                     Save
                   </button>
                 </div>
-								<div>
+                <div>
                   <Link
                     to={`/investing/accounts/${id}`}
                     className="btn btn-delete"

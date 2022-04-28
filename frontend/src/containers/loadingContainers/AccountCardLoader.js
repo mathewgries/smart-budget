@@ -11,8 +11,8 @@ export default function AccountCardLoader(props) {
   }
 
   return (
-    <div className="account-card-container">
-      <div className="account-list-item-wrapper">
+    <div className="spending-account-card-container">
+      <div className="spending-account-list-item-wrapper">
         {status === "pending" ? (
           <LoadingSpinner />
         ) : (

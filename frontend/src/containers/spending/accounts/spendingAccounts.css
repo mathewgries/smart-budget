@@ -16,16 +16,6 @@
   border: 2px solid #98c1d9;
 }
 
-.spending-account-header-wrapper {
-  display: flex;
-  flex-flow: row nowrap;
-  gap: 15px;
-}
-
-.spending-account-header {
-  padding: 7px 0;
-}
-
 .spending-account-form-button-wrapper {
   display: flex;
   flex-flow: row nowrap;
@@ -40,24 +30,29 @@
     margin: 0 auto;
   }
 
-	.spending-account-header-wrapper {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-  }
-
   .spending-account-card-container,
   .spending-accounts-list-wrapper {
     width: 100%;
   }
 
-  .account-btn-section {
+	.spending-account-btn-section {
     display: flex;
     flex-flow: row wrap;
     justify-content: space-between;
     gap: 5px;
     margin-bottom: 5px;
   }
+
+	.spending-account-btn-wrapper {
+    width: 48%;
+    margin-bottom: 5px;
+  }
+
+	.spending-account-btn-wrapper a,
+	.spending-account-btn-wrapper button {
+		font-size: small;
+		font-weight: bold;
+	}
 }
 
 @media (min-width: 601px) {
@@ -99,7 +94,7 @@
     justify-content: flex-start;
   }
 
-  .account-btn-wrapper {
+  .spending-account-btn-wrapper {
     width: 150px;
     margin-bottom: 5px;
   }

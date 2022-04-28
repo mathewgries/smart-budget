@@ -10,7 +10,7 @@ export default function InvestingBalance(props) {
       {!isLoading ? (
         <div>
           <div>Balance</div>
-          <div>{accountBalance}</div>
+          <div>${accountBalance}</div>
         </div>
       ) : (
         <div>

@@ -86,8 +86,8 @@ export default function SpendingAccount() {
         </section>
 
         <div className="spending-account-wrapper">
-          <section className="spending-account-header-wrapper">
-            <header className="spending-account-header">
+          <section className="page-header-wrapper">
+            <header className="page-header">
               <Link to="/spending">
                 <h4>Spending Account</h4>
               </Link>
@@ -110,8 +110,8 @@ export default function SpendingAccount() {
                 </div>
               )}
 
-              <div className="account-btn-section">
-                <div className="account-btn-wrapper">
+              <div className="spending-account-btn-section">
+                <div className="spending-account-btn-wrapper">
                   <Link
                     to={`/spending/transactions/new/${id}`}
                     className="btn btn-add-new form-control"
@@ -121,7 +121,7 @@ export default function SpendingAccount() {
                   </Link>
                 </div>
 
-                <div className="account-btn-wrapper">
+                <div className="spending-account-btn-wrapper">
                   <Link
                     to={`/spending/accounts/edit/${id}`}
                     className="btn btn-edit form-control"
@@ -131,7 +131,7 @@ export default function SpendingAccount() {
                   </Link>
                 </div>
 
-                <div className="account-btn-wrapper">
+                <div className="spending-account-btn-wrapper">
                   <button
                     className="btn btn-delete form-control"
                     onClick={() => setShowConfirm(!showConfrim)}

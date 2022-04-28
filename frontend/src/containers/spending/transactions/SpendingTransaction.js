@@ -73,9 +73,9 @@ export default function SpendingTransaction(props) {
   return (
     <div className="page-container">
       <div className="page-wrapper">
-        <section className="spending-transaction-wrapper">
-          <div className="spending-transaction-header-wrapper">
-            <header className="spending-transaction-header">
+        <div className="spending-transaction-wrapper">
+          <section className="page-header-wrapper">
+            <header className="page-header">
               <Link to={`/spending/accounts/${account.id}`}>
                 <h4>Spending Transaction</h4>
               </Link>
@@ -87,23 +87,23 @@ export default function SpendingTransaction(props) {
                 isLoading={isLoading}
               />
             </div>
-          </div>
+          </section>
 
-          <div>
+          <section>
             <header>
               <h6>Transaction Detail</h6>
             </header>
-          </div>
+          </section>
 
-          <div>
+          <section>
             {isLoading ? (
               <TransactionCardLoader status={status} />
             ) : (
               <SpendingTransactionCard transaction={transaction} />
             )}
-          </div>
+          </section>
 
-          <div className="transaction-note-section">
+          <section className="transaction-note-section">
             <div className="transaction-note-header">
               <header>
                 <h6>Note:</h6>
@@ -112,8 +112,8 @@ export default function SpendingTransaction(props) {
             <div>
               {isLoading ? <LoadingSpinner /> : transaction.transactionNote}
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </div>
   );

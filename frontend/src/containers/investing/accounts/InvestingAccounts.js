@@ -35,8 +35,8 @@ export default function InvestingAccounts(props) {
     <div className="page-container">
       <div className="page-wrapper">
         <div className="investing-accounts-wrapper">
-          <section className="investing-account-header-wrapper">
-            <header className="investing-account-header">
+          <section className="page-header-wrapper">
+            <header className="page-header">
               <Link to="/">
                 <h4>Investing Accounts</h4>
               </Link>

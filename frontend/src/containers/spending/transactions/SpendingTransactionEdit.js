@@ -130,8 +130,8 @@ export default function SpendingTransactionEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header className="spending-transaction-header">
+            <section className="page-header-wrapper">
+              <header className="page-header">
                 <Link to={`/spending/transactions/${id}`}>
                   <h4>Edit Spending Transaction</h4>
                 </Link>

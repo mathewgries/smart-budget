@@ -7,6 +7,7 @@ import {
   selectActiveStrategy,
   activeStrategyRemoved,
 } from "../../../../redux/investing/strategiesSlice";
+import { Link } from "react-router-dom";
 import { onError } from "../../../../lib/errorLib";
 import { inputDateFormat } from "../../../../helpers/dateFormat";
 import {
@@ -15,7 +16,7 @@ import {
 } from "../../../../helpers/currencyHandler";
 import StrategyListGroup from "../StrategyListGroup";
 import CurrencyInput from "../../../inputFields/CurrencyInput";
-import "../orders.css"
+import "../orders.css";
 
 export default function OptionsOrderNew(props) {
   const { id } = useParams();
@@ -135,18 +136,30 @@ export default function OptionsOrderNew(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header>
-                <h5>New Option Order</h5>
+            <section className="page-header-wrapper">
+              <header className="page-header">
+                <Link to={`/investing/journal/${id}`}>
+                  <h4>New Options Order</h4>
+                </Link>
               </header>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn btn-add-new"
-                  disabled={validateForm()}
-                >
-                  Save
-                </button>
+              <div className="orders-button-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new"
+                    disabled={validateForm()}
+                  >
+                    Save
+                  </button>
+                </div>
+                <div>
+                  <Link
+                    to={`/investing/journal/${id}`}
+                    className="btn btn-delete"
+                  >
+                    Cancel
+                  </Link>
+                </div>
               </div>
             </section>
 
@@ -366,11 +379,11 @@ export default function OptionsOrderNew(props) {
               </div>
             </section>
 
-            <section className="order-accordian-section">
-              <div className="order-type-accordian">
-                <div className="order-type-accordian-item">
+            <section className="greeks-accordian-section">
+              <div className="greeks-accordian">
+                <div className="greeks-accordian-item">
                   <div
-                    className="order-type-accordian-title"
+                    className="greeks-accordian-title"
                     onClick={() => setOpenGreeks(!openGreeks)}
                   >
                     <div>

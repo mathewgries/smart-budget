@@ -60,8 +60,8 @@ export default function InvestingAccountsEdit(props) {
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>
-            <section className="form-header">
-              <header className="investing-account-header">
+            <section className="page-header-wrapper">
+              <header className="page-header">
                 <Link to={`/investing/accounts/${id}`}>
                   <h4>Edit Investing Account</h4>
                 </Link>

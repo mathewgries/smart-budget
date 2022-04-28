@@ -105,8 +105,8 @@ export default function InvestingAccount() {
         </section>
 
         <div className="investing-account-wrapper">
-          <section className="investing-account-header-wrapper">
-            <header className="investing-account-header">
+          <section className="page-header-wrapper">
+            <header className="page-header">
               <Link to="/investing">
                 <h4>Investing Account</h4>
               </Link>
@@ -129,42 +129,42 @@ export default function InvestingAccount() {
                 </div>
               )}
 
-              <div className="account-btn-section">
-                <div className="account-btn-wrapper">
+              <div className="investing-account-btn-section">
+                <div className="investing-account-btn-wrapper">
                   <Link
                     to={`/investing/journal/${id}`}
                     className="btn btn-info form-control"
-										style={isLoading ? { pointerEvents: "none" } : null}
+                    style={isLoading ? { pointerEvents: "none" } : null}
                   >
                     Journal
                   </Link>
                 </div>
 
-                <div className="account-btn-wrapper">
+                <div className="investing-account-btn-wrapper">
                   <Link
                     to={`/investing/transactions/new/${id}`}
                     className="btn btn-add-new form-control"
-										style={isLoading ? { pointerEvents: "none" } : null}
+                    style={isLoading ? { pointerEvents: "none" } : null}
                   >
                     Add Transaction
                   </Link>
                 </div>
 
-                <div className="account-btn-wrapper">
+                <div className="investing-account-btn-wrapper">
                   <Link
                     to={`/investing/accounts/edit/${id}`}
                     className="btn btn-edit form-control"
-										style={isLoading ? { pointerEvents: "none" } : null}
+                    style={isLoading ? { pointerEvents: "none" } : null}
                   >
                     Edit Account
                   </Link>
                 </div>
 
-                <div className="account-btn-wrapper">
+                <div className="investing-account-btn-wrapper">
                   <button
                     className="btn b btn-delete form-control"
                     onClick={() => setShowConfirm(!showConfrim)}
-										disabled={isLoading}
+                    disabled={isLoading}
                   >
                     Delete Account
                   </button>
