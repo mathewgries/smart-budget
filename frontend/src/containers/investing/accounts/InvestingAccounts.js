@@ -35,7 +35,7 @@ export default function InvestingAccounts(props) {
     <div className="page-container">
       <div className="page-wrapper">
         <div className="investing-accounts-wrapper">
-          <section className="page-header-wrapper">
+          <section className="page-header-wrapper  account-list-header">
             <header className="page-header">
               <Link to="/">
                 <h4>Investing Accounts</h4>

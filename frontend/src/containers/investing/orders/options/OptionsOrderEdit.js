@@ -163,7 +163,7 @@ export default function OptionsOrderEdit(props) {
                     className="btn btn-add-new"
                     disabled={validateForm()}
                   >
-                    Update
+                    Save
                   </button>
                 </div>
                 <div>

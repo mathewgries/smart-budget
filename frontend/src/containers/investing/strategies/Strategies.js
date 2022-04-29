@@ -79,6 +79,12 @@ export default function Strategies(props) {
     }
   }, [strategiesStatus, signalsStatus, isLoading]);
 
+	useEffect(() => {
+		if(!activeStrategy){
+			dispatch(activeStrategyUpdated(strategies[0].id))
+		}
+	}, [activeStrategy, strategies, dispatch])
+
   function toggleStrategyEdit() {
     setEditStrategy(!editStrategy);
   }

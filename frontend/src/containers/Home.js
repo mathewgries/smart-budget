@@ -88,7 +88,7 @@ export default function Home() {
       <div className="page-wrapper">
         <section className="home-account-section">
           <div className="home-list-section">
-            <div className="page-header-wrapper">
+            <div className="page-header-wrapper account-list-header">
               <header className="page-header">
                 <Link to="/spending">
                   <h4>Spending Accounts</h4>
@@ -113,7 +113,7 @@ export default function Home() {
           </div>
 
           <div className="home-list-section">
-            <div className="page-header-wrapper">
+            <div className="page-header-wrapper account-list-header">
               <header className="page-header">
                 <Link to="/investing">
                   <h4>Investing Accounts</h4>

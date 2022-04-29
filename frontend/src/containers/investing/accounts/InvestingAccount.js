@@ -133,7 +133,7 @@ export default function InvestingAccount() {
                 <div className="investing-account-btn-wrapper">
                   <Link
                     to={`/investing/journal/${id}`}
-                    className="btn btn-info form-control"
+                    className="btn btn-journal form-control"
                     style={isLoading ? { pointerEvents: "none" } : null}
                   >
                     Journal

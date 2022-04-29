@@ -16,7 +16,7 @@ export const spendingAccount = (table, userId, categories) => {
         id: accountId,
         type: accountType,
         accountName: "Checking Account",
-        accountBalance: "10,000",
+        accountBalance: "10000.00",
         createDate: Date.now(),
         modifyDate: Date.now(),
       },

@@ -56,13 +56,17 @@ export const strategiesSlice = createSlice({
   initialState,
   reducers: {
     activeStrategyUpdated(state, action) {
-      const strategy = state.entities[action.payload];
+			const id = action.payload
+			const strategy = Object.values(state.entities).find(
+				(strategy) => strategy.id === id
+			);
 
       state.activeStrategy = strategy;
       state.activeSignals = strategy.signals;
     },
     activeStrategyRemoved(state, action) {
-      state.activeStrategy = undefined;
+      state.activeStrategy = undefined
+			state.activeSignals = []
     },
   },
   extraReducers(builder) {

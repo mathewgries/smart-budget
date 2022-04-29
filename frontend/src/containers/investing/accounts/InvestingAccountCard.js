@@ -7,7 +7,7 @@ export default function InvestingAccountCard(props) {
   return (
     <div className="investing-account-card-container">
       <div>{account.accountName}</div>
-      <div>{account.accountBalance}</div>
+      <div>${account.accountBalance}</div>
     </div>
   );
 }

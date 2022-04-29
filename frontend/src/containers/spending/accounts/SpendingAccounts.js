@@ -35,7 +35,7 @@ export default function SpendingAccounts(props) {
     <div className="page-container">
       <div className="page-wrapper">
         <div className="spending-accounts-wrapper">
-          <section className="page-header-wrapper">
+          <section className="page-header-wrapper  account-list-header">
             <header className="page-header">
               <Link to="/">
                 <h4>Spending Accounts</h4>

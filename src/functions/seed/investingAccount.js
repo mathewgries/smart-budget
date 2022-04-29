@@ -26,7 +26,7 @@ export const investingAccount = (table, userId, strategies) => {
         id: accountId,
         type: accountType,
         accountName: "Cash Account",
-        accountBalance: "10,000",
+        accountBalance: "10000.00",
         createDate: Date.now(),
         modifyDate: Date.now(),
       },

@@ -1,5 +1,5 @@
 export function dollarsToCents(amount) {
-  return Number.parseFloat(amount) * 100;
+  return Number.parseFloat(amount.replace(",", "")) * 100;
 }
 
 export function addTransactionHandler(

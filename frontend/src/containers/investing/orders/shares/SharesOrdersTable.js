@@ -8,6 +8,7 @@ export default function SharesOrdersTable(props) {
   const { orders } = props;
   const history = useHistory();
   const strategies = useSelector(selectAllStrategies);
+  const sortedOrders = orders.sort((a, b) => b.openDate - a.openDate);
 
   const handleOnClick = (id) => {
     history.push(`/investing/orders/shares/${id}`);
@@ -27,7 +28,7 @@ export default function SharesOrdersTable(props) {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => {
+          {sortedOrders.map((order) => {
             const strategy = strategies.find(
               (strategy) => strategy.id === order.strategyId
             );

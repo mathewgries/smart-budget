@@ -8,9 +8,7 @@ import { deleteCategory, deleteSubcategory } from "./categoriesSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 import { fetchAllData } from "../users/usersSlice";
 
-const spendingTransactionsAdapter = createEntityAdapter({
-  sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
-});
+const spendingTransactionsAdapter = createEntityAdapter();
 
 const initialState = spendingTransactionsAdapter.getInitialState({
   status: "idle",
@@ -68,10 +66,10 @@ export const spendingTransactionsSlice = createSlice({
       })
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const trans = action.payload.filter(
+        const transactions = action.payload.filter(
           (item) => item.type === "TRANS#SPENDING#"
         );
-        spendingTransactionsAdapter.setAll(state, trans);
+        spendingTransactionsAdapter.setAll(state, transactions);
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";
@@ -82,7 +80,8 @@ export const spendingTransactionsSlice = createSlice({
       })
       .addCase(saveNewSpendingTransaction.fulfilled, (state, action) => {
         state.status = "succeeded";
-        spendingTransactionsAdapter.addOne(state, action.payload.transaction);
+        const { transaction } = action.payload;
+        spendingTransactionsAdapter.addOne(state, transaction);
       })
       .addCase(saveNewSpendingTransaction.rejected, (state, action) => {
         state.status = "failed";

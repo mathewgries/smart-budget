@@ -9,6 +9,8 @@ export default function OptionsOrdersTable(props) {
   const history = useHistory();
   const strategies = useSelector(selectAllStrategies);
 
+  const sortedOrders = orders.sort((a, b) => b.openDate - a.openDate);
+
   const handleOnClick = (id) => {
     history.push(`/investing/orders/options/${id}`);
   };
@@ -27,7 +29,7 @@ export default function OptionsOrdersTable(props) {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => {
+          {sortedOrders.map((order) => {
             const strategy = strategies.find(
               (strategy) => strategy.id === order.strategyId
             );

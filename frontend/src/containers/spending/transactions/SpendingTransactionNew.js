@@ -81,11 +81,12 @@ export default function SpendingTransactionNew(props) {
   };
 
   const getNewAccountBalance = () => {
-    return addTransactionHandler(
+		const result = addTransactionHandler(
       account.accountBalance,
       fields.transactionAmount,
       fields.transactionType.charAt(0)
     );
+		return result
   };
 
   const handleSaveNewTransaction = async (newAccountBalance) => {
