@@ -74,7 +74,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   flex-flow: row nowrap;
   justify-content: space-between;
 	align-items: center;
-	background-color: red;
 }
 
 .page-header {
