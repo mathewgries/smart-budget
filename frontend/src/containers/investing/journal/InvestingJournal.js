@@ -80,8 +80,8 @@ export default function InvestingJournal(props) {
     <div className="page-container">
       <div className="page-wrapper">
         <div className="journal-page-container">
-          <section className="journal-account-name">
-            <header>
+          <section className="page-header-wrapper journal-account-name">
+            <header className="page-header">
               <Link to={`/investing/accounts/${id}`}>
                 <h5>Account: {account.accountName}</h5>
               </Link>
@@ -196,7 +196,11 @@ export default function InvestingJournal(props) {
               options.length === 0 &&
               verticalSpreads.length === 0 ? (
                 <div>
-                  <p>Add your first order...</p>
+                  <p>
+                    <span style={{ color: "#ee6c4d" }}>
+                      Add your first order...
+                    </span>
+                  </p>
                 </div>
               ) : (
                 <div>

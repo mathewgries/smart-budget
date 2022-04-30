@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { amplifyClient } from "../../api/amplifyClient";
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../../lib/contextLib";
-import { useFormFields } from "../../lib/hooksLib";
+import { Link } from "react-router-dom";
 import { onError } from "../../lib/errorLib";
-import Form from "react-bootstrap/Form";
-import LoaderButton from "../../components/LoaderButton";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import "./auth.css";
 
 export default function Login() {
   const history = useHistory();
   const { userHasAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(false);
-  const [fields, handleFieldChange] = useFormFields({
+  const [fields, setFields] = useState({
     email: "",
     password: "",
   });
@@ -42,34 +42,60 @@ export default function Login() {
     <div className="page-container">
       <div className="page-wrapper">
         <div className="form-wrapper">
-          <Form onSubmit={handleSubmit}>
-            <Form.Group size="lg" controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                autoFocus
-                type="email"
-                value={fields.email}
-                onChange={handleFieldChange}
-              />
-            </Form.Group>
-            <Form.Group size="lg" controlId="password">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={fields.password}
-                onChange={handleFieldChange}
-              />
-            </Form.Group>
-            <LoaderButton
-              block
-              size="lg"
-              type="submit"
-              isLoading={isLoading}
-              disabled={!validateForm()}
-            >
-              Login
-            </LoaderButton>
-          </Form>
+          <form onSubmit={handleSubmit}>
+            <section className="page-header-wrapper">
+              <header className="page-header">
+                <h4>Login</h4>
+              </header>
+            </section>
+            <section className="form-section">
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  className="form-control"
+                  autoFocus
+                  type="email"
+                  name="email"
+                  value={fields.email}
+                  onChange={(e) =>
+                    setFields({ ...fields, [e.target.name]: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>Password</label>
+                <input
+                  className="form-control"
+                  type="password"
+                  name="password"
+                  value={fields.password}
+                  onChange={(e) =>
+                    setFields({ ...fields, [e.target.name]: e.target.value })
+                  }
+                />
+              </div>
+              <div className="auth-btn-wrapper">
+                <div className="form-group">
+                  <button
+                    className="btn btn-add-new"
+                    type="submit"
+                    disabled={!validateForm()}
+                  >
+                    {isLoading ? <LoadingSpinner /> : "Login"}
+                  </button>
+                </div>
+                <div className="form-group">
+                  <Link
+                    className="btn btn-edit"
+                    to={"/signup"}
+                    style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Signup
+                  </Link>
+                </div>
+              </div>
+            </section>
+          </form>
         </div>
       </div>
     </div>

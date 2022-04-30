@@ -55,7 +55,7 @@ export default function SpendingAccountEdit(props) {
   };
 
   return (
-    <div className="page-cointainer">
+    <div className="page-container">
       <div className="page-wrapper">
         <div className="form-wrapper">
           <form onSubmit={handleSubmit}>

@@ -11,13 +11,13 @@ import {
   addNewUser,
 } from "../../redux/users/usersSlice";
 import { useAppContext } from "../../lib/contextLib";
-import { useFormFields } from "../../lib/hooksLib";
-import Form from "react-bootstrap/Form";
-import LoaderButton from "../../components/LoaderButton";
+import { Link } from "react-router-dom";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import "./auth.css";
 
 export default function Signup() {
   const dispatch = useDispatch();
-  const [fields, handleFieldChange] = useFormFields({
+  const [fields, setFields] = useState({
     email: "",
     password: "",
     confirmPassword: "",
@@ -94,75 +94,132 @@ export default function Signup() {
 
   function renderConfirmationForm() {
     return (
-      <Form onSubmit={handleConfirmationSubmit}>
-        <Form.Group controlId="confirmationCode" size="lg">
-          <Form.Label>Confirmation Code</Form.Label>
-          <Form.Control
-            autoFocus
-            type="tel"
-            onChange={handleFieldChange}
-            value={fields.confirmationCode}
-          />
-          <Form.Text muted>Please check your email for the code.</Form.Text>
-        </Form.Group>
-        <LoaderButton
-          block
-          size="lg"
-          type="submit"
-          variant="success"
-          isLoading={isLoading}
-          disabled={!validateConfirmationForm()}
-        >
-          Verify
-        </LoaderButton>
-      </Form>
+      <div className="page-wrapper">
+        <div className="form-wrapper">
+          <form onSubmit={handleConfirmationSubmit}>
+            <section className="page-header-wrapper">
+              <header className="page-header">
+                <h4>Conirm Signup</h4>
+              </header>
+            </section>
+            <section className="form-section">
+              <div className="form-group">
+                <label>Confirmation Code</label>
+                <input
+                  className="form-control"
+                  autoFocus
+                  type="tel"
+                  name="confirmationCode"
+                  onChange={(e) =>
+                    setFields({ ...fields, [e.target.name]: e.target.value })
+                  }
+                  value={fields.confirmationCode}
+                  data-lpignore="true"
+                />
+                <span style={{ color: "#ee6c4d" }}>
+                  Please check your email for the code.
+                </span>
+              </div>
+              <div className="form-group">
+                <button
+                  type="submit"
+                  className="btn btn-add-new"
+                  disabled={!validateConfirmationForm()}
+                >
+                  {isLoading ? <LoadingSpinner /> : "Verify"}
+                </button>
+              </div>
+            </section>
+          </form>
+        </div>
+      </div>
     );
   }
 
   function renderForm() {
     return (
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="email" size="lg">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            autoFocus
-            type="email"
-            value={fields.email}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
-        <Form.Group controlId="password" size="lg">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            value={fields.password}
-            onChange={handleFieldChange}
-          />
-        </Form.Group>
-        <Form.Group controlId="confirmPassword" size="lg">
-          <Form.Label>Confirm Password</Form.Label>
-          <Form.Control
-            type="password"
-            onChange={handleFieldChange}
-            value={fields.confirmPassword}
-          />
-        </Form.Group>
-        <LoaderButton
-          block
-          size="lg"
-          type="submit"
-          variant="success"
-          isLoading={isLoading}
-          disabled={!validateForm()}
-        >
-          Signup
-        </LoaderButton>
-      </Form>
+      <div className="page-wrapper">
+        <div className="form-wrapper">
+          <form onSubmit={handleSubmit}>
+            <section className="page-header-wrapper">
+              <header className="page-header">
+                <h4>Signup</h4>
+              </header>
+            </section>
+
+            <section className="form-section">
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  className="form-control"
+                  autoFocus
+                  type="email"
+                  name="email"
+                  value={fields.email}
+                  onChange={(e) =>
+                    setFields({ ...fields, [e.target.name]: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>
+                  Password <br />
+                  <span style={{ color: "#ee6c4d" }}>
+                    (uppercase letters, lowercase letters, special characters,
+                    numbers)
+                  </span>
+                </label>
+                <input
+                  className="form-control"
+                  type="password"
+                  name="password"
+                  value={fields.password}
+                  onChange={(e) =>
+                    setFields({ ...fields, [e.target.name]: e.target.value })
+                  }
+                />
+              </div>
+              <div className="form-group">
+                <label>Confirm Password</label>
+                <input
+                  className="form-control"
+                  type="password"
+                  name="confirmPassword"
+                  onChange={(e) =>
+                    setFields({ ...fields, [e.target.name]: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="auth-btn-wrapper">
+                <div className="form-group">
+                  <button
+                    type="submit"
+                    className="btn btn-add-new"
+                    disabled={!validateForm()}
+                  >
+                    {isLoading ? <LoadingSpinner /> : "Signup"}
+                  </button>
+                </div>
+                <div className="form-group">
+                  <Link
+                    className="btn btn-edit"
+                    to={"/login"}
+                    style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Login
+                  </Link>
+                </div>
+              </div>
+            </section>
+          </form>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="Signup">
+    <div className="page-container">
       {user === null ? renderForm() : renderConfirmationForm()}
     </div>
   );

@@ -67,7 +67,7 @@ export default function InvestingAccountsEdit(props) {
                 </Link>
               </header>
               <div className="investing-account-form-button-wrapper">
-                <div className="form-group">
+                <div>
                   <button
                     type="submit"
                     className="btn btn-add-new"

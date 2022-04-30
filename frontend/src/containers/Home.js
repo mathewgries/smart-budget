@@ -76,8 +76,23 @@ export default function Home() {
     return (
       <div className="page-wrapper">
         <div className="home-lander-wrapper">
-          <h1>Smart Budget</h1>
-          <p className="text-muted">Control your money habits</p>
+          <div>
+            <h1>Smart Budget</h1>
+            <p style={{ color: "#ee6c4d" }}>Control your money habits</p>
+          </div>
+
+          <div className="lander-btn-wrapper">
+            <div>
+              <Link to={"/login"} className="btn btn-add-new">
+                Login
+              </Link>
+            </div>
+            <div>
+              <Link to={"/signup"} className="btn btn-edit">
+                Signup
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -94,7 +109,7 @@ export default function Home() {
                   <h4>Spending Accounts</h4>
                 </Link>
               </header>
-              <div className="form-group">
+              <div>
                 <button
                   disabled={isLoading}
                   className="btn btn-add-new"
@@ -119,7 +134,7 @@ export default function Home() {
                   <h4>Investing Accounts</h4>
                 </Link>
               </header>
-              <div className="form-group">
+              <div>
                 <button
                   disabled={isLoading}
                   className="btn btn-add-new"

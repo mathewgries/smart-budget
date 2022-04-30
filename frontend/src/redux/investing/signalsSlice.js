@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { amplifyClient } from "../../api/amplifyClient";
-import { fetchAllData } from "../users/usersSlice";
+import { addNewUser, fetchAllData } from "../users/usersSlice";
 
 const signalsAdapter = createEntityAdapter();
 
@@ -31,6 +31,21 @@ export const signalsSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
+      .addCase(addNewUser.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(addNewUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const signals = action.payload.find(
+          (val) => val.Put.Item.type === "SIGNALS#"
+        );
+        signalsAdapter.upsertMany(state, signals.Put.Item.signals);
+      })
+      .addCase(addNewUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+    builder
       .addCase(fetchAllData.pending, (state, action) => {
         state.status = "pending";
       })
@@ -49,7 +64,7 @@ export const signalsSlice = createSlice({
       .addCase(updateSignals.fulfilled, (state, action) => {
         state.status = "succeeded";
         const { signals } = action.payload;
-        signalsAdapter.setAll(state, signals)
+        signalsAdapter.setAll(state, signals);
       })
       .addCase(updateSignals.rejected, (state, action) => {
         state.status = "failed";

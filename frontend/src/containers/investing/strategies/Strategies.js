@@ -30,7 +30,7 @@ import {
   SignalRemoveConfirmMessage,
   SignalDeleteConfirmMessage,
 } from "./strategyPopupMessages";
-import "./strategies.css"
+import "./strategies.css";
 
 export default function Strategies(props) {
   const dispatch = useDispatch();
@@ -63,6 +63,8 @@ export default function Strategies(props) {
     .concat(useSelector(selectAllOptionsOrders))
     .concat(useSelector(selectAllVerticalSpreadsOrders));
 
+	console.log(signals)
+
   useEffect(() => {
     function validateStatus() {
       if (strategiesStatus === "pending" || signalsStatus === "pending") {
@@ -79,11 +81,11 @@ export default function Strategies(props) {
     }
   }, [strategiesStatus, signalsStatus, isLoading]);
 
-	useEffect(() => {
-		if(!activeStrategy){
-			dispatch(activeStrategyUpdated(strategies[0].id))
-		}
-	}, [activeStrategy, strategies, dispatch])
+  useEffect(() => {
+    if (!activeStrategy) {
+      dispatch(activeStrategyUpdated(strategies[0].id));
+    }
+  }, [activeStrategy, strategies, dispatch]);
 
   function toggleStrategyEdit() {
     setEditStrategy(!editStrategy);
@@ -237,106 +239,171 @@ export default function Strategies(props) {
 
   return (
     <div className="page-container">
+      <section>
+        {showAlertPopup && (
+          <section className="confirmation-popup-section">
+            <AlertPopup onCancel={handleAlertPopupCancel}>
+              <SignalInStrategyAlertPopupMessage />
+            </AlertPopup>
+          </section>
+        )}
+      </section>
+
+      <section>
+        {showDeleteStrategyConfirm && (
+          <section className="confirmation-popup-section">
+            <ConfirmationPopup
+              onCancel={handleStrategyCancel}
+              onConfirm={handleStrategyConfirm}
+            >
+              <DeleteStrategyConfirmMessage />
+              <ReplaceStrategyPopup
+                strategies={strategies}
+                strategyToDelete={stagedStrategyToDelete}
+                handleSelectedReplacementStrategy={
+                  handleSelectedReplacementStrategy
+                }
+              ></ReplaceStrategyPopup>
+            </ConfirmationPopup>
+          </section>
+        )}
+      </section>
+
+      <section>
+        {showRemoveSignalConfirm && (
+          <section className="confirmation-popup-section">
+            <ConfirmationPopup
+              onCancel={handleRemoveSignalCancel}
+              onConfirm={handleRemoveSignalConfirm}
+            >
+              <SignalRemoveConfirmMessage />
+            </ConfirmationPopup>
+          </section>
+        )}
+      </section>
+
+      <section>
+        {showDeleteSignalConfirm && (
+          <section className="confirmation-popup-section">
+            <ConfirmationPopup
+              onCancel={handleDeleteSignalCancel}
+              onConfirm={handleDeleteSignalConfirm}
+            >
+              <SignalDeleteConfirmMessage />
+            </ConfirmationPopup>
+          </section>
+        )}
+      </section>
+
       <div className="page-wrapper">
         <div className="form-wrapper">
-          <section>
-            {showAlertPopup && (
-              <section className="confirmation-popup-section">
-                <AlertPopup onCancel={handleAlertPopupCancel}>
-                  <SignalInStrategyAlertPopupMessage />
-                </AlertPopup>
-              </section>
-            )}
-          </section>
-
-          <section>
-            {showDeleteStrategyConfirm && (
-              <section className="confirmation-popup-section">
-                <ConfirmationPopup
-                  onCancel={handleStrategyCancel}
-                  onConfirm={handleStrategyConfirm}
-                >
-                  <DeleteStrategyConfirmMessage />
-                  <ReplaceStrategyPopup
-                    strategies={strategies}
-                    strategyToDelete={stagedStrategyToDelete}
-                    handleSelectedReplacementStrategy={
-                      handleSelectedReplacementStrategy
-                    }
-                  ></ReplaceStrategyPopup>
-                </ConfirmationPopup>
-              </section>
-            )}
-          </section>
-
-          <section>
-            {showRemoveSignalConfirm && (
-              <section className="confirmation-popup-section">
-                <ConfirmationPopup
-                  onCancel={handleRemoveSignalCancel}
-                  onConfirm={handleRemoveSignalConfirm}
-                >
-                  <SignalRemoveConfirmMessage />
-                </ConfirmationPopup>
-              </section>
-            )}
-          </section>
-
-          <section>
-            {showDeleteSignalConfirm && (
-              <section className="confirmation-popup-section">
-                <ConfirmationPopup
-                  onCancel={handleDeleteSignalCancel}
-                  onConfirm={handleDeleteSignalConfirm}
-                >
-                  <SignalDeleteConfirmMessage />
-                </ConfirmationPopup>
-              </section>
-            )}
-          </section>
-
-          <section>
-            <div>
-              <header>
-                <h5>Strategies</h5>
+          <div className="form-section">
+            <section className="page-header-wrapper">
+              <header className="page-header">
+                <h4>Strategies</h4>
               </header>
-            </div>
-          </section>
-
-          <section>
-            <StrategyNew strategies={strategies} />
-          </section>
-
-          {(isLoading || !strategies[0]) && (
-            <section>
-              <DropDownLoader
-                isLoading={isLoading}
-                text={"Add a strategy..."}
-              />
             </section>
-          )}
 
-          {!isLoading && strategies[0] && (
             <section>
-              {editStrategy && (
-                <div className="strategy-edit-wrapper">
-                  <div>
-                    <StrategyEdit toggleStrategyEdit={toggleStrategyEdit} />
-                  </div>
-                  <div>
-                    <button
-                      className="btn btn-delete"
-                      onClick={toggleStrategyEdit}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
+              <StrategyNew strategies={strategies} />
+            </section>
 
-              {!editStrategy && (
+            {(isLoading || !strategies[0]) && (
+              <section>
+                <DropDownLoader
+                  isLoading={isLoading}
+                  text={"Add a strategy..."}
+                />
+              </section>
+            )}
+
+            {!isLoading && strategies[0] && (
+              <section>
+                {editStrategy && (
+                  <div className="strategy-edit-wrapper">
+                    <div>
+                      <StrategyEdit toggleStrategyEdit={toggleStrategyEdit} />
+                    </div>
+                    <div>
+                      <button
+                        className="btn btn-delete"
+                        onClick={toggleStrategyEdit}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {!editStrategy && (
+                  <div className="strategy-dropdown-section">
+                    <div className="dropdown form-group strategy-dropdown">
+                      <button
+                        className="btn dropdown-toggle"
+                        type="input"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        disabled={isLoading}
+                      >
+                        {activeStrategy.strategyName}
+                      </button>
+                      <div>
+                        <button
+                          className="btn btn-edit strategy-edit-btn"
+                          onClick={toggleStrategyEdit}
+                        >
+                          Edit
+                        </button>
+                      </div>
+                      <div
+                        className="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        {strategies.map((strategy) => (
+                          <div key={strategy.id} className="strategy-list-item">
+                            <div
+                              className="dropdown-item"
+                              onClick={() => handleStrategyToggle(strategy)}
+                            >
+                              <div>{strategy.strategyName}</div>
+                            </div>
+                            <div className="strategy-btn-container">
+                              <div>
+                                <button
+                                  className="btn btn-delete btn-sm"
+                                  onClick={() =>
+                                    handleShowStrategyConfirm(strategy)
+                                  }
+                                  disabled={isLoading}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </section>
+            )}
+
+            {(isLoading || !strategies[0] || !activeSignals[0]) && (
+              <section>
+                <DropDownLoader
+                  isLoading={isLoading}
+                  text={!strategies[0] ? "Add a strategy..." : "No signals..."}
+                />
+              </section>
+            )}
+
+            {!isLoading && strategies[0] && activeSignals[0] && (
+              <section>
                 <div className="strategy-dropdown-section">
-                  <div className="dropdown form-group strategy-dropdown">
+                  <div className="dropdown form-group">
                     <button
                       className="btn dropdown-toggle"
                       type="input"
@@ -346,38 +413,27 @@ export default function Strategies(props) {
                       aria-expanded="false"
                       disabled={isLoading}
                     >
-                      {activeStrategy.strategyName}
+                      View Signals...
                     </button>
-                    <div>
-                      <button
-                        className="btn btn-edit strategy-edit-btn"
-                        onClick={toggleStrategyEdit}
-                      >
-                        Edit
-                      </button>
-                    </div>
                     <div
                       className="dropdown-menu"
                       aria-labelledby="dropdownMenuButton"
                     >
-                      {strategies.map((strategy) => (
-                        <div key={strategy.id} className="strategy-list-item">
-                          <div
-                            className="dropdown-item"
-                            onClick={() => handleStrategyToggle(strategy)}
-                          >
-                            <div>{strategy.strategyName}</div>
+                      {activeSignals.map((signal) => (
+                        <div key={signal.id} className="signal-list-item">
+                          <div className="dropdown-item">
+                            <div>{signal.name}</div>
                           </div>
                           <div className="strategy-btn-container">
                             <div>
                               <button
                                 className="btn btn-delete btn-sm"
                                 onClick={() =>
-                                  handleShowStrategyConfirm(strategy)
+                                  handleShowRemoveSignalConfirm(signal.id)
                                 }
                                 disabled={isLoading}
                               >
-                                Delete
+                                Remove
                               </button>
                             </div>
                           </div>
@@ -386,129 +442,75 @@ export default function Strategies(props) {
                     </div>
                   </div>
                 </div>
-              )}
-            </section>
-          )}
+              </section>
+            )}
 
-          {(isLoading || !strategies[0] || !activeSignals[0]) && (
-            <section>
-              <DropDownLoader
-                isLoading={isLoading}
-                text={!strategies[0] ? "Add a strategy..." : "No signals..."}
-              />
-            </section>
-          )}
-
-          {!isLoading && strategies[0] && activeSignals[0] && (
-            <section>
-              <div className="strategy-dropdown-section">
-                <div className="dropdown form-group">
-                  <button
-                    className="btn dropdown-toggle"
-                    type="input"
-                    id="dropdownMenuButton"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    disabled={isLoading}
-                  >
-                    View Signals...
-                  </button>
-                  <div
-                    className="dropdown-menu"
-                    aria-labelledby="dropdownMenuButton"
-                  >
-                    {activeSignals.map((signal) => (
-                      <div key={signal.id} className="signal-list-item">
-                        <div className="dropdown-item">
-                          <div>{signal.name}</div>
-                        </div>
-                        <div className="strategy-btn-container">
-                          <div>
-                            <button
-                              className="btn btn-delete btn-sm"
-                              onClick={() =>
-                                handleShowRemoveSignalConfirm(signal.id)
-                              }
-                              disabled={isLoading}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-
-          <section>
-            <div>
-              <header>
-                <h5>Signals</h5>
+            <section className="page-header-wrapper">
+              <header className="page-header">
+                <h4>Signals</h4>
               </header>
-            </div>
-          </section>
-
-          <section>
-            <SignalNew />
-          </section>
-
-          {signals.length > 0 && (
-            <section>
-              <ul className="list-group">
-                {signals.map((signal) => (
-                  <li
-                    key={signal.id}
-                    className="list-group-item signal-list-item"
-                  >
-                    {signalToUpdate && signal.id === signalToUpdate ? (
-                      <>
-                        <div>
-                          <SignalEdit
-                            signalId={signalToUpdate}
-                            handleSignalToUpdate={handleSignalToUpdate}
-                          />
-                        </div>
-                        <button
-                          className="btn btn-delete form-group"
-                          onClick={() => handleSignalToUpdate()}
-                          disabled={isLoading}
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <div
-                          onClick={() => addSignalToStrategy(signal.id)}
-                          className="signal"
-                        >
-                          {signal.name}
-                        </div>
-                        <button
-                          className="btn btn-edit"
-                          onClick={() => handleSignalToUpdate(signal.id)}
-                          disabled={isLoading}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="btn btn-delete"
-                          onClick={() => handleShowDeleteSignalConfirm(signal)}
-                          disabled={isLoading}
-                        >
-                          Delete
-                        </button>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
             </section>
-          )}
+
+            <section>
+              <SignalNew />
+            </section>
+
+            {signals.length > 0 && (
+              <section>
+                <ul className="list-group">
+                  {signals.map((signal) => (
+                    <li
+                      key={signal.id}
+                      className="list-group-item signal-list-item"
+                    >
+                      {signalToUpdate && signal.id === signalToUpdate ? (
+                        <>
+                          <div>
+                            <SignalEdit
+                              signalId={signalToUpdate}
+                              handleSignalToUpdate={handleSignalToUpdate}
+                            />
+                          </div>
+                          <button
+                            className="btn btn-delete form-group"
+                            onClick={() => handleSignalToUpdate()}
+                            disabled={isLoading}
+                          >
+                            Cancel
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <div
+                            onClick={() => addSignalToStrategy(signal.id)}
+                            className="signal"
+                          >
+                            {signal.name}
+                          </div>
+                          <button
+                            className="btn btn-edit"
+                            onClick={() => handleSignalToUpdate(signal.id)}
+                            disabled={isLoading}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            className="btn btn-delete"
+                            onClick={() =>
+                              handleShowDeleteSignalConfirm(signal)
+                            }
+                            disabled={isLoading}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </div>
         </div>
       </div>
     </div>

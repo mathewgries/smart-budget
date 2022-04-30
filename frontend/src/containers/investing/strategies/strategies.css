@@ -18,6 +18,9 @@
   justify-content: space-between;
   background-color: #e0fbfc;
 }
+.signal-list-item {
+  align-items: center;
+}
 
 .strategy-dropdown-section {
   background-color: #e0fbfc;
@@ -40,6 +43,7 @@
 }
 
 .signal-list-item .signal {
+  color: #293241;
   flex-grow: 1;
 }
 

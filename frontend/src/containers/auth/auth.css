@@ -18,3 +18,9 @@
     max-width: 320px;
   }
 }
+
+.auth-btn-wrapper {
+	display: flex;
+	flex-flow: row nowrap;
+	gap: 15px;
+}

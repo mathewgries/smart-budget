@@ -257,7 +257,7 @@ export default function OptionsOrder(props) {
             </section>
           )}
 
-          {strategy && signals.length > 0 && (
+          {strategy &&  signals.length > 0 && (
             <section>
               <table className="table orders-table">
                 <thead>

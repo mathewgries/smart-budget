@@ -41,7 +41,7 @@ export default function InvestingAccounts(props) {
                 <h4>Investing Accounts</h4>
               </Link>
             </header>
-            <div className="form-group">
+            <div>
               <button
                 disabled={isLoading}
                 className="btn btn-add-new"

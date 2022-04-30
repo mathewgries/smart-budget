@@ -47,7 +47,7 @@ export default function OptionsOrdersTable(props) {
                 <td>{new Date(order.openDate).toLocaleDateString()}</td>
                 <td>{order.contractType}</td>
                 <td>{order.profitLoss}</td>
-                <td>{strategy.strategyName}</td>
+                <td>{strategy ? strategy.strategyName : "N/A"}</td>
               </tr>
             );
           })}

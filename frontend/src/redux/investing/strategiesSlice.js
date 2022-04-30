@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { updateSignals } from "./signalsSlice";
-import { fetchAllData } from "../users/usersSlice";
+import { addNewUser, fetchAllData } from "../users/usersSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
 const strategiesAdapter = createEntityAdapter();
@@ -56,20 +56,39 @@ export const strategiesSlice = createSlice({
   initialState,
   reducers: {
     activeStrategyUpdated(state, action) {
-			const id = action.payload
-			const strategy = Object.values(state.entities).find(
-				(strategy) => strategy.id === id
-			);
+      const id = action.payload;
+      const strategy = Object.values(state.entities).find(
+        (strategy) => strategy.id === id
+      );
 
       state.activeStrategy = strategy;
       state.activeSignals = strategy.signals;
     },
     activeStrategyRemoved(state, action) {
-      state.activeStrategy = undefined
-			state.activeSignals = []
+      state.activeStrategy = undefined;
+      state.activeSignals = [];
     },
   },
   extraReducers(builder) {
+    builder
+      .addCase(addNewUser.pending, (state, action) => {
+        state.status = "pending";
+      })
+      .addCase(addNewUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        const strategies = action.payload
+          .filter((val) => val.Put.Item.type === "STRATEGY#")
+          .map((val) => val.Put.Item);
+        strategiesAdapter.upsertMany(state, strategies);
+        if (strategies[0]) {
+          state.activeStrategy = strategies[0];
+          state.activeSignals = strategies[0].signals;
+        }
+      })
+      .addCase(addNewUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
     builder
       .addCase(fetchAllData.pending, (state, action) => {
         state.status = "pending";
