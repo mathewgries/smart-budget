@@ -109,7 +109,7 @@ export default function VerticalSpreadsOrder(props) {
               </Link>
             </header>
             <div className="orders-button-wrapper">
-              <div className="form-group">
+              <div>
                 <Link
                   to={`/investing/orders/spreads/vertical/edit/${id}`}
                   className="btn btn-add-new"
@@ -117,7 +117,7 @@ export default function VerticalSpreadsOrder(props) {
                   Edit
                 </Link>
               </div>
-              <div className="form-group">
+              <div>
                 <button
                   className="btn btn-delete"
                   onClick={() => setShowConfirm(!showConfrim)}

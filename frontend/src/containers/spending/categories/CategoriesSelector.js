@@ -208,7 +208,7 @@ export default function CategoriesSelector(props) {
       </section>
 
       <section>
-        <div>
+        <div className="page-header-wrapper">
           <header className="page-header">
             <h4>Categories</h4>
           </header>
@@ -295,7 +295,7 @@ export default function CategoriesSelector(props) {
       )}
 
       <section>
-        <div>
+        <div className="page-header-wrapper">
           <header className="page-header">
             <h4>Subcategories</h4>
           </header>

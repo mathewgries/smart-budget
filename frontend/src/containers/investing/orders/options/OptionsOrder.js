@@ -106,7 +106,7 @@ export default function OptionsOrder(props) {
               </Link>
             </header>
             <div className="orders-button-wrapper">
-              <div className="form-group">
+              <div>
                 <Link
                   to={`/investing/orders/options/edit/${id}`}
                   className="btn btn-add-new"
@@ -114,7 +114,7 @@ export default function OptionsOrder(props) {
                   Edit
                 </Link>
               </div>
-              <div className="form-group">
+              <div>
                 <button
                   className="btn btn-delete"
                   onClick={() => setShowConfirm(!showConfrim)}

@@ -63,7 +63,7 @@ export default function Strategies(props) {
     .concat(useSelector(selectAllOptionsOrders))
     .concat(useSelector(selectAllVerticalSpreadsOrders));
 
-	console.log(signals)
+  console.log(signals);
 
   useEffect(() => {
     function validateStatus() {

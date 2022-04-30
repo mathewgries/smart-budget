@@ -143,7 +143,7 @@ export default function SharesOrderEdit(props) {
                 </Link>
               </header>
               <div className="orders-button-wrapper">
-                <div className="form-group">
+                <div>
                   <button
                     type="submit"
                     className="btn btn-add-new"

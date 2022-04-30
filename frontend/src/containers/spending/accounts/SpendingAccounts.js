@@ -41,7 +41,7 @@ export default function SpendingAccounts(props) {
                 <h4>Spending Accounts</h4>
               </Link>
             </header>
-            <div className="form-group">
+            <div>
               <button
                 disabled={isLoading}
                 className="btn btn-add-new"

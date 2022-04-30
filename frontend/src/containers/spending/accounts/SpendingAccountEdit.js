@@ -66,7 +66,7 @@ export default function SpendingAccountEdit(props) {
                 </Link>
               </header>
               <div className="spending-account-form-button-wrapper">
-                <div className="form-group">
+                <div>
                   <button
                     type="submit"
                     className="btn btn-add-new"

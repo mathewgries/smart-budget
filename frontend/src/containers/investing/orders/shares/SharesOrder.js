@@ -106,7 +106,7 @@ export default function SharesOrder(props) {
               </Link>
             </header>
             <div className="orders-button-wrapper">
-              <div className="form-group">
+              <div>
                 <Link
                   to={`/investing/orders/shares/edit/${id}`}
                   className="btn btn-add-new"
@@ -114,7 +114,7 @@ export default function SharesOrder(props) {
                   Edit
                 </Link>
               </div>
-              <div className="form-group">
+              <div>
                 <button
                   className="btn btn-delete"
                   onClick={() => setShowConfirm(!showConfrim)}
