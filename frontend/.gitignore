@@ -7,11 +7,11 @@
 
 # testing
 /coverage
+/src/seed
 
 # production
 /build
 
-/seed
 
 # misc
 .DS_Store

@@ -5,7 +5,7 @@
 
 # testing
 /coverage
-/src/seed
+/src/functions/seed
 
 # production
 /build
