@@ -3,7 +3,7 @@ import * as uuid from "uuid";
 import { useSelector, useDispatch } from "react-redux";
 import {
   saveNewCategory,
-  updateCategory,
+  saveNewSubcategory,
   selectActiveCategory,
 } from "../../../redux/spending/categoriesSlice";
 import AlertPopup from "../../popups/AlertPopup";
@@ -91,15 +91,15 @@ export default function CategoriesForm(props) {
     }
 
     try {
+      const newSubcategory = { id: uuid.v1(), name: fields.subcategory };
+      const subcategories = [...activeCategory.subcategories, newSubcategory];
       await dispatch(
-        updateCategory({
+        saveNewSubcategory({
           category: {
             ...activeCategory,
-            subcategories: [
-              ...activeCategory.subcategories,
-              { id: uuid.v1(), name: fields.subcategory },
-            ],
+            subcategories,
           },
+          newSubcategory,
         })
       ).unwrap();
       setFields({ categoryName: "", subcategory: "" });

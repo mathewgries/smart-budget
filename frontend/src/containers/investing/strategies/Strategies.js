@@ -63,8 +63,6 @@ export default function Strategies(props) {
     .concat(useSelector(selectAllOptionsOrders))
     .concat(useSelector(selectAllVerticalSpreadsOrders));
 
-  console.log(signals);
-
   useEffect(() => {
     function validateStatus() {
       if (strategiesStatus === "pending" || signalsStatus === "pending") {
