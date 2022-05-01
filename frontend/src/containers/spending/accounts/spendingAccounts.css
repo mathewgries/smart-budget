@@ -1,0 +1,117 @@
+.spending-account-card-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: #3d5a80;
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.spending-account-form-button-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+@media (max-width: 600px) {
+  .spending-account-wrapper,
+  .spending-accounts-wrapper {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .spending-account-card-container,
+  .spending-accounts-list-wrapper {
+    width: 100%;
+  }
+
+	.spending-account-btn-section {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+	.spending-account-btn-wrapper {
+    width: 48%;
+    margin-bottom: 5px;
+  }
+
+	.spending-account-btn-wrapper a,
+	.spending-account-btn-wrapper button {
+		font-size: small;
+		font-weight: bold;
+	}
+}
+
+@media (min-width: 601px) {
+  .spending-account-wrapper {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+  }
+
+  .spending-account-wrapper,
+  .spending-accounts-wrapper {
+    width: 480px;
+    margin: 0 auto;
+  }
+
+  .spending-account-detail {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
+
+  .spending-account-card-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: space-between;
+    width: 150px;
+    height: 200px;
+    padding: 10px;
+    margin-right: 10px;
+  }
+
+  .spending-account-card-balance {
+    text-align: right;
+  }
+
+  .spending-account-list-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+  }
+
+  .spending-account-btn-wrapper {
+    width: 150px;
+    margin-bottom: 5px;
+  }
+
+  .spending-transaction-list-section{
+    width: 400px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .spending-account-wrapper,
+  .spending-accounts-wrapper {
+		width: 800px;
+    margin: 0 auto;
+  }
+
+  .spending-account-detail {
+    display: flex;
+    flex-flow: row nowrap;
+		justify-content: flex-start;
+  }
+
+	.spending-transaction-list-section{
+		width: 640px;
+	}
+}

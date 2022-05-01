@@ -1,0 +1,188 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #293241;
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #e0fbfc;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+  color: #293241;
+}
+
+select.form-control,
+textarea.form-control,
+input.form-control {
+  font-size: 1rem;
+  background-color: #e0fbfc;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  width: 0;
+  margin: 0;
+  padding: 0;
+  /* display: none;
+  -webkit-appearance: none; */
+}
+
+.app-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.app-wrapper {
+  margin: 0 auto;
+}
+
+.page-container {
+  width: 100%;
+}
+
+.form-wrapper {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.page-header-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+	align-items: center;
+}
+
+.page-header {
+  padding: 7px 0;
+}
+
+.form-section {
+  padding: 5px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  background-color: #3d5a80;
+  color: #e0fbfc;
+  border: 2px solid #98c1d9;
+}
+
+.btn-add-new {
+  background-color: #ee6c4d;
+  color: #e0fbfc;
+  border: 2px solid #e0fbfc;
+}
+
+.btn-add-new:active {
+  background-color: #e0fbfc;
+  color: #ee6c4d;
+  border: 2px solid #ee6c4d;
+}
+
+.btn-delete {
+  background-color: #3d5a80;
+  border: 2px solid #e0fbfc;
+  color: #e0fbfc;
+}
+
+.btn-delete:active {
+  background-color: #e0fbfc;
+  border: 2px solid #3d5a80;
+  color: #3d5a80;
+}
+
+.btn-edit {
+  background-color: #e0fbfc;
+  border: 2px solid #98c1d9;
+  color: #3d5a80;
+}
+
+.btn-edit:active {
+  background-color: #3d5a80;
+  border: 2px solid #3d5a80;
+  color: #e0fbfc;
+}
+
+.btn-journal {
+  background-color: #e0fbfc;
+  border: 2px solid #ee6c4d;
+  color: #ee6c4d;
+}
+
+.btn-journal:active {
+  background-color: #ee6c4d;
+  border: 2px solid #e0fbfc;
+  color: #e0fbfc;
+}
+
+.confirmation-popup-section {
+  display: hidden;
+  position: fixed;
+  z-index: 1;
+  margin: 0 auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 600px) {
+  .app-wrapper {
+    width: 95%;
+  }
+
+  .page-header-wrapper h4 {
+    font-size: 20px;
+  }
+
+  .page-header-wrapper .btn {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 601px) {
+  .app-wrapper {
+    width: 90%;
+  }
+
+  .account-list-header {
+    display: flex;
+    flex-flow: nowrap;
+    justify-content: flex-start;
+    gap: 15px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .app-wrapper {
+    width: 80%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .app-wrapper {
+    width: 1000px;
+  }
+}

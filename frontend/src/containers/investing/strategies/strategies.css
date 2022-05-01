@@ -1,0 +1,59 @@
+.strategy-form {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 5px;
+}
+
+.strategy-form-input {
+  flex-grow: 10;
+}
+
+.strategy-dropdown,
+.strategy-edit-wrapper,
+.signal-list-item,
+.strategy-list-item {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  background-color: #e0fbfc;
+}
+.signal-list-item {
+  align-items: center;
+}
+
+.strategy-dropdown-section {
+  background-color: #e0fbfc;
+}
+
+.strategy-dropdown-section button {
+  width: 100%;
+  text-align: left;
+}
+
+.strategy-dropdown-section .dropdown-menu {
+  background-color: #e0fbfc;
+  width: 100%;
+}
+
+.strategy-btn-container {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 2px;
+}
+
+.signal-list-item .signal {
+  color: #293241;
+  flex-grow: 1;
+}
+
+.strategy-edit-form {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.strategy-edit-btn {
+  border-radius: 0;
+}
