@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { onError } from "../../../lib/errorLib";
 import {
-  updateCategory,
+  updateSubcategory,
   selectActiveCategory,
   selectActiveSubcategory,
 } from "../../../redux/spending/categoriesSlice";
-import "./categories.css"
+import "./categories.css";
 
 export default function SubcategoryEdit(props) {
   const dispatch = useDispatch();
@@ -42,11 +42,14 @@ export default function SubcategoryEdit(props) {
 
     try {
       await dispatch(
-        updateCategory({
+        updateSubcategory({
           category: {
             ...activeCategory,
             subcategories: updatedSubList,
           },
+          subcategory: updatedSubList.find(
+            (sub) => sub.id === activeSubcategory.id
+          ),
         })
       ).unwrap();
       props.toggleSubcategoryEdit();
@@ -65,7 +68,7 @@ export default function SubcategoryEdit(props) {
             value={subcategory}
             type="text"
             onChange={(e) => setSubcategory(e.target.value)}
-						data-lpignore="true"
+            data-lpignore="true"
             disabled={isLoading}
           />
         </div>

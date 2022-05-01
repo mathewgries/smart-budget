@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   selectAllCategories,
   activeCategoryUpdated,
+  selectActiveSubcategories,
   activeSubcategoryUpdated,
   selectActiveCategory,
   selectActiveSubcategory,
@@ -41,15 +42,17 @@ export default function CategoriesSelector(props) {
   const dispatch = useDispatch();
   const categories = useSelector(selectAllCategories);
   const activeCategory = useSelector((state) => selectActiveCategory(state));
+  const activeSubcategories = useSelector((state) =>
+    selectActiveSubcategories(state)
+  );
   const activeSubcategory = useSelector((state) =>
     selectActiveSubcategory(state)
   );
+  const categoryStatus = useSelector((state) => state.categories.status);
   const allTransactions = useSelector(selectAllSpendingTransactions);
   const transactionStatus = useSelector(
     (state) => state.spendingTransactions.status
   );
-  const categoryStatus = useSelector((state) => state.categories.status);
-  const [subcategories, setSubcategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showCategoryConfrim, setShowCategoryConfirm] = useState(false);
   const [stagedCategoryForDelete, setStagedCategoryForDelete] = useState();
@@ -59,12 +62,6 @@ export default function CategoriesSelector(props) {
   const [stagedSubcategoryForDelete, setStagedSubcategoryForDelete] =
     useState();
   const [editSubcategory, setEditSubcategory] = useState(false);
-
-  useEffect(() => {
-    if (activeCategory) {
-      setSubcategories(activeCategory.subcategories);
-    }
-  }, [activeCategory]);
 
   useEffect(() => {
     function validateStatus() {
@@ -88,7 +85,6 @@ export default function CategoriesSelector(props) {
 
   function handleCategoryToggle(category) {
     dispatch(activeCategoryUpdated(category.id));
-    setSubcategories(category.subcategories);
   }
 
   function handleShowCategoryConfirm(category) {
@@ -305,8 +301,8 @@ export default function CategoriesSelector(props) {
       {(isLoading ||
         !categories ||
         !categories[0] ||
-        !subcategories ||
-        !subcategories[0]) && (
+        !activeSubcategories ||
+        !activeSubcategories[0]) && (
         <section>
           <DropDownLoader
             text={!categories[0] ? "Add a category..." : "Add a subcategory..."}
@@ -315,87 +311,93 @@ export default function CategoriesSelector(props) {
         </section>
       )}
 
-      {!isLoading && categories && subcategories && subcategories.length > 0 && (
-        <section>
-          {editSubcategory && (
-            <div className="category-edit-wrapper">
-              <div>
-                <SubcategoryEdit
-                  toggleSubcategoryEdit={toggleSubcategoryEdit}
-                />
-              </div>
-              <div>
-                <button
-                  className="btn btn-delete"
-                  onClick={toggleSubcategoryEdit}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-
-          {!editSubcategory && (
-            <div className="categories-dropdown-section">
-              <div className="dropdown form-group category-dropdown">
-                <button
-                  className="btn dropdown-toggle"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                  disabled={isLoading}
-                >
-                  {activeSubcategory.name}
-                </button>
+      {!isLoading &&
+        categories &&
+        activeSubcategories &&
+        activeSubcategories.length > 0 && (
+          <section>
+            {editSubcategory && (
+              <div className="category-edit-wrapper">
+                <div>
+                  <SubcategoryEdit
+                    toggleSubcategoryEdit={toggleSubcategoryEdit}
+                  />
+                </div>
                 <div>
                   <button
-                    style={{
-                      borderTop: "none",
-                      borderRight: "none",
-                      borderBottom: "none",
-                    }}
-                    className="btn btn-edit category-edit-btn"
+                    className="btn btn-delete"
                     onClick={toggleSubcategoryEdit}
                   >
-                    Edit
+                    Cancel
                   </button>
                 </div>
-                <div
-                  className="dropdown-menu"
-                  aria-labelledby="dropdownMenuButton"
-                >
+              </div>
+            )}
+
+            {!editSubcategory && (
+              <div className="categories-dropdown-section">
+                <div className="dropdown form-group category-dropdown">
+                  <button
+                    className="btn dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    disabled={isLoading}
+                  >
+                    {activeSubcategory.name}
+                  </button>
                   <div>
-                    {subcategories.map((subcategory) => (
-                      <div key={subcategory.id} className="category-list-item">
+                    <button
+                      style={{
+                        borderTop: "none",
+                        borderRight: "none",
+                        borderBottom: "none",
+                      }}
+                      className="btn btn-edit category-edit-btn"
+                      onClick={toggleSubcategoryEdit}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                  <div
+                    className="dropdown-menu"
+                    aria-labelledby="dropdownMenuButton"
+                  >
+                    <div>
+                      {activeSubcategories.map((subcategory) => (
                         <div
-                          className="dropdown-item"
-                          onClick={() => handleSubcategoryToggle(subcategory)}
+                          key={subcategory.id}
+                          className="category-list-item"
                         >
-                          <div>{subcategory.name}</div>
-                        </div>
-                        <div className="category-btn-container">
-                          <div>
-                            <button
-                              className="btn btn-delete btn-sm"
-                              onClick={() =>
-                                handleShowSubcategoryConfirm(subcategory)
-                              }
-                            >
-                              Delete
-                            </button>
+                          <div
+                            className="dropdown-item"
+                            onClick={() => handleSubcategoryToggle(subcategory)}
+                          >
+                            <div>{subcategory.name}</div>
+                          </div>
+                          <div className="category-btn-container">
+                            <div>
+                              <button
+                                className="btn btn-delete btn-sm"
+                                onClick={() =>
+                                  handleShowSubcategoryConfirm(subcategory)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-        </section>
-      )}
+            )}
+          </section>
+        )}
     </div>
   );
 }

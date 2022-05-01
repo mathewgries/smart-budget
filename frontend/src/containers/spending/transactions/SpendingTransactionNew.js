@@ -81,12 +81,12 @@ export default function SpendingTransactionNew(props) {
   };
 
   const getNewAccountBalance = () => {
-		const result = addTransactionHandler(
+    const result = addTransactionHandler(
       account.accountBalance,
       fields.transactionAmount,
       fields.transactionType.charAt(0)
     );
-		return result
+    return result;
   };
 
   const handleSaveNewTransaction = async (newAccountBalance) => {
@@ -112,7 +112,7 @@ export default function SpendingTransactionNew(props) {
     <div className="page-container">
       <div className="page-wrapper">
         <div className="form-wrapper">
-          <form onSubmit={handleSubmit}>
+          <div>
             <section className="page-header-wrapper">
               <header className="page-header">
                 <Link to={`/spending/accounts/${id}`}>
@@ -122,8 +122,9 @@ export default function SpendingTransactionNew(props) {
               <div className="spending-transaction-form-button-wrapper">
                 <div>
                   <button
-                    type="submit"
+                    type="button"
                     className="btn btn-add-new"
+                    onClick={handleSubmit}
                     disabled={!validateForm() || isLoading || isSaving}
                   >
                     {isLoading || isSaving ? (
@@ -209,7 +210,7 @@ export default function SpendingTransactionNew(props) {
                 />
               </div>
             </section>
-          </form>
+          </div>
         </div>
       </div>
     </div>
