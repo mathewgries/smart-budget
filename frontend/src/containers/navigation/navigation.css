@@ -1,0 +1,23 @@
+.navbar {
+  background-color: #e0fbfc;
+  color: #293241;
+}
+
+.nav-link,
+.logout-btn {
+  border: none;
+  background-color: #e0fbfc;
+}
+
+.nav-link:focus,
+.logout-btn:focus {
+  outline: none;
+}
+
+/* @media (max-width: 769px) {
+  .auth-btn-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 15px;
+  }
+} */
