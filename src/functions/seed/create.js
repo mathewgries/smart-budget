@@ -22,6 +22,7 @@ export const main = handler(async (event) => {
     .map((strategy) => strategy.Put.Item);
   const spendingAccountData = spendingAccount(table, user.id, categories);
   const investingAccountData = investingAccount(table, user.id, strategies);
+	
 
   items = items.concat(userData);
   items = items.concat(spendingAccountData);

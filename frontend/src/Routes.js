@@ -41,6 +41,7 @@ import Strategies from "./containers/investing/strategies/Strategies";
 
 import NotFound from "./containers/NotFound";
 import SeedData from "./seed/SeedData";
+import GraphTesting from "./containers/graphs/GraphTesing"
 
 export default function Routes() {
   return (
@@ -59,6 +60,10 @@ export default function Routes() {
 
       <AuthenticatedRoute exact path="/seed-data">
         <SeedData />
+      </AuthenticatedRoute>
+
+			<AuthenticatedRoute exact path="/graph-tesing">
+        <GraphTesting />
       </AuthenticatedRoute>
 
       {/* SPENDING ACCOUNTS */}
