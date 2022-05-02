@@ -23,10 +23,10 @@ export const spendingAccount = (table, userId, categories) => {
     },
   });
 
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 300; i++) {
     const transactionId = uuid.v1();
     const type = "TRANS#SPENDING#";
-    const transAmmount = (Math.random() * 100).toFixed(2);
+    const transAmmount = (Math.random() * 300).toFixed(2);
     const date = Date.parse(randomDate(new Date(2021, 0, 1), new Date()));
     const category = categories[Math.floor(Math.random() * categories.length)];
     const subcategories = category.subcategories;
