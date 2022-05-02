@@ -44,6 +44,9 @@ export default function TopNavBar(props) {
                 <Link className="dropdown-item" to="/spending">
                   Accounts
                 </Link>
+								<Link className="dropdown-item" to="/graph-tesing">
+                  Graph Tesing
+                </Link>
               </div>
             </li>
             <li className="nav-item dropdown">
