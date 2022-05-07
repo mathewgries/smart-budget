@@ -271,9 +271,6 @@ export const selectActiveSubcategories = (state) =>
 export const selectActiveSubcategory = (state) =>
   state.categories.activeSubcategory;
 
-export const selectSubcategories = (state, category) =>
-  Object.values(state.categories.entities).map((cat) => cat.categoryName);
-
 export const {
   selectAll: selectAllCategories,
   selectById: selectCategoryById,

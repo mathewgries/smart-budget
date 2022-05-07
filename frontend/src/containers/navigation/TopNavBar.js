@@ -44,7 +44,10 @@ export default function TopNavBar(props) {
                 <Link className="dropdown-item" to="/spending">
                   Accounts
                 </Link>
-								<Link className="dropdown-item" to="/graph-tesing">
+                <Link className="dropdown-item" to="/spending/categories">
+                  Categories
+                </Link>
+                <Link className="dropdown-item" to="/graph-tesing">
                   Graph Tesing
                 </Link>
               </div>
@@ -62,6 +65,9 @@ export default function TopNavBar(props) {
               <div className="dropdown-menu" aria-labelledby="navbarDropdown">
                 <Link className="dropdown-item" to="/investing">
                   Accounts
+                </Link>
+                <Link className="dropdown-item" to="/investing/strategies">
+                  Strategies
                 </Link>
               </div>
             </li>
@@ -82,7 +88,7 @@ export default function TopNavBar(props) {
                 Login
               </Link>
             </div>
-						<span>|</span>
+            <span>|</span>
             <div>
               <Link to={"/signup"} className="">
                 Signup
