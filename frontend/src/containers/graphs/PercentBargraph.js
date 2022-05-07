@@ -72,7 +72,9 @@ export default function PercentBargraph(props) {
               )}
             </div>
             <div className="bargraph-display-amount">
-              {item.percentage.toFixed(2)}
+              {item.percentage > 0
+                ? item.percentage.toFixed(2)
+                : item.percentage}
             </div>
             <div className="bargraph-display-date-wrapper">
               <div className="bargraph-display-date">{item.date}</div>

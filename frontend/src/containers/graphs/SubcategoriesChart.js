@@ -21,14 +21,12 @@ const SubcategoryChartItem = (props) => {
   return (
     <div className="category-chart-item">
       <div className="category-chart-item-name">
-        {item.name} <span>{percentOfWhole}%</span>
+        {item.name}: ${item.total.toFixed(2)} ({percentOfWhole}%)
       </div>
       <div
         className="category-chart-item-bar"
         style={{ width: setWidth() }}
-      >
-				${item.total.toFixed(2)}
-			</div>
+      ></div>
     </div>
   );
 };
