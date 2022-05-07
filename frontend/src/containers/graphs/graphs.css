@@ -20,12 +20,6 @@
   background-color: #98c1d9;
 }
 
-.time-frame-toggle-btn-section{
-	width: 271px;
-	height: 100%;
-	margin: 0 auto;
-}
-
 .account-dropwdown-toggle {
   text-align: left;
   width: 100%;
@@ -40,6 +34,16 @@
   padding: 0;
   margin-left: 10px;
   text-align: left;
+}
+
+.time-frame-toggle-btn-wrapper {
+  text-align: center;
+}
+
+.time-frame-toggle-btn-section {
+  display: inline-block;
+  height: 100%;
+  margin: 0 auto;
 }
 
 .total-average-toggle-btn:focus,
