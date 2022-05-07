@@ -58,7 +58,7 @@ export function getTimeGraphXAxis(timeFrame) {
 function getDayTimeAxis() {
   const end = new Date();
   let start = new Date();
-  start.setDate(end.getDate() - 19);
+  start.setDate(end.getDate() - 7);
   const dates = [];
   for (var d = start; d <= end; d.setDate(d.getDate() + 1)) {
     dates.push(new Date(d));
@@ -69,7 +69,7 @@ function getDayTimeAxis() {
 function getWeekTimeAxis() {
   const end = getPreviousSunday();
   let start = new Date();
-  start.setDate(end.getDate() - 19 * 7);
+  start.setDate(end.getDate() - 10 * 7);
   const dates = [];
   for (var d = start; d <= end; d.setDate(d.getDate() + 7)) {
     dates.push(new Date(d));
@@ -86,7 +86,7 @@ function getPreviousSunday(date = new Date()) {
 function getMonthTimeAxis() {
   const end = new Date();
   let start = new Date();
-  start.setMonth(end.getMonth() - 19);
+  start.setMonth(end.getMonth() - 6);
   start = new Date(start.getFullYear(), start.getMonth(), 1);
   const dates = [];
   for (var d = start; d <= end; d.setMonth(d.getMonth() + 1)) {
@@ -98,7 +98,7 @@ function getMonthTimeAxis() {
 function getQuarterlyTimeAxis() {
   const end = getQuarterStart();
   let start = new Date();
-  start.setMonth(end.getMonth() - 19 * 3);
+  start.setMonth(end.getMonth() - 6 * 3);
   start = new Date(start.getFullYear(), start.getMonth(), 1);
   const dates = [];
   for (var d = start; d <= end; d.setMonth(d.getMonth() + 3)) {
@@ -126,7 +126,7 @@ function getQuarterStart(date = new Date()) {
 function getYearlyTimeAxis() {
   const end = new Date(new Date().getFullYear(), 0, 1);
   let start = new Date();
-  start.setYear(end.getFullYear() - 19);
+  start.setYear(end.getFullYear() - 5);
   start = new Date(start.getFullYear(), 0, 1);
   const dates = [];
   for (var d = start; d <= end; d.setYear(d.getFullYear() + 1)) {
