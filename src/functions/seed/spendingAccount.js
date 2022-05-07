@@ -56,7 +56,5 @@ export const spendingAccount = (table, userId, categories) => {
     });
   }
 
-	console.log("Length: ",items.length)
-
   return items;
 };
