@@ -13,8 +13,6 @@ export default function GraphTesting(props) {
     (a, b) => b.transactionDate - a.transactionDate
   );
   const [account, setAccount] = useState(accounts[0]);
-
-  // const [totalsAverages, toggleTotalsAverages] = useState("T");
   const [timeFrame, setTimeFrame] = useState("D");
   const [transactions, setTransactions] = useState(
     allTransactions.filter(
@@ -82,79 +80,57 @@ export default function GraphTesting(props) {
             </div>
           </div>
 
-          {/* <div
-            className="total-average-toggle-btn-wrapper"
-            onClick={() =>
-              toggleTotalsAverages(totalsAverages === "T" ? "A" : "T")
-            }
-          >
-            <button
-              className={`total-average-toggle-btn ${
-                totalsAverages === "T" ? "ta-active" : "ta-not-active"
-              }`}
-            >
-              Totals
-            </button>
-            <button
-              className={`total-average-toggle-btn ${
-                totalsAverages === "A" ? "ta-active" : "ta-not-active"
-              }`}
-            >
-              Averages
-            </button>
-          </div> */}
-
           <div className="time-frame-toggle-btn-wrapper">
             <div className="time-frame-toggle-btn-section">
-              <button
+              <div
                 onClick={() => setTimeFrame("D")}
                 className={`time-frame-toggle-btn ${
                   timeFrame === "D" ? "tf-active" : "tf-not-active"
                 }`}
               >
                 D
-              </button>
+              </div>
 
-              <button
+              <div
                 onClick={() => setTimeFrame("W")}
                 className={`time-frame-toggle-btn ${
                   timeFrame === "W" ? "tf-active" : "tf-not-active"
                 }`}
               >
                 W
-              </button>
-              <button
+              </div>
+              <div
                 onClick={() => setTimeFrame("M")}
                 className={`time-frame-toggle-btn ${
                   timeFrame === "M" ? "tf-active" : "tf-not-active"
                 }`}
               >
                 M
-              </button>
-              <button
+              </div>
+              <div
                 onClick={() => setTimeFrame("Q")}
                 className={`time-frame-toggle-btn ${
                   timeFrame === "Q" ? "tf-active" : "tf-not-active"
                 }`}
               >
                 Q
-              </button>
-              <button
+              </div>
+              <div
                 onClick={() => setTimeFrame("Y")}
                 className={`time-frame-toggle-btn ${
                   timeFrame === "Y" ? "tf-active" : "tf-not-active"
                 }`}
               >
                 Y
-              </button>
-              <button
+              </div>
+              <div
                 onClick={() => setTimeFrame("YTD")}
                 className={`time-frame-toggle-btn ${
                   timeFrame === "YTD" ? "tf-active" : "tf-not-active"
                 }`}
               >
                 YTD
-              </button>
+              </div>
             </div>
           </div>
         </section>
@@ -171,7 +147,7 @@ export default function GraphTesting(props) {
         <section className="bargraph-wrapper">
           <div>
             <header>
-              <h5>Outgoing</h5>
+              <h5>Spending</h5>
             </header>
           </div>
           <TotalsBargraph transactions={withdrawals} timeFrame={timeFrame} />
