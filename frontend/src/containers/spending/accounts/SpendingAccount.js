@@ -132,6 +132,16 @@ export default function SpendingAccount() {
                 </div>
 
                 <div className="spending-account-btn-wrapper">
+                  <Link
+                    to={`/seed-transactions/${id}`}
+                    className="btn btn-edit form-control"
+                    style={isLoading ? { pointerEvents: "none" } : null}
+                  >
+                    Seed Account
+                  </Link>
+                </div>
+
+                <div className="spending-account-btn-wrapper">
                   <button
                     className="btn btn-delete form-control"
                     onClick={() => setShowConfirm(!showConfrim)}

@@ -38,10 +38,12 @@ import VerticalSpreadsOrderNew from "./containers/investing/orders/spreads/Verti
 import VerticalSpreadsOrderEdit from "./containers/investing/orders/spreads/VerticalSpreadsOrderEdit";
 
 import Strategies from "./containers/investing/strategies/Strategies";
+import GraphTesting from "./containers/graphs/GraphTesing"
 
 import NotFound from "./containers/NotFound";
 import SeedData from "./seed/SeedData";
-import GraphTesting from "./containers/graphs/GraphTesing"
+import SeedTransactions from "./seed/SeedTransactions";
+
 
 export default function Routes() {
   return (
@@ -60,6 +62,10 @@ export default function Routes() {
 
       <AuthenticatedRoute exact path="/seed-data">
         <SeedData />
+      </AuthenticatedRoute>
+
+			<AuthenticatedRoute exact path="/seed-transactions/:id">
+        <SeedTransactions />
       </AuthenticatedRoute>
 
 			<AuthenticatedRoute exact path="/graph-tesing">

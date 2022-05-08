@@ -34,8 +34,8 @@ const SubcategoryChartItem = (props) => {
 export default function SubcategoriesChart(props) {
   const { activeCategory, categories } = props;
   const [sortedSubcategories, setSortedCategories] = useState([]);
-  const [overallTotal, setOverallTotal] = useState();
-  const [max, setMax] = useState();
+  const [overallTotal, setOverallTotal] = useState(0);
+  const [max, setMax] = useState(0);
 
   useEffect(() => {
     const subcategories = categories.find(
