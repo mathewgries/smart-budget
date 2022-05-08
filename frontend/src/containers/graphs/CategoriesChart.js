@@ -7,7 +7,6 @@ import {
 } from "./incomeGraphHelpers";
 import { selectAllCategories } from "../../redux/spending/categoriesSlice";
 import SubcategoriesChart from "./SubcategoriesChart";
-import LoadingSpinner from "../../components/LoadingSpinner";
 
 const CategoryChartItem = (props) => {
   const { item, categories, overallTotal, max } = props;
@@ -45,7 +44,6 @@ const CategoryChartItem = (props) => {
 export default function CategoriesChart(props) {
   const { transactions, timeFrame } = props;
   const categories = useSelector(selectAllCategories);
-  const [isLoading, setIsLoading] = useState(true);
   const [sortedCategories, setSortedCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
   const [overallTotal, setOverallTotal] = useState(0);
@@ -64,8 +62,6 @@ export default function CategoriesChart(props) {
       setActiveCategory(sorted[0]);
       setOverallTotal(overallTotal);
     }
-
-    setIsLoading(false);
   }, [timeFrame, transactions]);
 
   function toggleActive(category) {
