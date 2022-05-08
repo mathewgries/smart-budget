@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { saveNewSpendingTransaction } from "../redux/spending/spendingTransactionsSlice";
@@ -12,15 +12,15 @@ export default function SeedTransactions(props) {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const account = useSelector((state) => selectSpendingAccountById(state, id));
-  const [fields, setFields] = useState({
+  const fields = {
     transactionAmount: "134.95",
     transactionType: "Withdrawal",
-  });
+  };
   const date = new Date("03/01/2019");
   const endDate = new Date();
 
   const handleSubmit = async (e) => {
-		let accountBalance = account.accountBalance
+    let accountBalance = account.accountBalance;
     while (date.getTime() < endDate.getTime()) {
       try {
         setIsLoading(true);
@@ -29,7 +29,7 @@ export default function SeedTransactions(props) {
       } catch (e) {
         onError(e);
       }
-			date.setUTCMonth(date.getUTCMonth() + 1);
+      date.setUTCMonth(date.getUTCMonth() + 1);
     }
     setIsLoading(false);
   };

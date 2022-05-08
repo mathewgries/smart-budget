@@ -131,7 +131,7 @@ export default function SpendingAccount() {
                   </Link>
                 </div>
 
-                <div className="spending-account-btn-wrapper">
+                {/* <div className="spending-account-btn-wrapper">
                   <Link
                     to={`/seed-transactions/${id}`}
                     className="btn btn-edit form-control"
@@ -139,7 +139,7 @@ export default function SpendingAccount() {
                   >
                     Seed Account
                   </Link>
-                </div>
+                </div> */}
 
                 <div className="spending-account-btn-wrapper">
                   <button
