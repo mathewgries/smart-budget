@@ -141,7 +141,10 @@ export default function GraphTesting(props) {
               <h5>Income</h5>
             </header>
           </div>
-          <TotalsBargraph transactions={deposits} timeFrame={timeFrame} />
+          <TotalsBargraph
+            transactions={deposits}
+            timeFrame={timeFrame}
+          />
         </section>
 
         <section className="bargraph-wrapper">
@@ -150,7 +153,10 @@ export default function GraphTesting(props) {
               <h5>Spending</h5>
             </header>
           </div>
-          <TotalsBargraph transactions={withdrawals} timeFrame={timeFrame} />
+          <TotalsBargraph
+            transactions={withdrawals}
+            timeFrame={timeFrame}
+          />
         </section>
 
         <section className="bargraph-wrapper">
@@ -172,7 +178,10 @@ export default function GraphTesting(props) {
               <h5>Categories</h5>
             </header>
           </div>
-          <CategoriesChart transactions={withdrawals} timeFrame={timeFrame} />
+          <CategoriesChart
+            transactions={withdrawals}
+            timeFrame={timeFrame}
+          />
         </section>
       </div>
     </div>

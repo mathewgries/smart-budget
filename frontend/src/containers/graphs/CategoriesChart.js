@@ -37,9 +37,7 @@ const CategoryChartItem = (props) => {
       <div
         className="category-chart-item-bar"
         style={{ width: setWidth() }}
-      >
-				{/* ${item.total.toFixed(2)} */}
-			</div>
+      ></div>
     </div>
   );
 };
@@ -49,9 +47,9 @@ export default function CategoriesChart(props) {
   const categories = useSelector(selectAllCategories);
   const [isLoading, setIsLoading] = useState(true);
   const [sortedCategories, setSortedCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState();
-  const [overallTotal, setOverallTotal] = useState();
-  const [max, setMax] = useState();
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [overallTotal, setOverallTotal] = useState(0);
+  const [max, setMax] = useState(0);
 
   useEffect(() => {
     const sorted = getCategoryChartDisplay(transactions, timeFrame).sort(
@@ -59,10 +57,14 @@ export default function CategoriesChart(props) {
     );
     const overallTotal = getOverallTotal(transactions, timeFrame);
     const max = getMaxValue(sorted.map((n) => n.total));
-    setMax(max);
-    setSortedCategories(sorted);
-    setActiveCategory(sorted[0]);
-    setOverallTotal(overallTotal);
+
+    if (sorted) {
+      setMax(max);
+      setSortedCategories(sorted);
+      setActiveCategory(sorted[0]);
+      setOverallTotal(overallTotal);
+    }
+
     setIsLoading(false);
   }, [timeFrame, transactions]);
 
@@ -72,28 +74,28 @@ export default function CategoriesChart(props) {
 
   return (
     <div className="categories-chart-container">
-      <div className="categories-chart-wrapper">
-        {sortedCategories.map((sorted) => (
-          <div key={sorted.categoryId} onClick={() => toggleActive(sorted)}>
-            <CategoryChartItem
-              item={sorted}
-              overallTotal={overallTotal}
-              max={max}
+      {activeCategory && (
+        <>
+          <div className="categories-chart-wrapper">
+            {sortedCategories.map((sorted) => (
+              <div key={sorted.categoryId} onClick={() => toggleActive(sorted)}>
+                <CategoryChartItem
+                  item={sorted}
+                  overallTotal={overallTotal}
+                  max={max}
+                  categories={categories}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="categories-chart-wrapper">
+            <SubcategoriesChart
+              activeCategory={activeCategory}
               categories={categories}
             />
           </div>
-        ))}
-      </div>
-      <div className="categories-chart-wrapper">
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          <SubcategoriesChart
-            activeCategory={activeCategory}
-            categories={categories}
-          />
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }
