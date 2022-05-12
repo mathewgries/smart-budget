@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import historyReducer from "./history/historySlice";
+import appReducer from "./appSlice";
 import usersReducer from "./users/usersSlice";
 import spendingAccountsReducer from "./spending/spendingAccountsSlice";
 import categoriesReducer from "./spending/categoriesSlice";
@@ -15,6 +16,7 @@ import signalsReducer from "./investing/signalsSlice";
 export default configureStore({
   reducer: {
     history: historyReducer,
+		app: appReducer,
     users: usersReducer,
     spendingAccounts: spendingAccountsReducer,
     spendingTransactions: spendingTransactionReducer,

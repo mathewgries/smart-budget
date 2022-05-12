@@ -5,7 +5,10 @@ import {
   selectSpendingAccountById,
   deleteSpendingAccount,
 } from "../../../redux/spending/spendingAccountsSlice";
-import { selectSpendingTransactionsByGSI } from "../../../redux/spending/spendingTransactionsSlice";
+import {
+  selectSpendingTransactionsByGSI,
+  selectAllSpendingTransactions,
+} from "../../../redux/spending/spendingTransactionsSlice";
 import { Link } from "react-router-dom";
 import { onError } from "../../../lib/errorLib";
 import SpendingAccountCard from "./SpendingAccountCard";
@@ -131,7 +134,7 @@ export default function SpendingAccount() {
                   </Link>
                 </div>
 
-                {/* <div className="spending-account-btn-wrapper">
+                <div className="spending-account-btn-wrapper">
                   <Link
                     to={`/seed-transactions/${id}`}
                     className="btn btn-edit form-control"
@@ -139,7 +142,7 @@ export default function SpendingAccount() {
                   >
                     Seed Account
                   </Link>
-                </div> */}
+                </div>
 
                 <div className="spending-account-btn-wrapper">
                   <button

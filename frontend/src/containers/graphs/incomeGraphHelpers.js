@@ -2,9 +2,10 @@ export function dollarsToCents(amount) {
   return Number.parseFloat(amount.replace(",", "")) * 100;
 }
 
-export function getAmount(num1, num2){
-	const total = dollarsToCents(num1.toString()) + dollarsToCents(num2.toString())
-	return total / 100
+export function getAmount(num1, num2) {
+  const total =
+    dollarsToCents(num1.toString()) + dollarsToCents(num2.toString());
+  return total / 100;
 }
 
 export function sumReducer(transactions) {
@@ -18,6 +19,10 @@ export function sumReducer(transactions) {
     initialValue
   );
   return total / 100;
+}
+
+export function getMinDate(transactionDates) {
+  return Math.min(...transactionDates);
 }
 
 export function getMinValue(amounts) {
@@ -34,31 +39,104 @@ export function dateForCompare(date) {
   return newDate.getTime();
 }
 
+export function setFixedTimeFrame(timeFrame, minDate) {
+  minDate = new Date(minDate);
+  let endDate = new Date();
+  let startDate = new Date();
+  switch (timeFrame) {
+    case "D":
+      startDate.setDate(startDate.getDate() - 6);
+      break;
+    case "W":
+      startDate.setDate(endDate.getDate() - 7 * 7);
+      if (startDate.getTime() < minDate.getTime()) {
+        startDate.setDate(
+          minDate.getDate() + ((0 - 1 - minDate.getDay() + 7) % 7) + 1
+        );
+      } else {
+        startDate.setDate(
+          startDate.getDate() + ((0 - 1 - startDate.getDay() + 7) % 7) + 1
+        );
+      }
+      break;
+    case "M":
+      startDate.setMonth(endDate.getMonth() - 7);
+      if (startDate.getTime() < minDate.getTime()) {
+        startDate = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 1);
+      } else {
+        startDate = new Date(
+          startDate.getFullYear(),
+          startDate.getMonth() + 1,
+          1
+        );
+      }
+      break;
+    case "Q":
+      const currentQuarter = getQuarterStart();
+      startDate.setMonth(currentQuarter.getMonth() - 3 * 6);
+			if (startDate.getTime() < minDate.getTime()) {
+        startDate = new Date(minDate.getFullYear(), minDate.getMonth(), 1);
+      } else {
+        startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+      }
+      startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+      break;
+    case "Y":
+      startDate.setMonth(endDate.getMonth() - 7 * 12);
+      if (startDate.getTime() < minDate.getTime()) {
+        startDate = new Date(minDate.getFullYear(), 0, 1);
+      } else {
+        startDate = new Date(startDate.getFullYear(), 0, 1);
+      }
+      break;
+    case "YTD":
+      startDate = new Date(new Date().getFullYear(), 0, 1);
+      break;
+    default:
+      startDate.setDate(endDate.getDate() - 7);
+      break;
+  }
+
+  return {
+    label: timeFrame,
+    startDate: new Date(startDate).setHours(0, 0, 0, 0),
+    endDate: new Date(endDate).setHours(23, 59, 59, 999),
+  };
+}
+
+export function getTransactionsForTimeFrame(transactions, startDate, endDate) {
+  return transactions.filter(
+    (transaction) =>
+      dateForCompare(transaction.transactionDate) >=
+        dateForCompare(startDate) &&
+      dateForCompare(transaction.transactionDate) <= dateForCompare(endDate)
+  );
+}
+
 export function getTimeGraphXAxis(timeFrame) {
-  if (timeFrame === "D") {
-    return getDayTimeAxis();
+  if (timeFrame.label === "D") {
+    return getDayTimeAxis(timeFrame);
   }
-  if (timeFrame === "W") {
-    return getWeekTimeAxis();
+  if (timeFrame.label === "W") {
+    return getWeekTimeAxis(timeFrame);
   }
-  if (timeFrame === "M") {
-    return getMonthTimeAxis();
+  if (timeFrame.label === "M") {
+    return getMonthTimeAxis(timeFrame);
   }
-  if (timeFrame === "Q") {
-    return getQuarterlyTimeAxis();
+  if (timeFrame.label === "Q") {
+    return getQuarterlyTimeAxis(timeFrame);
   }
-  if (timeFrame === "Y") {
-    return getYearlyTimeAxis();
+  if (timeFrame.label === "Y") {
+    return getYearlyTimeAxis(timeFrame);
   }
-  if (timeFrame === "YTD") {
-    return getYearToDateTimeAxis();
+  if (timeFrame.label === "YTD") {
+    return getYearToDateTimeAxis(timeFrame);
   }
 }
 
-function getDayTimeAxis() {
-  const end = new Date();
-  let start = new Date();
-  start.setDate(end.getDate() - 7);
+function getDayTimeAxis(timeFrame) {
+  const end = new Date(timeFrame.endDate);
+  let start = new Date(timeFrame.startDate);
   const dates = [];
   for (var d = start; d <= end; d.setDate(d.getDate() + 1)) {
     dates.push(new Date(d));
@@ -66,10 +144,9 @@ function getDayTimeAxis() {
   return dates;
 }
 
-function getWeekTimeAxis() {
-  const end = getPreviousSunday();
-  let start = new Date();
-  start.setDate(end.getDate() - 10 * 7);
+function getWeekTimeAxis(timeFrame) {
+  const end = getPreviousSunday(timeFrame.endDate);
+  let start = new Date(timeFrame.startDate);
   const dates = [];
   for (var d = start; d <= end; d.setDate(d.getDate() + 7)) {
     dates.push(new Date(d));
@@ -79,15 +156,14 @@ function getWeekTimeAxis() {
 
 function getPreviousSunday(date = new Date()) {
   const previousSunday = new Date();
-  previousSunday.setDate(date.getDate() - date.getDay());
+  const newDate = new Date(date);
+  previousSunday.setDate(newDate.getDate() - newDate.getDay());
   return previousSunday;
 }
 
-function getMonthTimeAxis() {
-  const end = new Date();
-  let start = new Date();
-  start.setMonth(end.getMonth() - 6);
-  start = new Date(start.getFullYear(), start.getMonth(), 1);
+function getMonthTimeAxis(timeFrame) {
+  const end = new Date(timeFrame.endDate);
+  let start = new Date(timeFrame.startDate);
   const dates = [];
   for (var d = start; d <= end; d.setMonth(d.getMonth() + 1)) {
     dates.push(new Date(d));
@@ -95,11 +171,9 @@ function getMonthTimeAxis() {
   return dates;
 }
 
-function getQuarterlyTimeAxis() {
-  const end = getQuarterStart();
-  let start = new Date();
-  start.setMonth(end.getMonth() - 6 * 3);
-  start = new Date(start.getFullYear(), start.getMonth(), 1);
+function getQuarterlyTimeAxis(timeFrame) {
+  const end = getQuarterStart(timeFrame.endDate);
+  let start = new Date(timeFrame.startDate);
   const dates = [];
   for (var d = start; d <= end; d.setMonth(d.getMonth() + 3)) {
     dates.push(new Date(d));
@@ -108,7 +182,8 @@ function getQuarterlyTimeAxis() {
 }
 
 function getQuarterStart(date = new Date()) {
-  const currentMonth = date.getUTCMonth();
+  const newDate = new Date(date);
+  const currentMonth = newDate.getMonth();
   const currentQuarter = new Date();
   if (currentMonth >= 9) {
     currentQuarter.setMonth(currentMonth - (currentMonth - 9));
@@ -123,11 +198,9 @@ function getQuarterStart(date = new Date()) {
   return new Date(currentQuarter.getFullYear(), currentQuarter.getMonth(), 1);
 }
 
-function getYearlyTimeAxis() {
-  const end = new Date(new Date().getFullYear(), 0, 1);
-  let start = new Date();
-  start.setYear(end.getFullYear() - 5);
-  start = new Date(start.getFullYear(), 0, 1);
+function getYearlyTimeAxis(timeFrame) {
+  const end = new Date(new Date(timeFrame.endDate).getFullYear(), 0, 1);
+  let start = new Date(timeFrame.startDate);
   const dates = [];
   for (var d = start; d <= end; d.setYear(d.getFullYear() + 1)) {
     dates.push(new Date(d));
@@ -135,9 +208,10 @@ function getYearlyTimeAxis() {
   return dates;
 }
 
-function getYearToDateTimeAxis(date = new Date()) {
+function getYearToDateTimeAxis(timeFrame, date = new Date()) {
+  const newDate = new Date(date);
   const start = new Date(new Date().getFullYear(), 0, 1);
-  const end = new Date(date.getFullYear(), date.getMonth(), 1);
+  const end = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
   const dates = [];
   for (var d = start; d <= end; d.setMonth(d.getMonth() + 1)) {
     dates.push(new Date(d));
@@ -145,42 +219,42 @@ function getYearToDateTimeAxis(date = new Date()) {
   return dates;
 }
 
-export function getBargraphDisplay(deposits, timeFrame) {
+export function getBargraphDisplay(transactions, timeFrame) {
   const timeFrameAxis = getTimeGraphXAxis(timeFrame);
-  if (timeFrame === "D") {
-    return getDayDisplay(deposits, timeFrameAxis);
+  if (timeFrame.label === "D") {
+    return getDayDisplay(transactions, timeFrameAxis);
   }
-  if (timeFrame === "W") {
-    return getWeeklyDisplay(deposits, timeFrameAxis);
+  if (timeFrame.label === "W") {
+    return getWeeklyDisplay(transactions, timeFrameAxis);
   }
-  if (timeFrame === "M") {
-    return getMonthlyDisplay(deposits, timeFrameAxis);
+  if (timeFrame.label === "M") {
+    return getMonthlyDisplay(transactions, timeFrameAxis);
   }
-  if (timeFrame === "Q") {
-    return getQuarterlyDisplay(deposits, timeFrameAxis);
+  if (timeFrame.label === "Q") {
+    return getQuarterlyDisplay(transactions, timeFrameAxis);
   }
-  if (timeFrame === "Y") {
-    return getYearlyDisplay(deposits, timeFrameAxis);
+  if (timeFrame.label === "Y") {
+    return getYearlyDisplay(transactions, timeFrameAxis);
   }
-  if (timeFrame === "YTD") {
-    return getMonthlyDisplay(deposits, timeFrameAxis);
+  if (timeFrame.label === "YTD") {
+    return getMonthlyDisplay(transactions, timeFrameAxis);
   }
 }
 
-function getDayDisplay(deposits, timeFrameAxis) {
+function getDayDisplay(transactions, timeFrameAxis) {
   const results = timeFrameAxis.map((element, index, collection) => ({
     amount: sumReducer(
-      deposits.filter((deposit) =>
-        compareDayDates(element, new Date(deposit.transactionDate))
-          ? deposit.transactionAmount
+      transactions.filter((transaction) =>
+        compareDayDates(element, new Date(transaction.transactionDate))
+          ? transaction.transactionAmount
           : 0
       )
     ),
-    date: element.getUTCMonth() + 1 + "/" + element.getUTCDate(),
+    date: element.getMonth() + 1 + "/" + element.getDate(),
     year:
-      element.getUTCMonth() + 1 === 1 &&
-      (!collection[index - 1] || collection[index - 1].getUTCMonth() + 1 !== 1)
-        ? element.getUTCFullYear()
+      element.getMonth() + 1 === 1 &&
+      (!collection[index - 1] || collection[index - 1].getMonth() + 1 !== 1)
+        ? element.getFullYear()
         : null,
   }));
   return results;
@@ -192,20 +266,20 @@ function compareDayDates(date1, date2) {
   return date1.getTime() === date2.getTime();
 }
 
-function getWeeklyDisplay(deposits, timeFrameAxis) {
+function getWeeklyDisplay(transactions, timeFrameAxis) {
   const results = timeFrameAxis.map((element, index, collection) => ({
     amount: sumReducer(
-      deposits.filter((deposit) =>
-        compareWeeklyDates(element, new Date(deposit.transactionDate))
-          ? deposit.transactionAmount
+      transactions.filter((transaction) =>
+        compareWeeklyDates(element, new Date(transaction.transactionDate))
+          ? transaction.transactionAmount
           : 0
       )
     ),
-    date: element.getUTCMonth() + 1 + "/" + element.getUTCDate(),
+    date: element.getMonth() + 1 + "/" + element.getDate(),
     year:
-      element.getUTCMonth() + 1 === 1 &&
-      (!collection[index - 1] || collection[index - 1].getUTCMonth() + 1 !== 1)
-        ? element.getUTCFullYear()
+      element.getMonth() + 1 === 1 &&
+      (!collection[index - 1] || collection[index - 1].getMonth() + 1 !== 1)
+        ? element.getFullYear()
         : null,
   }));
   return results;
@@ -225,24 +299,24 @@ function compareWeeklyDates(date1, date2) {
   );
 }
 
-function getMonthlyDisplay(deposits, timeFrameAxis) {
+function getMonthlyDisplay(transactions, timeFrameAxis) {
   const results = timeFrameAxis.map((element, index, collection) => ({
     amount: sumReducer(
-      deposits.filter((deposit) =>
-        compareMonthlyDates(element, new Date(deposit.transactionDate))
-          ? deposit.transactionAmount
+      transactions.filter((transaction) =>
+        compareMonthlyDates(element, new Date(transaction.transactionDate))
+          ? transaction.transactionAmount
           : 0
       )
     ),
     date:
-      element.getUTCMonth() +
+      element.getMonth() +
       1 +
       "/" +
-      element.getUTCFullYear().toString().substring(2),
+      element.getFullYear().toString().substring(2),
     year:
-      element.getUTCMonth() + 1 === 1 &&
-      (!collection[index - 1] || collection[index - 1].getUTCMonth() + 1 !== 1)
-        ? element.getUTCFullYear()
+      element.getMonth() + 1 === 1 &&
+      (!collection[index - 1] || collection[index - 1].getMonth() + 1 !== 1)
+        ? element.getFullYear()
         : null,
   }));
   return results;
@@ -261,24 +335,24 @@ function compareMonthlyDates(date1, date2) {
   );
 }
 
-function getQuarterlyDisplay(deposits, timeFrameAxis) {
+function getQuarterlyDisplay(transactions, timeFrameAxis) {
   const results = timeFrameAxis.map((element, index, collection) => ({
     amount: sumReducer(
-      deposits.filter((deposit) =>
-        compareQuarterlyDates(element, new Date(deposit.transactionDate))
-          ? deposit.transactionAmount
+      transactions.filter((transaction) =>
+        compareQuarterlyDates(element, new Date(transaction.transactionDate))
+          ? transaction.transactionAmount
           : 0
       )
     ),
     date:
-      element.getUTCMonth() +
+      element.getMonth() +
       1 +
       "/" +
-      element.getUTCFullYear().toString().substring(2),
+      element.getFullYear().toString().substring(2),
     year:
-      element.getUTCMonth() + 1 === 1 &&
-      (!collection[index - 1] || collection[index - 1].getUTCMonth() + 1 !== 1)
-        ? element.getUTCFullYear()
+      element.getMonth() + 1 === 1 &&
+      (!collection[index - 1] || collection[index - 1].getMonth() + 1 !== 1)
+        ? element.getFullYear()
         : null,
   }));
   return results;
@@ -298,16 +372,16 @@ function compareQuarterlyDates(date1, date2) {
   );
 }
 
-function getYearlyDisplay(deposits, timeFrameAxis) {
+function getYearlyDisplay(transactions, timeFrameAxis) {
   const results = timeFrameAxis.map((element) => ({
     amount: sumReducer(
-      deposits.filter((deposit) =>
-        compareYearlyDates(element, new Date(deposit.transactionDate))
-          ? deposit.transactionAmount
+      transactions.filter((transaction) =>
+        compareYearlyDates(element, new Date(transaction.transactionDate))
+          ? transaction.transactionAmount
           : 0
       )
     ),
-    date: element.getUTCFullYear(),
+    date: element.getFullYear(),
     year: null,
   }));
   return results;
@@ -326,68 +400,53 @@ function compareYearlyDates(date1, date2) {
   );
 }
 
-export function getCategoryChartDisplay(transactions, timeFrame) {
+export function getOverallTotal(transactions, timeFrame) {
   const start = getTimeGraphXAxis(timeFrame)[0];
-  return transactions
-    .filter(
+  return sumReducer(
+    transactions.filter(
       (transaction) =>
         dateForCompare(transaction.transactionDate) >= dateForCompare(start)
     )
-    .reduce((accumulator, current) => {
-      let existing = accumulator.find(
-        (n) => n.categoryId === current.categoryId
-      );
-      if (existing) {
-        existing.total = getAmount(existing.total, current.transactionAmount);
-        existing.count = existing.count + 1;
-        let existingSub = existing.subcategories.find(
-          (n) => n.subcategoryId === current.subcategoryId
-        );
-        if (existingSub) {
-          existing.subcategories = existing.subcategories.map((subcategory) => {
-            if (subcategory.subcategoryId === current.subcategoryId) {
-              return {
-                ...subcategory,
-                count: subcategory.count + 1,
-                total: getAmount(subcategory.total, current.transactionAmount),
-              };
-            } else {
-              return subcategory;
-            }
-          });
-        } else {
-          existing.subcategories = [
-            ...existing.subcategories,
-            {
-              subcategoryId: current.subcategoryId,
-              count: 1,
-              total: Number.parseFloat(current.transactionAmount),
-            },
-          ];
-        }
-      } else {
-        accumulator.push({
-          categoryId: current.categoryId,
-          total: Number.parseFloat(current.transactionAmount),
-          count: 1,
-          subcategories: [
-            {
-              subcategoryId: current.subcategoryId,
-              count: 1,
-              total: Number.parseFloat(current.transactionAmount),
-            },
-          ],
-        });
-      }
-      return accumulator;
-    }, []);
+  );
 }
 
-export function getOverallTotal(transactions, timeFrame){
-	const start = getTimeGraphXAxis(timeFrame)[0];
-  return sumReducer(transactions
-    .filter(
-      (transaction) =>
-        dateForCompare(transaction.transactionDate) >= dateForCompare(start)
-    ))
+export function reduceCategories(transactions) {
+  return transactions.reduce((a, b) => {
+    const exists = a.find((n) => n.categoryId === b.categoryId);
+    if (exists) {
+      exists.count += 1;
+      exists.total += Number.parseFloat(b.transactionAmount);
+    } else {
+      a.push({
+        categoryId: b.categoryId,
+        count: 1,
+        total: Number.parseFloat(b.transactionAmount),
+        subcategories: transactions
+          .filter((n) => n.categoryId === b.categoryId)
+          .map((x) => ({
+            subcategoryId: x.subcategoryId,
+            transactionAmount: Number.parseFloat(x.transactionAmount),
+          })),
+      });
+    }
+    return a;
+  }, []);
+}
+
+export function reduceSubcategories(category, subcategories) {
+  return category.subcategories.reduce((a, b) => {
+    const exists = a.find((n) => n.subcategoryId === b.subcategoryId);
+    if (exists) {
+      exists.count += 1;
+      exists.total += Number.parseFloat(b.transactionAmount);
+    } else {
+      a.push({
+        subcategoryId: b.subcategoryId,
+        count: 1,
+        total: Number.parseFloat(b.transactionAmount),
+				name: subcategories.find((n) => n.id === b.subcategoryId).name
+      });
+    }
+    return a;
+  }, []);
 }

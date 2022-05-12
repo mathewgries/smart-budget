@@ -4,7 +4,8 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { amplifyClient } from "../../api/amplifyClient";
-import { addNewUser, fetchAllData } from "../users/usersSlice";
+import { addNewUser } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 
 const signalsAdapter = createEntityAdapter();
 
@@ -12,6 +13,13 @@ const initialState = signalsAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllSignals = createAsyncThunk(
+  "signals/getAllSignals",
+  async () => {
+    return await amplifyClient.get("smartbudget", "/investing/signals");
+  }
+);
 
 export const updateSignals = createAsyncThunk(
   "signals/updateSignals",
@@ -51,7 +59,9 @@ export const signalsSlice = createSlice({
       })
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const signals = action.payload.find((item) => item.type === "SIGNALS#");
+        const signals = action.payload.find(
+          (item) => item.type === "SIGNALS#"
+        );
         signalsAdapter.upsertMany(state, signals.signals);
       })
       .addCase(fetchAllData.rejected, (state, action) => {

@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { amplifyClient } from "../../api/amplifyClient";
-
-export const fetchAllData = createAsyncThunk("users/fetchAllData", async () => {
-  return await amplifyClient.loadAll("smartbudget", "/users");
-});
+import { fetchAllData } from "../appSlice";
 
 export const addNewUser = createAsyncThunk("users/addNewUser", async (data) => {
   return await amplifyClient.auth.newUser(data, "smartbudget", "/users");
+});
+
+export const getUserInfo = createAsyncThunk("users/getUserInfo", async () => {
+  return await amplifyClient.get("smartbudget", "/users/info");
 });
 
 export const signUpUser = createAsyncThunk(
@@ -79,8 +80,10 @@ export const usersSlice = createSlice({
       })
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const data = action.payload.filter((item) => item.type === "USER#INFO");
-        state.user = data[0];
+        const userInfo = action.payload.find(
+          (item) => item.type === "USER#INFO"
+        );
+        state.user = userInfo;
       })
       .addCase(fetchAllData.rejected, (state, action) => {
         state.status = "failed";

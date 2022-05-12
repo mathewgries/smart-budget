@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getMaxValue } from "./incomeGraphHelpers";
+import { reduceSubcategories, getMaxValue } from "./incomeGraphHelpers";
 
 const SubcategoryChartItem = (props) => {
   const { item, overallTotal, max } = props;
@@ -41,14 +41,10 @@ export default function SubcategoriesChart(props) {
     const subcategories = categories.find(
       (category) => activeCategory.categoryId === category.id
     ).subcategories;
-    const sorted = activeCategory.subcategories
-      .map((active) => ({
-        ...active,
-        name: subcategories.find(
-          (subcategory) => active.subcategoryId === subcategory.id
-        ).name,
-      }))
-      .sort((a, b) => b.total - a.total);
+
+    const sorted = reduceSubcategories(activeCategory, subcategories).sort(
+      (a, b) => b.total - a.total
+    );
     const max = getMaxValue(sorted.map((n) => n.total));
 
     setMax(max);

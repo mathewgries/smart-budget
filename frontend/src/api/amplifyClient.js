@@ -43,4 +43,10 @@ export const amplifyClient = {
       body: data,
     });
   },
+	testAllData: async ({api, uriList}) => {
+		const data = uriList.forEach(async(uri) => {
+			return await API.get(api, uri);
+		});
+    return data
+  },
 };

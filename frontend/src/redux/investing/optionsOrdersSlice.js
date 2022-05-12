@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { deleteStrategy } from "./strategiesSlice";
-import { fetchAllData } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
 const optionsAdapter = createEntityAdapter({
@@ -16,6 +16,13 @@ const initialState = optionsAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllOptionsOrders = createAsyncThunk(
+  "optionsOrders/getAllOptionsOrders",
+  async () => {
+    return await amplifyClient.get("smartbudget", "/investing/orders/options");
+  }
+);
 
 export const saveNewOptionsOrder = createAsyncThunk(
   "optionsOrders/saveNewOptionsOrder",

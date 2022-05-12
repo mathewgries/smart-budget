@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import {
-  getCategoryChartDisplay,
+	reduceCategories,
   getOverallTotal,
   getMaxValue,
 } from "./incomeGraphHelpers";
@@ -50,7 +50,7 @@ export default function CategoriesChart(props) {
   const [max, setMax] = useState(0);
 
   useEffect(() => {
-    const sorted = getCategoryChartDisplay(transactions, timeFrame).sort(
+    const sorted = reduceCategories(transactions).sort(
       (a, b) => b.total - a.total
     );
     const overallTotal = getOverallTotal(transactions, timeFrame);

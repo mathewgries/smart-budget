@@ -29,8 +29,6 @@ export default function SpendingTransaction(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
-	console.log(transaction)
-
   useEffect(() => {
     if (status === "pending" && !isLoading) {
       setIsLoading(true);

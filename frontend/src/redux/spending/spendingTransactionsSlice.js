@@ -6,7 +6,7 @@ import {
 import { deleteSpendingAccount } from "./spendingAccountsSlice";
 import { deleteCategory, deleteSubcategory } from "./categoriesSlice";
 import { amplifyClient } from "../../api/amplifyClient";
-import { fetchAllData } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 
 const spendingTransactionsAdapter = createEntityAdapter();
 
@@ -14,6 +14,13 @@ const initialState = spendingTransactionsAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllSpendingTransactions = createAsyncThunk(
+  "spendingTransactions/getAllSpendingTransactions",
+  async () => {
+    return await amplifyClient.get("smartbudget", "/spending/transactions");
+  }
+);
 
 export const saveNewSpendingTransaction = createAsyncThunk(
   "spendingTransactions/saveNewSpendingTransaction",
