@@ -23,33 +23,24 @@ export default function GraphTesting(props) {
   );
   const minDate = getMinDate(transactions.map((n) => n.transactionDate));
   const [timeFrame, setTimeFrame] = useState(setFixedTimeFrame("D", minDate));
+  const transForTime = getTransactionsForTimeFrame(
+    transactions,
+    timeFrame.startDate,
+    timeFrame.endDate
+  ).sort((a, b) => b.transactionDate - a.transactionDate);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const [withdrawals, setWithdrawals] = useState([]);
-  const [deposits, setDeposits] = useState([]);
+  const withdrawals = transForTime
+    .filter((transaction) => transaction.transactionType === "W")
+    .sort((a, b) => b.transactionDate - a.transactionDate);
+  const deposits = transForTime
+    .filter((transaction) => transaction.transactionType === "D")
+    .sort((a, b) => b.transactionDate - a.transactionDate);
 
   useEffect(() => {
     setTimeFrame((prev) => setFixedTimeFrame(prev.label, minDate));
-  }, [account]);
+  }, [account, minDate]);
 
-  useEffect(() => {
-    const transForTime = getTransactionsForTimeFrame(
-      transactions,
-      timeFrame.startDate,
-      timeFrame.endDate
-    ).sort((a, b) => b.transactionDate - a.transactionDate);
-
-    setWithdrawals(
-      transForTime
-        .filter((transaction) => transaction.transactionType === "W")
-        .sort((a, b) => b.transactionDate - a.transactionDate)
-    );
-    setDeposits(
-      transForTime
-        .filter((transaction) => transaction.transactionType === "D")
-        .sort((a, b) => b.transactionDate - a.transactionDate)
-    );
-  }, [timeFrame]);
 
   function handleShowDatePicker() {
     setShowDatePicker(!showDatePicker);
@@ -274,7 +265,7 @@ export default function GraphTesting(props) {
             timeFrame={timeFrame}
           />
         </section>
-        
+
         <section className="bargraph-wrapper">
           <div>
             <header>
