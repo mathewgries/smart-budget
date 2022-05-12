@@ -14,12 +14,12 @@
 }
 
 .confirmation-popup {
-  background-color:  #98c1d9;
-	color:#293241;
-	font-weight: bold;
+  background-color: #98c1d9;
+  color: #293241;
+  font-weight: bold;
   padding: 50px;
   border-radius: 15px;
-  -webkit-box-shadow: 0 10px 6px -6px  #777;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
   -moz-box-shadow: 0 10px 6px -6px #777;
   box-shadow: 0 10px 6px -6px #777;
 }
@@ -32,5 +32,57 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
+  margin-top: 20px;
+}
+
+.date-picker-popup-wrapper {
+  position: relative;
+  z-index: 2;
+  top: 20%;
+  width: 80%;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.date-picker-popup {
+  border: 1px solid #98c1d9;
+  background-color: #98c1d9;
+  color: #293241;
+  height: 100%;
+  font-weight: bold;
+  border-radius: 15px;
+  -webkit-box-shadow: 0 10px 6px -6px #777;
+  -moz-box-shadow: 0 10px 6px -6px #777;
+  box-shadow: 0 10px 6px -6px #777;
+}
+
+.date-display-wrapper {
+  width: 80%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  margin: 30px auto;
+}
+
+.date-display {
+  text-align: center;
+  width: 49%;
+  height: 60px;
+}
+
+.date-display input {
+  background-color: #e0fbfc;
+  border: none;
+  color: #293241;
+  width: 100%;
+  font-size: 16px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.date-picker-popup-btn-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-evenly;
   margin-top: 20px;
 }

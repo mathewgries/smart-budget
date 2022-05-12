@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { amplifyClient } from "../../api/amplifyClient";
-import { fetchAllData } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 
 const investingTransactionAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.createDate.toString().localeCompare(a.createDate),
@@ -15,6 +15,13 @@ const initialState = investingTransactionAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllInvestingTransactions = createAsyncThunk(
+  "investingTransactions/getAllInvestingTransactions",
+  async () => {
+    return await amplifyClient.get("smartbudget", "/investing/transactions");
+  }
+);
 
 export const saveNewInvestingTransaction = createAsyncThunk(
   "investingTransactions/saveNewInvestingTransaction",

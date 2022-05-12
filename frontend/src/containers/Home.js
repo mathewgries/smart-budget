@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useAppContext } from "../lib/contextLib";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchAllData } from "../redux/users/usersSlice";
+// import { fetchAllData } from "../redux/users/usersSlice";
+import { fetchAllData } from "../redux/appSlice";
 import { selectAllSpendingAcounts } from "../redux/spending/spendingAccountsSlice";
 import { selectAllInvestingAccounts } from "../redux/investing/investingAccountsSlice";
 import { Link } from "react-router-dom";
@@ -16,6 +17,7 @@ export default function Home() {
   const history = useHistory();
   const dispatch = useDispatch();
   const prevLocation = useSelector((state) => state.history.lastRoute);
+	const appStatus = useSelector((state) => state.app.status)
   const usersStatus = useSelector((state) => state.users.status);
   const spendingAccountStatus = useSelector(
     (state) => state.spendingAccounts.status
@@ -36,6 +38,7 @@ export default function Home() {
 
       function validateStatus() {
         return (
+					appStatus === "pending" ||
           usersStatus === "pending" ||
           spendingAccountStatus === "pending" ||
           investingAccountStatus === "pending"
@@ -48,7 +51,7 @@ export default function Home() {
         setIsLoading(false);
       }
 
-      if (usersStatus === "idle") {
+      if (appStatus === "idle") {
         try {
           await dispatch(fetchAllData()).unwrap();
         } catch (e) {
@@ -61,6 +64,7 @@ export default function Home() {
   }, [
     isAuthenticated,
     isLoading,
+		appStatus,
     usersStatus,
     spendingAccountStatus,
     investingAccountStatus,

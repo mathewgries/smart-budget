@@ -4,7 +4,7 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { amplifyClient } from "../../api/amplifyClient";
-import { fetchAllData } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 import {
   saveNewSpendingTransaction,
   updateSpendingTransaction,
@@ -19,6 +19,13 @@ const initialState = spendingAccountsAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllSpendingAccounts = createAsyncThunk(
+  "spendingAccounts/getAllSpendingAccounts",
+  async () => {
+    return await amplifyClient.get("smartbudget", "/spending/accounts");
+  }
+);
 
 export const addNewSpendingAccount = createAsyncThunk(
   "spendingAccounts/addNewSpendingAccount",

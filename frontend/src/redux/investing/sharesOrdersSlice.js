@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { deleteStrategy } from "./strategiesSlice";
-import { fetchAllData } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
 const sharesAdapter = createEntityAdapter({
@@ -16,6 +16,13 @@ const initialState = sharesAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllSharesOrders = createAsyncThunk(
+  "sharesOrders/getAllSharesOrders",
+  async () => {
+    return await amplifyClient.get("smartbudget", "/investing/orders/shares");
+  }
+);
 
 export const saveNewSharesOrder = createAsyncThunk(
   "sharesOrders/saveNewSharesOrder",

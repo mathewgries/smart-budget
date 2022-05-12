@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import { deleteInvestingAccount } from "./investingAccountsSlice";
 import { deleteStrategy } from "./strategiesSlice";
-import { fetchAllData } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
 const vertSpreadsAdapter = createEntityAdapter({
@@ -16,6 +16,16 @@ const initialState = vertSpreadsAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllVerticalSpreadsOrders = createAsyncThunk(
+  "verticalSpreadsOrders/getAllVerticalSpreadsOrders",
+  async () => {
+    return await amplifyClient.get(
+      "smartbudget",
+      "/investing/orders/spreads/vertical"
+    );
+  }
+);
 
 export const saveNewVerticalSpreadsOrder = createAsyncThunk(
   "verticalSpreadsOrders/saveNewVerticalSpreadsOrder",
@@ -64,7 +74,7 @@ export const verticalSpreadsOrdersSlice = createSlice({
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
         const verts = action.payload.filter(
-          (item) => item.type === "ORDER#VERTSPREADS#"
+          (item) => item.type === "	ORDER#VERTSPREADS#"
         );
         vertSpreadsAdapter.setAll(state, verts);
       })

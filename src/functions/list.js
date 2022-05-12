@@ -1,5 +1,5 @@
-import handler from "../../../util/handler";
-import dynamoDb from "../../../util/dynamodb";
+import handler from "../util/handler";
+import dynamoDb from "../util/dynamodb";
 
 export const main = handler(async (event) => {
   const userId = event.requestContext.authorizer.iam.cognitoIdentity.identityId;
@@ -11,14 +11,9 @@ export const main = handler(async (event) => {
     result = await dynamoDb.query({
       TableName: process.env.TABLE_NAME,
       ExclusiveStartKey,
-      KeyConditionExpression: "#PK = :PK and begins_with(#SK, :SK)",
-      ExpressionAttributeNames: {
-        "#PK": "PK",
-        "#SK": "SK",
-      },
+      KeyConditionExpression: "PK = :PK",
       ExpressionAttributeValues: {
         ":PK": `USER#${userId}`,
-        ":SK": "TRANS#SPENDING#",
       },
     });
     ExclusiveStartKey = result.LastEvaluatedKey;

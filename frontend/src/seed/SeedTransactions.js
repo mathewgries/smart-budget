@@ -13,15 +13,44 @@ export default function SeedTransactions(props) {
   const dispatch = useDispatch();
   const account = useSelector((state) => selectSpendingAccountById(state, id));
   const fields = {
-    transactionAmount: "134.95",
+    transactionAmount:  "1190.00",
     transactionType: "Withdrawal",
   };
-  const date = new Date("03/01/2019");
+  let date = new Date("03/01/2019");
   const endDate = new Date();
 
+  //BI MONTHLY
+  // const handleSubmit = async (e) => {
+  //   let accountBalance = account.accountBalance;
+  //   while (date.getTime() <= endDate.getTime()) {
+  // 		console.log(date)
+  // 		const currentDay = date.getDay()
+
+  // 		if(currentDay === 6){
+  // 			date.setDate(date.getDate() - 1)
+  // 		}else if(currentDay === 0){
+  // 			date.setDate(date.getDate() - 2)
+  // 		}
+
+  //     try {
+  //       setIsLoading(true);
+  //       accountBalance = getNewAccountBalance(accountBalance);
+  //       await handleSaveNewTransaction(accountBalance);
+  //     } catch (e) {
+  //       onError(e);
+  //     }
+
+  //     date = new Date(date.getFullYear(), date.getMonth() + 2, 0);
+  //   }
+  //   setIsLoading(false);
+  // };
+
+  // DAILY
   const handleSubmit = async (e) => {
     let accountBalance = account.accountBalance;
-    while (date.getTime() < endDate.getTime()) {
+    while (date.getTime() <= endDate.getTime()) {
+      console.log(date);
+
       try {
         setIsLoading(true);
         accountBalance = getNewAccountBalance(accountBalance);
@@ -29,7 +58,8 @@ export default function SeedTransactions(props) {
       } catch (e) {
         onError(e);
       }
-      date.setUTCMonth(date.getUTCMonth() + 1);
+
+      date.setMonth(date.getMonth() + 1);
     }
     setIsLoading(false);
   };
@@ -44,20 +74,6 @@ export default function SeedTransactions(props) {
   };
 
   const handleSaveNewTransaction = async (newAccountBalance) => {
-    // console.log({
-    //   transaction: {
-    //     transactionAmount: fields.transactionAmount,
-    //     transactionDate: Date.parse(date),
-    //     transactionType: "W",
-    //     categoryId: "72bacce3-c9ae-11ec-96d5-1f22d1c68a62",
-    //     subcategoryId: "72bacce6-c9ae-11ec-96d5-1f22d1c68a62",
-    //     transactionNote: "Gold Standard",
-    //   },
-    //   account: {
-    //     id: account.id,
-    //     accountBalance: newAccountBalance,
-    //   },
-    // });
     await dispatch(
       saveNewSpendingTransaction({
         transaction: {
@@ -65,8 +81,8 @@ export default function SeedTransactions(props) {
           transactionDate: Date.parse(date),
           transactionType: "W",
           categoryId: "72bacceb-c9ae-11ec-96d5-1f22d1c68a62",
-          subcategoryId: "72baccf2-c9ae-11ec-96d5-1f22d1c68a62",
-          transactionNote: "State Farm",
+          subcategoryId: "72baccef-c9ae-11ec-96d5-1f22d1c68a62",
+          transactionNote: "Baltimore Ave, Philly",
         },
         account: {
           id: account.id,
@@ -88,17 +104,3 @@ export default function SeedTransactions(props) {
     </div>
   );
 }
-
-// GSI1_PK: "ACCT#SPENDING#9aa5db80-ce4c-11ec-9639-51cefeb499dc"
-// PK: "USER#us-east-1:599e1944-109f-499e-a207-95c6eefcf056"
-// SK: "TRANS#SPENDING#85056580-ce7d-11ec-8169-b50ef9c4e9b8"
-// categoryId: "72bacceb-c9ae-11ec-96d5-1f22d1c68a62"
-// createDate: 1651979903960
-// id: "85056580-ce7d-11ec-8169-b50ef9c4e9b8"
-// modifyDate: 1651979903960
-// subcategoryId: "72baccf2-c9ae-11ec-96d5-1f22d1c68a62"
-// transactionAmount: "134.95"
-// transactionDate: 1651363200000
-// transactionNote: "State Farm"
-// transactionType: "W"
-// type: "TRANS#SPENDING#"

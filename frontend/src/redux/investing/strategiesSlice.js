@@ -4,7 +4,8 @@ import {
   createEntityAdapter,
 } from "@reduxjs/toolkit";
 import { updateSignals } from "./signalsSlice";
-import { addNewUser, fetchAllData } from "../users/usersSlice";
+import { addNewUser } from "../users/usersSlice";
+import { fetchAllData } from "../appSlice";
 import { amplifyClient } from "../../api/amplifyClient";
 
 const strategiesAdapter = createEntityAdapter();
@@ -15,6 +16,13 @@ const initialState = strategiesAdapter.getInitialState({
   status: "idle",
   error: null,
 });
+
+export const getAllStrategies = createAsyncThunk(
+  "strategies/getAllStrategies",
+  async () => {
+    return await amplifyClient.get("smartbudget", "/investing/strategies");
+  }
+);
 
 export const saveStrategy = createAsyncThunk(
   "strategies/saveStrategy",
