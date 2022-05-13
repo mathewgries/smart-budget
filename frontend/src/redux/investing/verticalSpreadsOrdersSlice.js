@@ -74,7 +74,7 @@ export const verticalSpreadsOrdersSlice = createSlice({
       .addCase(fetchAllData.fulfilled, (state, action) => {
         state.status = "succeeded";
         const verts = action.payload.filter(
-          (item) => item.type === "	ORDER#VERTSPREADS#"
+          (item) => item.type === "ORDER#VERTSPREADS#"
         );
         vertSpreadsAdapter.setAll(state, verts);
       })
