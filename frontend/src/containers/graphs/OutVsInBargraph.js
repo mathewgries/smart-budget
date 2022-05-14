@@ -3,11 +3,10 @@ import { getBargraphDisplay, getMaxValue } from "./incomeGraphHelpers";
 import TotalsBargraphBar from "./TotalsBargraphBar";
 import "./graphs.css";
 
-export default function PercentBargraph(props) {
+export default function OutVsInBargraph(props) {
   const { deposits, withdrawals, timeFrame } = props;
-  const barHeight = 95;
   const [graphDisplay, setGraphDisplay] = useState([]);
-  const [ratio, setRatio] = useState();
+  const [max, setMax] = useState(0);
 
   useEffect(() => {
     const withdrawalItems = getBargraphDisplay(withdrawals, timeFrame);
@@ -19,62 +18,50 @@ export default function PercentBargraph(props) {
           depItem.date === wdItem.date && depItem.year === wdItem.year
       ).amount,
     }));
-    const withPercentage = displayItems.map((item) => ({
+    const withDifference = displayItems.map((item) => ({
       ...item,
-      percentage: getPercentChange(item.depositAmount, item.amount),
+      diff: getDifference(item.depositAmount, item.amount),
     }));
-    setGraphDisplay(withPercentage);
 
-    const max = getMaxValue(withPercentage.map((item) => item.percentage));
-
-    if (max === barHeight || max === 0) {
-      setRatio(1);
-    } else {
-      setRatio(barHeight / max);
-    }
+    setGraphDisplay(withDifference);
+    setMax(
+      getMaxValue(
+        withDifference.map((item) =>
+          item.diff > 0 ? item.diff : item.diff * -1
+        )
+      )
+    );
   }, [deposits, withdrawals, timeFrame]);
 
-  function getPercentChange(deposit, withdrawal) {
-    if (deposit === 0 && withdrawal === 0) {
-      return 0;
-    } else if (deposit === 0 || withdrawal === 0) {
-      return 100;
-    } else if (deposit === withdrawal) {
-      return 100;
-    } else if (deposit > withdrawal) {
-      return (deposit / withdrawal) * 100;
-    } else if (withdrawal > deposit) {
-      return (withdrawal / deposit) * 100;
-    }
+  function getDifference(deposit, withdrawal) {
+    return Number.parseFloat(deposit) - Number.parseFloat(withdrawal);
   }
 
   return (
-    <div className="precentage-bargraph-container">
-      <div className="percentage-bargraph-display">
+    <div className="outvsin-bargraph-container">
+      <div className="outvsin-bargraph-display">
         {graphDisplay.map((item) => (
-          <div key={item.date} className="percentage-bargraph-display-item">
-            <div className="overunder-bargraph-display oubd-top">
+          <div key={item.date} className="outvsin-bargraph-display-item">
+            <div className="totals-bargraph-bar-wrapper oubd-top">
               {item.depositAmount > item.amount && (
                 <TotalsBargraphBar
-                  value={item.percentage}
-                  ratio={ratio}
+                  value={item.diff}
+                  max={max}
                   displayTop={true}
                 />
               )}
             </div>
-            <div className="overunder-bargraph-display oubd-bottom">
+            <div className="totals-bargraph-bar-wrapper oubd-bottom">
               {item.amount > item.depositAmount && (
                 <TotalsBargraphBar
-                  value={item.percentage}
-                  ratio={ratio}
+                  value={item.diff}
+                  max={max}
                   displayTop={false}
                 />
               )}
             </div>
             <div className="bargraph-display-amount">
-              {item.percentage > 0
-                ? item.percentage.toFixed(2)
-                : item.percentage}
+              {item.diff > 0 ? item.diff.toFixed(2) : item.diff}
             </div>
             <div className="bargraph-display-date-wrapper">
               <div className="bargraph-display-date">{item.date}</div>

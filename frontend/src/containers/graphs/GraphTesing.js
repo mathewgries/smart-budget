@@ -10,7 +10,7 @@ import {
 } from "./incomeGraphHelpers";
 import { inputDateFormat } from "../../helpers/dateFormat";
 import TotalsBargraph from "./TotalsBargraph";
-import PercentBargraph from "./PercentBargraph";
+import OutVsInBargraph from "./OutVsInBargraph";
 import CategoriesChart from "./CategoriesChart";
 import DatePickerPopup from "../popups/DatePickerPopup";
 import "./graphs.css";
@@ -41,16 +41,17 @@ export default function GraphTesting(props) {
     setTimeFrame((prev) => setFixedTimeFrame(prev.label, minDate));
   }, [account, minDate]);
 
-
   function handleShowDatePicker() {
     setShowDatePicker(!showDatePicker);
   }
 
+	console.log(timeFrame)
+
   function handlDatePickerConfirm(dates) {
     setTimeFrame({
       label: "CUS",
-      startDate: dates.start,
-      endDate: dates.end,
+      startDate: new Date(dates.start),
+      endDate: new Date(dates.end),
     });
     setShowDatePicker(false);
   }
@@ -256,10 +257,10 @@ export default function GraphTesting(props) {
         <section className="bargraph-wrapper">
           <div>
             <header>
-              <h5>Average out vs in</h5>
+              <h5>Out vs In</h5>
             </header>
           </div>
-          <PercentBargraph
+          <OutVsInBargraph
             withdrawals={withdrawals}
             deposits={deposits}
             timeFrame={timeFrame}

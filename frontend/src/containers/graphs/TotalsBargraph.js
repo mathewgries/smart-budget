@@ -5,21 +5,16 @@ import "./graphs.css";
 
 export default function TotalsBargraph(props) {
   const { transactions, timeFrame, minDate } = props;
-  const barHeight = 56;
   const [graphDisplay, setGraphDisplay] = useState([]);
-  const [ratio, setRatio] = useState();
+  const [max, setMax] = useState(0);
+
+	console.log({transactions, timeFrame, minDate})
 
   useEffect(() => {
     const displayItems = getBargraphDisplay(transactions, timeFrame, minDate);
-    const max = getMaxValue(displayItems.map((item) => item.amount));
-
-    if (max === barHeight || max === 0) {
-      setRatio(1);
-    } else {
-      setRatio(barHeight / max);
-    }
 
     setGraphDisplay(displayItems);
+    setMax(getMaxValue(displayItems.map((item) => item.amount)));
   }, [transactions, timeFrame, minDate]);
 
   return (
@@ -27,11 +22,13 @@ export default function TotalsBargraph(props) {
       <div className="bargraph-display">
         {graphDisplay.map((item) => (
           <div key={item.date} className="bargraph-display-item">
-            <TotalsBaraphBar
-              value={item.amount}
-              ratio={ratio}
-              displayTop={true}
-            />
+            <div className="totals-bargraph-bar-wrapper">
+              <TotalsBaraphBar
+                value={item.amount}
+                max={max}
+                displayTop={true}
+              />
+            </div>
             <div className="bargraph-display-amount">{item.amount}</div>
             <div className="bargraph-display-date-wrapper">
               <div className="bargraph-display-date">{item.date}</div>

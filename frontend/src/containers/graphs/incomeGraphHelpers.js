@@ -100,7 +100,7 @@ export function setFixedTimeFrame(timeFrame, minDate) {
   return {
     label: timeFrame,
     startDate: new Date(startDate).setHours(0, 0, 0, 0),
-    endDate: new Date(endDate).setHours(23, 59, 59, 999),
+    endDate: new Date(endDate).setHours(23, 59, 59),
   };
 }
 

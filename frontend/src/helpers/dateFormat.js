@@ -9,9 +9,9 @@ export function inputDateFormat(date) {
       date = new Date(date).toLocaleDateString();
     }
     const convDate = new Date(date);
-    const year = convDate.getUTCFullYear();
-    let month = convDate.getUTCMonth() + 1;
-    let day = convDate.getUTCDate();
+    const year = convDate.getFullYear();
+    let month = convDate.getMonth() + 1;
+    let day = convDate.getDate();
 
     if ((day + "").length === 1) {
       day = "0" + day;
@@ -23,6 +23,8 @@ export function inputDateFormat(date) {
   } else {
     result = "Invalid Format";
   }
+
+	console.log(result)
   return result;
 }
 
